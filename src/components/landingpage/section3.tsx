@@ -1,4 +1,5 @@
 import React from 'react';
+import Cta from './Cta';
 
 export default function NutriOneSection() {
   return (
@@ -95,6 +96,7 @@ export default function NutriOneSection() {
           </div>
         </div>
       </div>
+      <Cta />
     </section>
   );
 }
