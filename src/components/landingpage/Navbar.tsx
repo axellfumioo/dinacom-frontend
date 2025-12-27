@@ -19,30 +19,49 @@ export default function Navbar() {
           {/* Logo */}
           <div
             onClick={() => router.push("/")}
-            className="text-white text-xl font-semibold cursor-pointer"
+            className="text-black text-xl font-semibold cursor-pointer"
           >
             NutriOne
           </div>
 
           {/* Menu */}
-          <div className="hidden md:flex items-center gap-10 text-white text-sm font-medium">
-            <button className="hover:opacity-80">Home</button>
-            <button className="hover:opacity-80">Features</button>
-            <button className="hover:opacity-80">Dashboard</button>
+          <div className="hidden md:flex items-center gap-10 text-black text-sm font-medium ">
+            <button className="hover:opacity-80 hover:underline">Home</button>
+            <button className="hover:opacity-80 hover:underline">Features</button>
+            <button className="hover:opacity-80 hover:underline">Dashboard</button>
           </div>
 
           {/* Auth Buttons */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push(authActions.login)}
-              className="border border-white/60 text-white px-5 py-2 rounded-full text-sm hover:bg-white hover:text-black transition"
+              className="
+                border border-black/30
+                text-black
+                px-5 py-2
+                rounded-full
+                text-sm
+                hover:bg-black/5
+                hover:border-black/50
+                transition
+              "
             >
               Log In
             </button>
 
+
             <button
               onClick={() => router.push(authActions.register)}
-              className="bg-white text-black px-5 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition"
+              className="
+                bg-black
+                text-white
+                px-5 py-2
+                rounded-full
+                text-sm
+                font-medium
+                hover:bg-black/90
+                transition
+              "
             >
               Register
             </button>

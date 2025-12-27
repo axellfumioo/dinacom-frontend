@@ -1,13 +1,10 @@
-import Hero from "@/components/landingpage/Hero";
-import Navbar from "@/components/landingpage/Navbar";
+import React from 'react';
+import Section1 from '@/components/landingpage/section1';
 
 export default function Home() {
   return (
     <div>
-      <Navbar />
-      <main>
-        <Hero />
-      </main>
+      <Section1 />
     </div>
   );
 }
