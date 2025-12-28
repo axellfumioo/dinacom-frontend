@@ -9,7 +9,7 @@ export default function Cta() {
       const authActions = { register: "/auth/register"}
 
   return (
-    <div className="px-4 py-16">
+    <div className="p-20 -mt-28">
       <div className="relative rounded-3xl max-w-5xl mx-auto overflow-hidden">
         {/* Background kuning */}
         <div className="bg-yellow-400 rounded-2xl px-8 py-16 md:px-16 md:py-20 relative">

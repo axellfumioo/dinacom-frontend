@@ -1,9 +1,8 @@
 import React from 'react';
-import Cta from './Cta';
 
 export default function NutriOneSection() {
   return (
-    <section className="min-h-screen bg-white p-20 px-4 mt-28">
+    <section className="min-h-screen bg-white p-44">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-20">
@@ -96,7 +95,6 @@ export default function NutriOneSection() {
           </div>
         </div>
       </div>
-      <Cta />
     </section>
   );
 }
