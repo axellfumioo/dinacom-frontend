@@ -4,7 +4,14 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 
-export default function Navbar() {
+type Props = {
+  onSection1: () => void;
+  onSection2: () => void;
+  onSection3: () => void;
+
+}
+
+export default function Navbar({ onSection1, onSection2, onSection3 }: Props) {
   const router = useRouter();
 
   const authActions = {
@@ -26,13 +33,19 @@ export default function Navbar() {
 
           {/* Menu */}
           <div className="hidden md:flex items-center gap-10 text-sm font-medium text-black">
-            <button className="hover:opacity-80 hover:underline">
+            <button 
+            onClick={onSection1}
+            className="hover:opacity-80 hover:underline">
               Home
             </button>
-            <button className="hover:opacity-80 hover:underline">
+            <button 
+            onClick={onSection2}
+            className="hover:opacity-80 hover:underline">
               Features
             </button>
-            <button className="hover:opacity-80 hover:underline">
+            <button 
+            onClick={onSection3}
+            className="hover:opacity-80 hover:underline">
               Dashboard
             </button>
           </div>
