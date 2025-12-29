@@ -4,14 +4,11 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 
-type Props = {
-  onSection1: () => void;
-  onSection2: () => void;
-  onSection3: () => void;
+type NavbarProps = {
+  onNavigate: (index: number) => void; // menerima parameter index number
+};
 
-}
-
-export default function Navbar({ onSection1, onSection2, onSection3 }: Props) {
+export default function Navbar({ onNavigate }: NavbarProps) {
   const router = useRouter();
 
   const authActions = {
@@ -20,12 +17,12 @@ export default function Navbar({ onSection1, onSection2, onSection3 }: Props) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-transparent">
+    <nav className="fixed top-0 left-0 z-50 w-full bg-blend-saturation">
       <div className="mx-auto max-w-7xl px-8 py-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div
-            onClick={() => router.push("/")}
+            onClick={() => onNavigate(0)} // index 0
             className="cursor-pointer text-xl font-semibold text-black"
           >
             NutriOne
@@ -33,19 +30,24 @@ export default function Navbar({ onSection1, onSection2, onSection3 }: Props) {
 
           {/* Menu */}
           <div className="hidden md:flex items-center gap-10 text-sm font-medium text-black">
-            <button 
-            onClick={onSection1}
-            className="hover:opacity-80 hover:underline">
+            <button
+              onClick={() => onNavigate(0)}
+              className="hover:opacity-80 hover:underline"
+            >
               Home
             </button>
-            <button 
-            onClick={onSection2}
-            className="hover:opacity-80 hover:underline">
+
+            <button
+              onClick={() => onNavigate(1)}
+              className="hover:opacity-80 hover:underline"
+            >
               Features
             </button>
-            <button 
-            onClick={onSection3}
-            className="hover:opacity-80 hover:underline">
+
+            <button
+              onClick={() => onNavigate(2)}
+              className="hover:opacity-80 hover:underline"
+            >
               Dashboard
             </button>
           </div>
