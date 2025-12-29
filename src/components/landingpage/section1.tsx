@@ -5,7 +5,7 @@ import Hero from './Hero'
 
 export default function Section1() {
   return (
-      <section className='min-h-screen bg-[#ffffff]'>
+      <section className='min-h-screen snap-start bg-[#ffffff]'>
          <Hero />
       </section>
 
