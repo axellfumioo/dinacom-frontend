@@ -44,9 +44,10 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
         }`}
       >
         <Sidebar
-          open={sidebarOpen}
-          setOpen={setSidebarOpen}
-          onCollapseChange={setSidebarCollapsed}
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
+        collapsed={sidebarCollapsed}
+        onCollapseChange={setSidebarCollapsed}
         />
 
         <div className="flex flex-1 flex-col bg-white">
