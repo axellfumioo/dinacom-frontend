@@ -1,6 +1,6 @@
 export function ActivityCard() {
   return (
-    <div className="rounded-xl bg-white border border-yellow-400 p-6 h-32 mb-4">
+    <div className="rounded-xl bg-white border border-yellow-400 p-6 h-32">
       <h3 className="text-sm font-semibold mb-3">Aktivitas Fisik</h3>
 
       <div className="flex justify-between items-center">
