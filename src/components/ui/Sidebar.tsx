@@ -41,9 +41,15 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
 
+  // ================= DESKTOP STATE =================
+  const desktopHidden = collapsed;
+
+  // ================= MOBILE STATE =================
+  const mobileHidden = !open;
+
   return (
     <>
-      {/* ================= OPEN SIDEBAR BUTTON ================= */}
+      {/* ================= OPEN BUTTON (DESKTOP) ================= */}
       {collapsed && (
         <button
           onClick={() => onCollapseChange(false)}
@@ -56,7 +62,6 @@ export default function Sidebar({
             bg-white border shadow
             hover:bg-gray-100
           "
-          aria-label="Open Sidebar"
         >
           <Menu size={20} />
         </button>
@@ -73,32 +78,43 @@ export default function Sidebar({
       {/* ================= SIDEBAR ================= */}
       <aside
         className={`
-          fixed z-50 inset-y-0 left-0 bg-white border-r
-          transition-all duration-300
-          ${collapsed ? "w-0" : "w-64"}
-          ${open ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0
+          fixed z-50 inset-y-0 left-0
+          w-64 bg-white border-r
+          transform transition-transform duration-300 ease-in-out
+
+          /* MOBILE */
+          ${mobileHidden ? "-translate-x-full" : "translate-x-0"}
+
+          /* DESKTOP */
+          lg:${desktopHidden ? "-translate-x-full" : "translate-x-0"}
         `}
       >
-        {/* ================= HEADER ================= */}
-        {!collapsed && (
+        {/* ================= CONTENT ================= */}
+        <div
+          className={`
+            h-full flex flex-col
+            transition-opacity duration-200
+            ${
+              desktopHidden && mobileHidden
+                ? "opacity-0 pointer-events-none"
+                : "opacity-100"
+            }
+          `}
+        >
+          {/* ================= HEADER ================= */}
           <div className="h-16 flex items-center justify-between px-6 border-b">
             <h1 className="text-xl font-bold">NutriOne</h1>
 
-            {/* Close Sidebar */}
             <button
               onClick={() => onCollapseChange(true)}
               className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
-              aria-label="Close Sidebar"
             >
               <X size={20} />
             </button>
           </div>
-        )}
 
-        {/* ================= MENU ================= */}
-        {!collapsed && (
-          <nav className="p-4 space-y-1">
+          {/* ================= MENU ================= */}
+          <nav className="p-4 space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const active = pathname === item.path;
@@ -110,7 +126,7 @@ export default function Sidebar({
                   onClick={() => setOpen(false)}
                   className={`
                     flex items-center gap-3 px-4 py-3 rounded-md
-                    text-sm font-medium transition
+                    text-sm font-medium transition-colors
                     ${
                       active
                         ? "bg-yellow-100 text-yellow-600"
@@ -118,13 +134,15 @@ export default function Sidebar({
                     }
                   `}
                 >
-                  <Icon size={18} />
-                  <span className="whitespace-nowrap">{item.label}</span>
+                  <Icon size={20} />
+                  <span className="whitespace-nowrap">
+                    {item.label}
+                  </span>
                 </Link>
               );
             })}
           </nav>
-        )}
+        </div>
       </aside>
     </>
   );
