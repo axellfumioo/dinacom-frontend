@@ -24,13 +24,13 @@ type SidebarProps = {
 
 const menuItems = [
   { label: "Dashboard", icon: Home, path: "/dashboard" },
-  { label: "Scan Makan", icon: Scan, path: "/scan" },
-  { label: "Health Assistant", icon: Sparkles, path: "/assistant" },
-  { label: "Riwayat Harian", icon: CalendarDays, path: "/riwayat" },
-  { label: "Konsultasi", icon: MessageCircle, path: "/konsultasi" },
-  { label: "Parental Mode", icon: Infinity, path: "/parental" },
-  { label: "Strava", icon: Activity, path: "/strava" },
-  { label: "Weekly Report", icon: BarChart3, path: "/weekly-report" },
+  { label: "Scan Makan", icon: Scan, path: "/dashboard/scanmakanan" },
+  { label: "Health Assistant", icon: Sparkles, path: "/dashboard/healtassistent" },
+  { label: "Riwayat Harian", icon: CalendarDays, path: "/dashboard/riwayatharian" },
+  { label: "Konsultasi", icon: MessageCircle, path: "/dashboard/konsultasi" },
+  { label: "Parental Mode", icon: Infinity, path: "/dashboard/parentalmode" },
+  { label: "Strava", icon: Activity, path: "/dashboard/strava" },
+  { label: "Weekly Report", icon: BarChart3, path: "/dashboard/weeklyreport/" },
 ];
 
 export default function Sidebar({
@@ -41,15 +41,9 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
 
-  // ================= DESKTOP STATE =================
-  const desktopHidden = collapsed;
-
-  // ================= MOBILE STATE =================
-  const mobileHidden = !open;
-
   return (
     <>
-      {/* ================= OPEN BUTTON (DESKTOP) ================= */}
+      {/* open dekstop sidebar */}
       {collapsed && (
         <button
           onClick={() => onCollapseChange(false)}
@@ -62,12 +56,13 @@ export default function Sidebar({
             bg-white border shadow
             hover:bg-gray-100
           "
+          aria-label="Open Sidebar"
         >
           <Menu size={20} />
         </button>
       )}
 
-      {/* ================= MOBILE OVERLAY ================= */}
+      {/* open mobile sidebar */}
       {open && (
         <div
           className="fixed inset-0 z-40 bg-black/30 lg:hidden"
@@ -75,46 +70,34 @@ export default function Sidebar({
         />
       )}
 
-      {/* ================= SIDEBAR ================= */}
+      {/* isi sidebar */}
       <aside
         className={`
-          fixed z-50 inset-y-0 left-0
-          w-64 bg-white border-r
-          transform transition-transform duration-300 ease-in-out
-
-          /* MOBILE */
-          ${mobileHidden ? "-translate-x-full" : "translate-x-0"}
-
-          /* DESKTOP */
-          lg:${desktopHidden ? "-translate-x-full" : "translate-x-0"}
+          fixed z-50 inset-y-0 left-0 bg-white border-r
+          transition-all duration-300
+          ${collapsed ? "w-0" : "w-64"}
+          ${open ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
         `}
       >
-        {/* ================= CONTENT ================= */}
-        <div
-          className={`
-            h-full flex flex-col
-            transition-opacity duration-200
-            ${
-              desktopHidden && mobileHidden
-                ? "opacity-0 pointer-events-none"
-                : "opacity-100"
-            }
-          `}
-        >
-          {/* ================= HEADER ================= */}
+        {!collapsed && (
           <div className="h-16 flex items-center justify-between px-6 border-b">
             <h1 className="text-xl font-bold">NutriOne</h1>
 
+            {/* Close Sidebar */}
             <button
               onClick={() => onCollapseChange(true)}
               className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
+              aria-label="Close Sidebar"
             >
               <X size={20} />
             </button>
           </div>
-
-          {/* ================= MENU ================= */}
-          <nav className="p-4 space-y-2">
+        )}
+      
+      {/* jika tidak tertutup maka tampilkan isi sidebar */}
+        {!collapsed && (
+          <nav className="p-4 space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const active = pathname === item.path;
@@ -126,7 +109,7 @@ export default function Sidebar({
                   onClick={() => setOpen(false)}
                   className={`
                     flex items-center gap-3 px-4 py-3 rounded-md
-                    text-sm font-medium transition-colors
+                    text-sm font-medium transition
                     ${
                       active
                         ? "bg-yellow-100 text-yellow-600"
@@ -134,15 +117,13 @@ export default function Sidebar({
                     }
                   `}
                 >
-                  <Icon size={20} />
-                  <span className="whitespace-nowrap">
-                    {item.label}
-                  </span>
+                  <Icon size={18} />
+                  <span className="whitespace-nowrap">{item.label}</span>
                 </Link>
               );
             })}
           </nav>
-        </div>
+        )}
       </aside>
     </>
   );
