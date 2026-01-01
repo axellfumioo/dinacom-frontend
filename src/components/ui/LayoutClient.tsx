@@ -2,7 +2,7 @@
 
 import {
   createContext,
-  type ReactNode,
+  ReactNode,
   useContext,
   useMemo,
   useState,
@@ -18,31 +18,26 @@ const SidebarLayoutContext = createContext<
 >(undefined);
 
 export function useSidebarLayout() {
-  const context = useContext(SidebarLayoutContext);
-  if (!context) {
-    throw new Error("useSidebarLayout must be used within LayoutClient");
-  }
-  return context;
+  const ctx = useContext(SidebarLayoutContext);
+  if (!ctx) throw new Error("useSidebarLayout must be used within LayoutClient");
+  return ctx;
 }
 
 export default function LayoutClient({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const contextValue = useMemo(
-    () => ({ sidebarCollapsed }),
-    [sidebarCollapsed]
-  );
+  const value = useMemo(() => ({ sidebarCollapsed }), [sidebarCollapsed]);
 
   return (
-    <SidebarLayoutContext.Provider value={contextValue}>
+    <SidebarLayoutContext.Provider value={value}>
       <div className="min-h-screen flex bg-gray-100 relative">
-        
-        {/* ================= DESKTOP SIDEBAR ================= */}
+
+        {/* ===== DESKTOP SIDEBAR ===== */}
         <div
           className={`
             hidden lg:block
-            transition-all duration-300 ease-in-out
+            transition-all duration-300
             ${sidebarCollapsed ? "w-20" : "w-64"}
           `}
         >
@@ -54,34 +49,41 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
           />
         </div>
 
-        {/* ================= MOBILE SIDEBAR ================= */}
-        {sidebarOpen && (
-          <div className="fixed inset-0 z-40 lg:hidden">
-            {/* backdrop */}
-            <div
-              className="absolute inset-0 bg-black/40"
-              onClick={() => setSidebarOpen(false)}
+        {/* ===== MOBILE SIDEBAR ===== */}
+        <div
+          className={`
+            fixed inset-0 z-40 lg:hidden
+            transition-opacity
+            ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
+          `}
+        >
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setSidebarOpen(false)}
+          />
+
+          <div
+            className={`
+              absolute left-0 top-0 h-full w-64 bg-white
+              transition-transform duration-300
+              ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+            `}
+          >
+            <Sidebar
+              open={sidebarOpen}
+              setOpen={setSidebarOpen}
+              collapsed={false}
+              onCollapseChange={setSidebarCollapsed}
             />
-
-            {/* sidebar */}
-            <div className="relative w-64 h-full bg-white shadow-lg">
-              <Sidebar
-                open={sidebarOpen}
-                setOpen={setSidebarOpen}
-                collapsed={false}
-                onCollapseChange={setSidebarCollapsed}
-              />
-            </div>
           </div>
-        )}
+        </div>
 
-        {/* ================= MAIN CONTENT ================= */}
+        {/* ===== MAIN CONTENT ===== */}
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Mobile Header */}
           <div className="lg:hidden p-4">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="p-2 rounded-md bg-white shadow"
+              className="p-2 bg-white rounded-md shadow"
             >
               ☰
             </button>
