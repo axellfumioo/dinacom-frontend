@@ -14,6 +14,8 @@ import {
   X,
   Menu,
 } from "lucide-react";
+import { Transition } from "@headlessui/react";
+
 
 type SidebarProps = {
   open: boolean;
@@ -71,7 +73,7 @@ export default function Sidebar({
       )}
 
       {/* isi sidebar */}
-      <aside
+   <aside
         className={`
           fixed z-50 inset-y-0 left-0 bg-white border-r
           transition-all duration-300
@@ -90,7 +92,17 @@ export default function Sidebar({
               className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
               aria-label="Close Sidebar"
             >
-              <X size={20} />
+              <Transition
+                show={!collapsed}
+                enter="transition-opacity duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="transition-opacity duration-300"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <X size={20} />
+              </Transition>
             </button>
           </div>
         )}
@@ -117,7 +129,7 @@ export default function Sidebar({
                     }
                   `}
                 >
-                  <Icon size={18} />
+                  <Icon size={20} />
                   <span className="whitespace-nowrap">{item.label}</span>
                 </Link>
               );
