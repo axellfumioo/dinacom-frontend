@@ -15,7 +15,7 @@ export default function ScanMakananPage() {
 
   return (
     <div className={`${containerWidth} mx-auto px-4 py-6 md:py-8`}>
-      {/* Title Section */}
+
       <div className='text-center mb-6 md:mb-8'>
         <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold text-black mb-2 md:mb-3'>
           NutriScan : Analisis Makanan
@@ -25,7 +25,6 @@ export default function ScanMakananPage() {
         </p>
       </div>
 
-      {/* Scan Box - Centered */}
       <div className='flex justify-center'>
         <div className='w-full max-w-2xl border-2 border-dashed border-[#FFE766] rounded-xl p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col items-center justify-center bg-white shadow-sm'>
           {/* Camera Icon with Plus */}
@@ -38,17 +37,16 @@ export default function ScanMakananPage() {
             </div>
           </div>
 
-          {/* Section Title */}
           <h2 className='text-xl md:text-2xl lg:text-3xl font-bold text-black mb-3 md:mb-4 text-center'>
             Mulai Scan Makanan
           </h2>
 
-          {/* Instructions */}
+
           <p className='text-center text-gray-600 mb-6 md:mb-8 max-w-md text-sm md:text-base leading-relaxed'>
             Ambil foto dari atas, pastikan seluruh makanan terlihat jelas tanpa terpotong agar hasil analisis lebih akurat.
           </p>
 
-          {/* Buttons */}
+
           <div className='w-full'>
             <BtnScan />
           </div>

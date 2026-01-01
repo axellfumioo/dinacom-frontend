@@ -12,12 +12,11 @@ export default function BtnScan() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  // State untuk menghindari hydration mismatch
-  // Mulai dengan false, baru detect setelah mount (client-side only)
+
   const [isMobile, setIsMobile] = useState(false);
 
-  // Deteksi mobile device setelah mount untuk menghindari hydration mismatch
-  // Ini adalah use case yang valid untuk useEffect + setState
+
+  // useEffect + setState
 
   useEffect(() => {
     if (typeof navigator !== "undefined") {
@@ -47,7 +46,7 @@ export default function BtnScan() {
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 justify-center w-full px-2">
-      {/* Upload Button - SELALU TERSEDIA (Desktop & Mobile) */}
+      {/* Upload Button - (Desktop & Mobile) */}
       <button
         onClick={handleUploadClick}
         className="px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-[#FFE766] text-black font-semibold hover:opacity-90 transition flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto"
@@ -64,8 +63,8 @@ export default function BtnScan() {
         onChange={handleFileChange}
       />
 
-      {/* Camera Button - HANYA DI MOBILE */}
-      {/* suppressHydrationWarning karena button ini hanya muncul di client setelah detect mobile */}
+      {/* Camera Button - mobile */}
+
       <div suppressHydrationWarning className="w-full sm:w-auto">
         {isMobile && (
           <>
