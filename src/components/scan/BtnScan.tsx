@@ -1,69 +1,93 @@
-"use client";       
+"use client";
 
-import { Image, Camera } from 'lucide-react';
-import React, { useRef, ChangeEvent } from 'react'
+import { Image as ImageIcon, Camera } from "lucide-react";
+import React, {
+  useRef,
+  ChangeEvent,
+  useState,
+  useEffect,
+} from "react";
 
 export default function BtnScan() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const cameraInputRef = useRef<HTMLInputElement>(null);
-    const isMobile = typeof navigator !== 'undefined' 
-        ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-        : false;
+  // State untuk menghindari hydration mismatch
+  // Mulai dengan false, baru detect setelah mount (client-side only)
+  const [isMobile, setIsMobile] = useState(false);
 
-    const handleUploadClick = () => {
-        fileInputRef.current?.click();
-    };
+  // Deteksi mobile device setelah mount untuk menghindari hydration mismatch
+  // Ini adalah use case yang valid untuk useEffect + setState
 
-    const handleCameraClick = () => {
-        cameraInputRef.current?.click();
-    };
-
-    // sementara buat kirim ke backend
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            console.log(file);
-        }
+  useEffect(() => {
+    if (typeof navigator !== "undefined") {
+      const mobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      setIsMobile(mobile);
     }
+  }, []);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleCameraClick = () => {
+    cameraInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    console.log("File terpilih:", file);
+    // TODO: Kirim ke backend untuk analisis
+  };
 
   return (
-    <div className='flex flex-row items-center gap-4'>
-        {/* Upload Button */}
-        <button
-            onClick={handleUploadClick}
-            className='px-6 py-3 rounded-xl bg-[#FFE766] text-black font-semibold hover:opacity-90 transition flex items-center gap-2'
-        >
-            <Image className='w-5 h-5' aria-label='upload' />
-            <span>Upload Foto Makanan</span>
-        </button>
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 justify-center w-full px-2">
+      {/* Upload Button - SELALU TERSEDIA (Desktop & Mobile) */}
+      <button
+        onClick={handleUploadClick}
+        className="px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-[#FFE766] text-black font-semibold hover:opacity-90 transition flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto"
+      >
+        <ImageIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" aria-hidden />
+        <span className="whitespace-nowrap">Upload Foto Makanan</span>
+      </button>
 
-        <input 
-            ref={fileInputRef}
-            type='file'
-            accept='image/*'
-            className='hidden'
-            onChange={handleFileChange}
-        />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
 
-        {/* Camera Button */}
-        <button
-            onClick={handleCameraClick}
-            className='px-6 py-3 rounded-xl bg-[#D1D5DB] text-black font-semibold hover:opacity-90 transition flex items-center gap-2'
-        >
-            <Camera className='w-5 h-5' />
-            <span>Ambil Dari Kamera</span>
-        </button>
+      {/* Camera Button - HANYA DI MOBILE */}
+      {/* suppressHydrationWarning karena button ini hanya muncul di client setelah detect mobile */}
+      <div suppressHydrationWarning className="w-full sm:w-auto">
+        {isMobile && (
+          <>
+            <button
+              onClick={handleCameraClick}
+              className="px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-[#D1D5DB] text-black font-semibold hover:opacity-90 transition flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto"
+            >
+              <Camera className="w-4 h-4 md:w-5 md:h-5 shrink-0" aria-hidden />
+              <span className="whitespace-nowrap">Ambil Dari Kamera</span>
+            </button>
 
-        <input 
-            ref={cameraInputRef}
-            type='file'
-            accept='image/*'
-            capture={isMobile ? 'environment' : 'user'}
-            className='hidden'
-            onChange={handleFileChange}
-        />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </>
+        )}
+      </div>
     </div>
-)
+  );
 }
-
