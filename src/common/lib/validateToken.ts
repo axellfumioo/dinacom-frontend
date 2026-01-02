@@ -1,10 +1,15 @@
 import api from "./apiClient";
 
 
-export default async function validateToken(): Promise<boolean> {
+export default async function validateToken(token: string) {
     try {
         const res = await api.get(
             process.env.NEXT_PUBLIC_API_BASE_URL + "/users/session",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         );
         
         const data = res.data;
@@ -14,14 +19,14 @@ export default async function validateToken(): Promise<boolean> {
         }
 
         if (typeof window !== "undefined") {
-            sessionStorage.removeItem(jwt_token);
+            sessionStorage.removeItem("token");
             window.location.href = "auth/login";
         }
 
         return false;
     } catch {
         if (typeof window !== "undefined") {
-            sessionStorage.removeItem(jwt_token);
+            sessionStorage.removeItem("token");
             window.location.href = "auth/login";
         }
 
