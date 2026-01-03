@@ -121,7 +121,7 @@ export default function RegisterPage() {
                   value={form.email}
                   onChange={handleChange}
                   className="w-full pl-10 pr-3 py-2.5 rounded-md border border-gray-300 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 transition bg-white"
-                  placeholder="contoh@domain.com"
+                  placeholder="halo@gmail.com"
                 />
               </div>
             </div>
@@ -168,7 +168,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   className="w-full pl-10 pr-3 py-2.5 rounded-md border border-gray-300 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 transition bg-white appearance-none cursor-pointer"
                 >
-                  <option value="">Pilih jenis kelamin</option>
+                  <option value="">--Pilih jenis kelamin--</option>
                   <option value="Laki-laki">Laki-laki</option>
                   <option value="Perempuan">Perempuan</option>
                 </select>
