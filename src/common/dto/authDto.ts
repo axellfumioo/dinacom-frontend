@@ -6,5 +6,5 @@ export interface LoginDto {
 export interface RegisterDto extends LoginDto{
     gender: string;
     name: string;
-    date_of_birdth: string;
+    date_of_birth: string;
 }
