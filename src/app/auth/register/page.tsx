@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Mail, Lock, UserPlus, Calendar, Users } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import toast from "toastify";
 import { authService } from "@/services/AuthService";
 
@@ -10,7 +10,7 @@ interface FormData {
   name: string;
   email: string;
   password: string;
-  date_of_birdth: string;
+  date_of_birth: string;
   gender: string;
 }
 
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     name: "",
     email: "",
     password: "",
-    date_of_birdth: "",
+    date_of_birth: "",
     gender: ""
   });
 
@@ -49,7 +49,7 @@ export default function RegisterPage() {
       toast.error("Password harus lebih dari 6")
       return setError("Password lebih dari 6 huruf");
     }
-    if (!form.date_of_birdth) {
+    if (!form.date_of_birth) {
       toast.error("Tanggal lahir harus diisi")
       return setError("Tanggal lahir harus diisi");
     }
@@ -66,17 +66,17 @@ export default function RegisterPage() {
         email: form.email,
         password: form.password,
         gender: form.gender,
-        date_of_birdth: form.date_of_birdth
+        date_of_birth: new Date(form.date_of_birth).toISOString()
       });
       setForm({
         name: "",
         email: "",
         password: "",
-        date_of_birdth: "",
+        date_of_birth: "",
         gender: ""
       });
       setTimeout(() => {
-        router.push("auth/login?register=true")
+        router.push("/auth/login")
       }, 1500); 
     } catch (err) {
       const message = err instanceof Error ? err.message : "Terjadi Kesalahan";
@@ -148,9 +148,9 @@ export default function RegisterPage() {
               <div className="relative">
                 <Calendar className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  name="date_of_birdth"
+                  name="date_of_birth"
                   type="date"
-                  value={form.date_of_birdth}
+                  value={form.date_of_birth}
                   onChange={handleChange}
                   className="w-full pl-10 pr-3 py-2.5 rounded-md border border-gray-300 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 transition bg-white"
                 />

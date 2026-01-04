@@ -1,54 +1,29 @@
-import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 import api from "@/common/lib/apiClient";
-import { BASE_URL } from "@/common/lib/loadEnv";
 import toast from "toastify";
+import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 
-interface IAuthService {
-    login: (dto: LoginDto) => void;
-    logout: () => void;
-    register: (dto: RegisterDto) => void;
-}
+class AuthService {
 
-class AuthService implements IAuthService {
+  async login(dto: LoginDto) {
+    const res = await api.post("/api/v1/auth/login", dto);
 
-    public async login(dto: LoginDto) {
-        try {
-            const res = await api.post(`${BASE_URL}/auth/login`, dto);
-            const {token, user} = res.data.data;
-            sessionStorage.setItem("token", token);
-            sessionStorage.setItem("user", user);
-            toast.success(`Selamat datang, ${user}`)
-            return true;
-        } catch (error) {
-            const errorMessage = error instanceof Error 
-                ? error.message 
-                : (error && typeof error === 'object' && 'message' in error)
-                    ? String(error.message)
-                    : "Login Failed";
-            toast.error(errorMessage);
-        }
-    };
+    const { token, user } = res.data.data;
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("user", JSON.stringify(user));
 
-    public async register(dto: RegisterDto) {
-        try {
-            const res = await api.post(`${BASE_URL}/auth/register`,dto) ;
-            toast.success(res.data.message);
-        } catch (error) {
-            const errorMessage = error instanceof Error 
-                ? error.message 
-                : (error && typeof error === 'object' && 'message' in error)
-                    ? String(error.message)
-                    : "Register Failed";
-            toast.error(errorMessage);
-        }
-    }
+    toast.success(`Selamat datang, ${user.name}`);
+    return true;
+  }
 
-    public async logout() {
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("user");
-        return true;
-    }
+  async register(dto: RegisterDto) {
+    const res = await api.post("/api/v1/auth/register", dto);
+    toast.success(res.data.message);
+    return true;
+  }
 
+  logout() {
+    sessionStorage.clear();
+  }
 }
 
 export const authService = new AuthService();
