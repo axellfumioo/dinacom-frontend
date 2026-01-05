@@ -21,7 +21,7 @@ export default function AuthGuard({children}: AuthGuardProps) {
         const evaluate = async () => {
             if (!token) {
                 setTokenStatus('false');
-                router.push('auth/login');
+                router.push('/auth/login');
                 return;
             }
 
@@ -29,7 +29,7 @@ export default function AuthGuard({children}: AuthGuardProps) {
             const isTokenValid = await validateToken(token)
             if (!isTokenValid) {
                 setTokenStatus('false');
-                router.push('auth/login');
+                router.push('/auth/login');
             } else {
                 setTokenStatus('true');
             }
@@ -49,7 +49,7 @@ export default function AuthGuard({children}: AuthGuardProps) {
             
             if (!token) {
                 setTokenStatus('false');
-                router.push('auth/login');
+                router.push('/auth/login');
                 return;
             }
 
