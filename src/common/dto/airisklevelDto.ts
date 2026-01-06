@@ -1,0 +1,1 @@
+export type AIRiskLevel = "LOW" | "MEDIUM" | "HIGH";
