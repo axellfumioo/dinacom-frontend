@@ -1,22 +1,34 @@
-import api from "@/common/lib/apiClient";
+
 import toast from "toastify";
 import { LoginDto, RegisterDto } from "@/common/dto/authDto";
+import axios from "axios";
+import { BASE_URL } from "@/common/lib/loadEnv";
+import api from "@/common/lib/apiClient";
 
 class AuthService {
 
   async login(dto: LoginDto) {
-    const res = await api.post("/api/v1/auth/login", dto);
+    try {
+      const res = await api.post(`/api/v1/auth/login`, dto)
 
-    const { token, user } = res.data.data;
-    sessionStorage.setItem("token", token);
-    sessionStorage.setItem("user", JSON.stringify(user));
+      // Validate response 
+      if (!res.data?.data?.token || !res.data?.data?.user) {
+        throw new Error("Invalid response from server");
+      }
 
-    toast.success(`Selamat datang, ${user.name}`);
-    return true;
+      const { token, user } = res.data.data;
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("user", JSON.stringify(user));
+
+      toast.success("Selamat datang");
+      return true;
+    } catch (error: unknown) {
+      throw error;
+    }
   }
 
   async register(dto: RegisterDto) {
-    const res = await api.post("/api/v1/auth/register", dto);
+    const res = await axios.post(`${BASE_URL}/api/v1/auth/register`, dto);
     toast.success(res.data.message);
     return true;
   }
