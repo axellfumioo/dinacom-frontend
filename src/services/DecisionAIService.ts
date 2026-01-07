@@ -1,6 +1,6 @@
 import api from "@/common/lib/apiClient";
 import toast from "toastify";
-import { createDecisionDto, updateDecisionDto } from "@/common/dto/scanDto";
+import { createDecisionDto, updateDecisionDto } from "@/common/dto/decisionDto";
 
 
 class ScanService {
