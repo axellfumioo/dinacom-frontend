@@ -3,26 +3,28 @@ import toast from "toastify";
 import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 import axios from "axios";
 import { BASE_URL } from "@/common/lib/loadEnv";
-import api from "@/common/lib/apiClient";
+import { apiClient } from "@/common/lib/apiClient";
 
 class AuthService {
 
   async login(dto: LoginDto) {
     try {
-      const res = await api.post(`/api/v1/auth/login`, dto)
+      const res = await apiClient<{ message: string, data: string, }>({ url: `/api/v1/auth/login`, data: dto, method: "post" })
 
       // Validate response 
-      if (!res.data?.data?.token || !res.data?.data?.user) {
+      if (!res.data) {
         throw new Error("Invalid response from server");
       }
 
-      const { token, user } = res.data.data;
+      const token = res.data;
       sessionStorage.setItem("token", token);
-      sessionStorage.setItem("user", JSON.stringify(user));
 
       toast.success("Selamat datang");
       return true;
     } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        throw error.response?.data.message
+      }
       throw error;
     }
   }

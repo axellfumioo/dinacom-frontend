@@ -1,26 +1,17 @@
-import api from "./apiClient";
+import { apiClient } from "./apiClient";
 
 
 export default async function validateToken(token: string) {
     try {
-        const res = await api.get(
-            "/users/session",
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        const res = await apiClient<{ success: boolean, message: string, data: any }>({
+            url: "/api/v1/users/session",
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
-        
-        const data = res.data;
+        });
 
-        if (data?.success === true ) {
+        if (res.success === true) {
             return true;
-        }
-
-        // Remove token kalo validasi gagalsa
-        if (typeof window !== "undefined") {
-            sessionStorage.removeItem("token");
         }
 
         return false;
