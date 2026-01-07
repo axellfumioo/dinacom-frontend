@@ -4,6 +4,7 @@ import { authService } from '@/services/AuthService';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
+import axios from 'axios';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -30,10 +31,14 @@ export default function LoginPage() {
         }
     };
 
-    function handleLoginStrava() {
+    async function handleLoginStrava() {
         setLoading(true);
         try {
-            window.location.href = "http://localhost:8080/api/v1/auth/strava/redirect";
+            await axios.get("http://localhost:8080/api/v1/auth/strava/redirect", {
+                headers : {
+                    "Authorization" : "Bearer"
+                }
+            })
         } catch (err: unknown) {
             const message = err instanceof Error ? err.message : "Terjadi kesalahan saat login";
             setError(message);

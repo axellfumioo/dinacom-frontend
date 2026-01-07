@@ -18,16 +18,15 @@ export default async function validateToken(token: string) {
             return true;
         }
 
+        // Remove token kalo validasi gagalsa
         if (typeof window !== "undefined") {
             sessionStorage.removeItem("token");
-            window.location.href = "auth/login";
         }
 
         return false;
     } catch {
         if (typeof window !== "undefined") {
             sessionStorage.removeItem("token");
-            window.location.href = "auth/login";
         }
 
         return false;
