@@ -1,45 +1,34 @@
-import api from '../common/lib/apiClient';
-import {
-  ScanFoodRequest,
-  ScanFoodResponse,
-  GetAllFoodScansResponse,
-  GetUserFoodScansResponse,
-} from '../common/dto/foodscanDto';
+import { apiClient } from "@/common/lib/apiClient";
+import { FoodScanDto } from "@/common/dto/foodscanDto";
 
 class FoodScanService {
-  async getAllFoodScans(): Promise<GetAllFoodScansResponse> {
-    try {
-      const response = await api.get('/foodscans');
-      return response.data.data;
-    } catch (error) {
-      throw error;
-    }
+
+  async getAllFoodScans() {
+    return apiClient({
+      method: "GET",
+      url: "/foodscans",
+    });
   }
 
-  async scanFood(request: ScanFoodRequest): Promise<ScanFoodResponse> {
-    try {
-      const formData = new FormData();
-      formData.append('image', request.image);
 
-      const response = await api.post('/foodscans/scan/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data.data;
-    } catch (error) {
-      throw error;
-    }
+  async scanFood(dto: FoodScanDto) {
+    const formData = new FormData();
+    formData.append("image", dto.image);
+
+    return apiClient({
+      method: "POST",
+      url: "/foodscans/scan",
+      data: formData,
+    });
   }
 
-  async getUserFoodScans(): Promise<GetUserFoodScansResponse> {
-    try {
-      const response = await api.get('/foodscans/user');
-      return response.data.data;
-    } catch (error) {
-      throw error;
-    }
+
+  async getUserFoodScans() {
+    return apiClient({
+      method: "GET",
+      url: "/foodscans/user",
+    });
   }
 }
 
-export default new FoodScanService();
+export const foodScanService = new FoodScanService();
