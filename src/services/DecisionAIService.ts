@@ -1,5 +1,5 @@
 import api from "@/common/lib/apiClient";
-import toast from "toastify";
+import toast from "toastify-js";
 import { createDecisionDto, updateDecisionDto } from "@/common/dto/decisionDto";
 
 

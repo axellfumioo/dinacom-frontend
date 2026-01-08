@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Mail, Lock, UserPlus, Calendar, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import toast from "toastify";
 import { authService } from "@/services/AuthService";
 import { useRegister } from "@/hooks/AuthHook";
 

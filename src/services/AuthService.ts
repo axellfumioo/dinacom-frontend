@@ -1,10 +1,10 @@
 
-import toast from "toastify";
+import toast from "toastify-js";
 import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 import axios from "axios";
 import { BASE_URL } from "@/common/lib/loadEnv";
 import { apiClient } from "@/common/lib/apiClient";
-import { setCookies } from "@/lib/cookie";
+import { deleteCookies, setCookies } from "@/lib/cookie";
 
 class AuthService {
   async login(dto: LoginDto) {
@@ -20,10 +20,16 @@ class AuthService {
       }
 
       setCookies(res.data);
-      
-      toast.success("Selamat datang");
 
-      return true;  
+      toast({
+        text: "Berhasil login",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#22c55e",
+      }).showToast();
+
+      return true;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         throw error.response?.data.message;
@@ -34,13 +40,26 @@ class AuthService {
 
   async register(dto: RegisterDto) {
     const res = await axios.post(`${BASE_URL}/api/v1/auth/register`, dto);
-    toast.success(res.data.message);
+    setCookies(res.data);
+    toast({
+      text: "Berhasil Register",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#22c55e",
+    }).showToast();
     return true;
   }
 
   logout() {
-    sessionStorage.clear();
-    toast.success("Berhasil logout");
+    deleteCookies();
+    toast({
+      text: "Berhasil logout",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#22c55e",
+    }).showToast();
   }
 }
 
