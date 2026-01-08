@@ -5,10 +5,10 @@ import AuthGuard from "@/components/AuthGuard";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthGuard>
+    // <AuthGuard>
       <LayoutClient>
         {children}
       </LayoutClient>
-    </AuthGuard>
+    // </AuthGuard>
   );
 }

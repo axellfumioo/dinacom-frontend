@@ -20,7 +20,7 @@ export default function SidebarUserCard({
 }: SidebarUserCardProps) {
   return (
     <div
-      className={`mt-auto border-t border-yellow-100 bg-linear-to-tr from-yellow-50/60 to-white ${
+      className={`mt-36 border-t border-yellow-100 bg-linear-to-tr from-yellow-50/60 to-white ${
         collapsed ? "px-2 py-4" : "px-4 py-5"
       }`}
     >
