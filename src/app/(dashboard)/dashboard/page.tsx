@@ -1,6 +1,6 @@
 "use client";
 
-import { ActionCard } from "@/components/dashboard/ActionCard";
+import ActionCard from "@/components/dashboard/ActionCard";
 import { ActivityCard } from "@/components/dashboard/ActivityCard";
 import { AiCard } from "@/components/dashboard/AiCard";
 import { NutritionCard } from "@/components/dashboard/NutritionCard";
