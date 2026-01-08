@@ -15,6 +15,9 @@ import {
   Menu,
 } from "lucide-react";
 import { Transition } from "@headlessui/react";
+import { useRouter } from "next/navigation";
+import { authService } from "@/services/AuthService";
+import SidebarUserCard from "./Logout";
 
 
 type SidebarProps = {
@@ -42,6 +45,11 @@ export default function Sidebar({
   onCollapseChange,
 }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const handleLogout = () => {
+    authService.logout();
+    router.replace("/");
+  }
 
   return (
     <>
@@ -73,70 +81,78 @@ export default function Sidebar({
       )}
 
       {/* isi sidebar */}
-   <aside
-        className={`
-          fixed z-50 inset-y-0 left-0 bg-white border-r
-          transition-all duration-300
-          ${collapsed ? "w-0" : "w-64"}
-          ${open ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0
-        `}
+      <aside
+  className={`
+    fixed z-50 inset-y-0 left-0 bg-white border-r
+    transition-all duration-300
+    ${collapsed ? "w-0" : "w-64"}
+    ${open ? "translate-x-0" : "-translate-x-full"}
+    lg:translate-x-0
+  `}
+>
+  {/* HEADER */}
+  {!collapsed && (
+    <div className="h-16 flex items-center justify-between px-6 border-b">
+      <h1 className="text-xl font-bold">NutriOne</h1>
+
+      <button
+        onClick={() => onCollapseChange(true)}
+        className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
+        aria-label="Close Sidebar"
       >
-        {!collapsed && (
-          <div className="h-16 flex items-center justify-between px-6 border-b">
-            <h1 className="text-xl font-bold">NutriOne</h1>
+        <Transition
+          show={!collapsed}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <X size={20} />
+        </Transition>
+      </button>
+    </div>
+  )}
 
-            {/* Close Sidebar */}
-            <button
-              onClick={() => onCollapseChange(true)}
-              className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
-              aria-label="Close Sidebar"
-            >
-              <Transition
-                show={!collapsed}
-                enter="transition-opacity duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="transition-opacity duration-300"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <X size={20} />
-              </Transition>
-            </button>
-          </div>
-        )}
-      
-      {/* jika tidak tertutup maka tampilkan isi sidebar */}
-        {!collapsed && (
-          <nav className="p-4 space-y-1">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const active = pathname === item.path;
+  {/* MENU */}
+  {!collapsed && (
+    <nav className="p-4 space-y-1 flex-1">
+      {menuItems.map((item) => {
+        const Icon = item.icon;
+        const active = pathname === item.path;
 
-              return (
-                <Link
-                  key={item.label}
-                  href={item.path}
-                  onClick={() => setOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-md
-                    text-sm font-medium transition
-                    ${
-                      active
-                        ? "bg-yellow-100 text-yellow-600"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  <span className="whitespace-nowrap">{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        )}
-      </aside>
+        return (
+          <Link
+            key={item.label}
+            href={item.path}
+            onClick={() => setOpen(false)}
+            className={`
+              flex items-center gap-3 px-4 py-3 rounded-md
+              text-sm font-medium transition
+              ${
+                active
+                  ? "bg-yellow-100 text-yellow-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }
+            `}
+          >
+            <Icon size={20} />
+            <span className="whitespace-nowrap">{item.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  )}
+
+  {/* USER CARD + LOGOUT */}
+  <SidebarUserCard
+    collapsed={collapsed}
+    // user={user}          // ambil dari auth context / state kamu
+    onLogout={handleLogout}
+  />
+</aside>
+
     </>
   );
 }
