@@ -1,58 +1,57 @@
 "use client";
 
 import { Image as ImageIcon, Camera } from "lucide-react";
-import React, {
-  useRef,
-  ChangeEvent,
-  useState,
-  useEffect,
-} from "react";
+import React, { useRef, ChangeEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useImageInput } from "@/hooks/ScanHook";
+import { FoodScanDto } from "@/common/dto/foodscanDto";
 
 export default function BtnScan() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
-
+  const router = useRouter();
 
   const [isMobile, setIsMobile] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-
-  // useEffect + setState
+  const scanMutation = useImageInput(setError);
 
   useEffect(() => {
     if (typeof navigator !== "undefined") {
-      const mobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      setIsMobile(
+        /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(
           navigator.userAgent
-        );
-      setIsMobile(mobile);
+        )
+      );
     }
   }, []);
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleCameraClick = () => {
-    cameraInputRef.current?.click();
-  };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    console.log("File terpilih:", file);
-    // TODO: Kirim ke backend untuk analisis
+    const previewUrl = URL.createObjectURL(file);
+
+    const dto: FoodScanDto = {
+      image: file,
+    };
+
+    scanMutation.mutate(dto, {
+      onSuccess: () => {
+        router.push(`/scan/result?image=${encodeURIComponent(previewUrl)}`);
+      },
+    });
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 justify-center w-full px-2">
-      {/* Upload Button - (Desktop & Mobile) */}
+    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+      {/* Upload */}
       <button
-        onClick={handleUploadClick}
-        className="px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-[#FFE766] text-black font-semibold hover:opacity-90 transition flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto"
+        onClick={() => fileInputRef.current?.click()}
+        className="px-6 py-3 rounded-xl bg-[#FFE766] font-semibold flex gap-2 items-center"
       >
-        <ImageIcon className="w-4 h-4 md:w-5 md:h-5 shrink-0" aria-hidden />
-        <span className="whitespace-nowrap">Upload Foto Makanan</span>
+        <ImageIcon className="w-5 h-5" />
+        Upload Foto Makanan
       </button>
 
       <input
@@ -63,30 +62,33 @@ export default function BtnScan() {
         onChange={handleFileChange}
       />
 
-      {/* Camera Button - mobile */}
+      {/* Camera (mobile) */}
+      {isMobile && (
+        <>
+          <button
+            onClick={() => cameraInputRef.current?.click()}
+            className="px-6 py-3 rounded-xl bg-gray-200 font-semibold flex gap-2 items-center"
+          >
+            <Camera className="w-5 h-5" />
+            Ambil Dari Kamera
+          </button>
 
-      <div suppressHydrationWarning className="w-full sm:w-auto">
-        {isMobile && (
-          <>
-            <button
-              onClick={handleCameraClick}
-              className="px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-[#D1D5DB] text-black font-semibold hover:opacity-90 transition flex items-center justify-center gap-2 text-sm md:text-base w-full sm:w-auto"
-            >
-              <Camera className="w-4 h-4 md:w-5 md:h-5 shrink-0" aria-hidden />
-              <span className="whitespace-nowrap">Ambil Dari Kamera</span>
-            </button>
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </>
+      )}
 
-            <input
-              ref={cameraInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </>
-        )}
-      </div>
+      {scanMutation.isPending && (
+        <p className="text-sm text-gray-500">Scanning...</p>
+      )}
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

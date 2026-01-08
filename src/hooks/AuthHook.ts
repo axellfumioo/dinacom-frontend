@@ -3,7 +3,8 @@ import { authService } from "@/services/AuthService"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import React from "react"
-import toast from "toastify-js"
+import { toast } from "sonner"
+
 
 export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | null>>) => {
     const router = useRouter()
