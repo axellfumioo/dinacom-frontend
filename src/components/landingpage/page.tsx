@@ -4,8 +4,8 @@ import { useRef } from "react";
 import Navbar from "@/components/landingpage/Navbar";
 
 import Section4 from "@/components/landingpage/Section4";
-import Section1 from "./section1";
-import Section2 from "./section2";
+import Section1 from "./Section1";
+import Section2 from "./Section2";
 
 export default function LandingPage() {
   const containerRef = useRef<HTMLDivElement>(null); // ambil berdasarakan element div
