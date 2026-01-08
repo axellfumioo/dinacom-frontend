@@ -5,6 +5,7 @@ import { Mail, Lock, UserPlus, Calendar, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "toastify";
 import { authService } from "@/services/AuthService";
+import { useRegister } from "@/hooks/AuthHook";
 
 interface FormData {
   name: string;
@@ -21,69 +22,33 @@ export default function RegisterPage() {
     email: "",
     password: "",
     date_of_birth: "",
-    gender: ""
+    gender: "",
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
- 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    setForm({...form, [e.target.name]: e.target.value});
-  };
+  const { mutate: registerMutation, isPending: loading } =
+    useRegister(setError);
+
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
-    if (!form.name || form.name.length < 3) {
-      toast.error("Nama harus lebih dari 3");
-      return setError("Nama harus lebih dari 3");
-    }
-    if (!form.email) {
-      toast.error("Email harus diisi")
-      return setError("Email harus diisi");
-    }
-    if (!form.password || form.password.length < 6) {
-      toast.error("Password harus lebih dari 6")
-      return setError("Password lebih dari 6 huruf");
-    }
-    if (!form.date_of_birth) {
-      toast.error("Tanggal lahir harus diisi")
-      return setError("Tanggal lahir harus diisi");
-    }
-    if (!form.gender) {
-      toast.error("Gender harus diisi")
-      return setError("Gender harus diisi");
-    }
-
-    setLoading(true);
-
-    try {
-      await authService.register({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        gender: form.gender,
-        date_of_birth: new Date(form.date_of_birth).toISOString()
-      });
-      setForm({
-        name: "",
-        email: "",
-        password: "",
-        date_of_birth: "",
-        gender: ""
-      });
-      setTimeout(() => {
-        router.push("/auth/login")
-      }, 1500); 
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Terjadi Kesalahan";
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
+    registerMutation({
+      ...form,
+      date_of_birth: new Date(form.date_of_birth).toISOString(),
+    });
+    setForm({
+      name: "",
+      email: "",
+      password: "",
+      date_of_birth: "",
+      gender: "",
+    });
   }
 
   return (
@@ -128,7 +93,9 @@ export default function RegisterPage() {
 
             {/* PASSWORD */}
             <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Kata Sandi</label>
+              <label className="text-sm font-medium text-gray-700">
+                Kata Sandi
+              </label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -144,7 +111,9 @@ export default function RegisterPage() {
 
             {/* DATE OF BIRTH */}
             <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Tanggal Lahir</label>
+              <label className="text-sm font-medium text-gray-700">
+                Tanggal Lahir
+              </label>
               <div className="relative">
                 <Calendar className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -159,7 +128,9 @@ export default function RegisterPage() {
 
             {/* GENDER */}
             <div className="space-y-1">
-              <label className="text-sm font-medium text-gray-700">Jenis Kelamin</label>
+              <label className="text-sm font-medium text-gray-700">
+                Jenis Kelamin
+              </label>
               <div className="relative">
                 <Users className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 z-10" />
                 <select
