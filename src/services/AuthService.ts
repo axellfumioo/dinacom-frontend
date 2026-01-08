@@ -1,10 +1,10 @@
 
-import toast from "toastify";
 import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 import axios from "axios";
 import { BASE_URL } from "@/common/lib/loadEnv";
 import { apiClient } from "@/common/lib/apiClient";
-import { setCookies } from "@/lib/cookie";
+import { deleteCookies, setCookies } from "@/lib/cookie";
+import { toast } from "sonner";
 
 class AuthService {
   async login(dto: LoginDto) {
@@ -20,10 +20,10 @@ class AuthService {
       }
 
       setCookies(res.data);
-      
-      toast.success("Selamat datang");
 
-      return true;  
+      toast.success("Berhasil Login");
+
+      return true;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         throw error.response?.data.message;
@@ -34,13 +34,14 @@ class AuthService {
 
   async register(dto: RegisterDto) {
     const res = await axios.post(`${BASE_URL}/api/v1/auth/register`, dto);
-    toast.success(res.data.message);
+    setCookies(res.data);
+    toast.success("Berhasil Register");
     return true;
   }
 
   logout() {
-    sessionStorage.clear();
-    toast.success("Berhasil logout");
+    deleteCookies();
+    toast.success("Berhasil Logout");
   }
 }
 
