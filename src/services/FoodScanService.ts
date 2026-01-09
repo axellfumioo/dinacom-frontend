@@ -5,8 +5,8 @@ class FoodScanService {
 
   async getAllFoodScans() {
     return apiClient({
-      method: "GET",
-      url: "/foodscans",
+      method: "get",
+      url: "api/v1/foodscans",
     });
   }
 
@@ -15,9 +15,13 @@ class FoodScanService {
     const formData = new FormData();
     formData.append("image", dto.image);
 
+    if (!dto.image) {
+      throw new Error("Image file is required");
+    }
+
     return apiClient({
-      method: "POST",
-      url: "/foodscans/scan",
+      method: "post",
+      url: "api/v1/foodscans/scan",
       data: formData,
     });
   }
@@ -25,8 +29,8 @@ class FoodScanService {
 
   async getUserFoodScans() {
     return apiClient({
-      method: "GET",
-      url: "/foodscans/user",
+      method: "get",
+      url: "api/v1/foodscans/user",
     });
   }
 }
