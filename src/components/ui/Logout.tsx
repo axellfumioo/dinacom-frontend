@@ -1,6 +1,8 @@
 "use client";
 
+import { authService } from "@/services/AuthService";
 import { User, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type SidebarUserCardProps = {
   collapsed: boolean;
@@ -10,14 +12,20 @@ type SidebarUserCardProps = {
       role_name: string;
     };
   };
-  onLogout: () => void;
 };
 
 export default function SidebarUserCard({
   collapsed,
   user,
-  onLogout,
 }: SidebarUserCardProps) {
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+  authService.logout();
+  router.replace("/");
+}
+
   return (
     <div
       className={`mt-36 border-t border-yellow-100 bg-linear-to-tr from-yellow-50/60 to-white ${
@@ -39,7 +47,7 @@ export default function SidebarUserCard({
 
             <button
               type="button"
-              onClick={onLogout}
+              onClick={handleLogout}
               className="mt-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />
@@ -65,7 +73,7 @@ export default function SidebarUserCard({
 
             <button
               type="button"
-              onClick={onLogout}
+              onClick={handleLogout}
               className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />

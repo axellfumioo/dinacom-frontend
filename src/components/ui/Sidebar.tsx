@@ -15,8 +15,6 @@ import {
   Menu,
 } from "lucide-react";
 import { Transition } from "@headlessui/react";
-import { useRouter } from "next/navigation";
-import { authService } from "@/services/AuthService";
 import SidebarUserCard from "./Logout";
 
 
@@ -45,11 +43,6 @@ export default function Sidebar({
   onCollapseChange,
 }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const handleLogout = () => {
-    authService.logout();
-    router.replace("/");
-  }
 
   return (
     <>
@@ -148,8 +141,6 @@ export default function Sidebar({
   {/* USER CARD + LOGOUT */}
   <SidebarUserCard
     collapsed={collapsed}
-    // user={user}          // ambil dari auth context / state kamu
-    onLogout={handleLogout}
   />
 </aside>
 
