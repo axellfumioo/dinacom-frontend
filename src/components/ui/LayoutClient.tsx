@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import Sidebar from "@/components/ui/Sidebar";
+import { Toaster } from "react-hot-toast";
 
 type SidebarLayoutContextValue = {
   sidebarCollapsed: boolean;
@@ -31,6 +32,7 @@ export default function LayoutClient({ children }: { children: ReactNode }) {
 
   return (
     <SidebarLayoutContext.Provider value={value}>
+      <Toaster />
       <div className="min-h-screen flex bg-gray-100 relative">
 
         {/* ===== DESKTOP SIDEBAR ===== */}

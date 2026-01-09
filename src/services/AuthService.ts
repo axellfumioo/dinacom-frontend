@@ -4,7 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "@/common/lib/loadEnv";
 import { apiClient } from "@/common/lib/apiClient";
 import { deleteCookies, setCookies } from "@/lib/cookie";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 class AuthService {
   async login(dto: LoginDto) {

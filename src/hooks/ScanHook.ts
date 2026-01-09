@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { foodScanService } from "@/services/FoodScanService"
 import { FoodScanDto } from "@/common/dto/foodscanDto"
-import { toast } from "sonner"
+import toast from "react-hot-toast"
 
 
 

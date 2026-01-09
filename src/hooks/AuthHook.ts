@@ -3,7 +3,6 @@ import { authService } from "@/services/AuthService"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import React from "react"
-import { toast } from "sonner"
 
 
 export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | null>>) => {
@@ -12,7 +11,6 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
         mutationKey: ['login'],
         mutationFn: (dto: LoginDto) => authService.login(dto),
         onSuccess: () => {
-            toast.success("Login berhasil")
             router.push("/dashboard")
         },
         onError: (err) => {
@@ -27,7 +25,6 @@ export const useRegister = (setError: React.Dispatch<React.SetStateAction<string
         mutationKey: ['register'],
         mutationFn: (dto: RegisterDto) => authService.register(dto),
         onSuccess: () => {
-            toast.success("Register berhasil")
             router.push("/auth/login")
         },
         onError: (err) => {
