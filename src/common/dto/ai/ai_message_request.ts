@@ -1,10 +1,1 @@
-export interface CreateMessageRequestDto {
-    content: string;
-}
-
-export interface CreateMessageWithMediaRequestDto {
-    content: string;
-    userId: string;
-    chatId: string;
-    image: File;
-}
+export type { CreateMessageRequestDto, CreateMessageWithMediaRequestDto } from "./ai_messageDto";
