@@ -1,4 +1,4 @@
-import { AIRiskLevel } from "./airisklevelDto";
+import { AIRiskLevel } from "./ai_risklevel_decisionDto";
 
 export interface createDecisionDto {
     needSearch: boolean;
