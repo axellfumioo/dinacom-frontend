@@ -44,6 +44,39 @@ class FoodScanService {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
+
+  async GetAllFoodScanResults() {
+    const token = await getCookies();
+    return apiClient({
+      method: "get",
+      url: "api/v1/results",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  async GetUserFoodScanResult() {
+    const token = await getCookies();
+    return apiClient({
+      method: "get",
+      url: "api/v1/results/user",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  async GetFoodScanResultByID(id: string) {
+    const token = await getCookies();
+    return apiClient({
+      method: "get",
+      url: `api/v1/results/${id}/get`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
 }
 
 export const foodScanService = new FoodScanService();
