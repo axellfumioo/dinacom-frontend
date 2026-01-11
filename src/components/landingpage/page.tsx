@@ -5,7 +5,8 @@ import Navbar from "@/components/landingpage/Navbar";
 
 import Section4 from "@/components/landingpage/Section4";
 import Section1 from "./Section1";
-import Section2 from "./Section2";
+import Section3 from "./Section3";
+import Section2 from "./section2";
 
 export default function LandingPage() {
   const containerRef = useRef<HTMLDivElement>(null); // ambil berdasarakan element div
@@ -28,6 +29,7 @@ export default function LandingPage() {
       >
         <section><Section1 /></section>
         <section><Section2 /></section>
+        <section><Section3 /></section>
         <section><Section4 /></section>
       </main>
     </>
