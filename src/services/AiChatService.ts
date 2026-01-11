@@ -1,4 +1,4 @@
-import { AIChatDto } from "@/common/dto/ai/ai_chat_Dto";
+import { AIChatDto } from "@/common/dto/ai/aiChatDto";
 import { apiClient } from "@/common/lib/apiClient";
 import { getCookies } from "@/lib/cookie";
 import { ApiResponse } from "@/common/dto/ai/apiResponse";
@@ -39,12 +39,14 @@ async CreateNewChat(): Promise<AIChatDto & { id: string }> {
 
     const res = await apiClient<ApiResponse<AIChatDto>>({
       url: `/api/v1/aichats/${id}`,
-      method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
+      method: "DELETE",
     });
 
     return res.data;
   }
+
+
 }
 
 export const aiChatService = new AIChatService();
