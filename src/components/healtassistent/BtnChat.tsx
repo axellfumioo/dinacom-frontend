@@ -4,16 +4,16 @@ import { useState, KeyboardEvent } from "react";
 import { Send } from "lucide-react";
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void;
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  disabled?: boolean;
 }
 
-export function ChatInput({ onSendMessage }: ChatInputProps) {
-  const [message, setMessage] = useState("");
-
+export function ChatInput({ value, onChange, onSubmit, disabled = false }: ChatInputProps) {
   const handleSend = () => {
-    if (message.trim()) {
-      onSendMessage(message.trim());
-      setMessage("");
+    if (value.trim() && !disabled) {
+      onSubmit();
     }
   };
 
@@ -29,18 +29,18 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       <div className="flex items-center gap-2">
         <input
           type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Tanyakan sesuatu tentang kesehatanmu..."
           className="flex-1 px-4 py-3 bg-transparent text-sm text-gray-900 placeholder-gray-500 focus:outline-none"
         />
         <button
           onClick={handleSend}
-          disabled={!message.trim()}
+          disabled={disabled}
           className={`
             w-12 h-12 rounded-xl flex items-center justify-center transition-all
-            ${message.trim() 
+            ${!disabled && value.trim()
               ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900" 
               : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }

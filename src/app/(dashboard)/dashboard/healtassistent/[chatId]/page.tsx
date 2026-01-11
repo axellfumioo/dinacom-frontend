@@ -11,7 +11,7 @@ import { useChatSubmit } from "@/hooks/useChatSubmit";
 import { useSuggestionChat } from "@/hooks/useSuggestionChat";
 import { aiMessageService } from "@/services/AiMessageService";
 import { aiChatService } from "@/services/AiChatService";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: string;
@@ -23,7 +23,6 @@ interface Message {
 export default function ChatAIPage() {
   const [input, setInput] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const { sidebarCollapsed } = useSidebarLayout();
   
@@ -40,8 +39,7 @@ export default function ChatAIPage() {
 
   // Get chats array and chatId
   const chats = Array.isArray(chatsData?.data) ? chatsData.data : chatsData?.data ? [chatsData.data] : [];
-  const queryChatId = searchParams.get('chatId');
-  const chatId = queryChatId || (chats.length > 0 ? chats[0].id : null);
+  const chatId = chats.length > 0 ? chats[0].id : null;
 
   const queryClient = useQueryClient();
 
