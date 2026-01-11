@@ -17,13 +17,13 @@ export default function Navbar({ onNavigate }: NavbarProps) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-blend-saturation">
+    <nav className="fixed top-0 left-0 z-50 w-full bg-blend-saturation ">
       <div className="mx-auto max-w-7xl px-8 py-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div
             onClick={() => onNavigate(0)} // index 0
-            className="cursor-pointer text-xl font-semibold text-black"
+            className="cursor-pointer text-xl font-semibold text-black "
           >
             NutriOne
           </div>
@@ -41,14 +41,14 @@ export default function Navbar({ onNavigate }: NavbarProps) {
               onClick={() => onNavigate(1)}
               className="hover:opacity-80 hover:underline"
             >
-              Features
+              Fact
             </button>
 
             <button
               onClick={() => onNavigate(2)}
               className="hover:opacity-80 hover:underline"
             >
-              Dashboard
+              Features
             </button>
           </div>
 
