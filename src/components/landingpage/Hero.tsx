@@ -1,33 +1,29 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import SplitText from "../../common/reactbits/SplitText";
-
-
-
 
 export default function Hero() {
   const handleAnimationComplete = () => {
-  console.log('All letters have animated!');
-};
-
-  const router = useRouter();
-  const authActions = { register: "/auth/register"}
+    console.log("All letters have animated!");
+  };
 
   return (
     <section className="px-4 pt-60">
-      <div className="max-w-3xl mx-28 text-left justify-left">
 
-        {/* Heading
-        <h1 className="text-black font-extrabold text-4xl md:text-6xl leading-tight mb-6 text-left">
-          Cek Nutrisi Lebih Mudah, <br />
-          Hidup Lebih Sehat.
-        </h1> */}
+      <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+        <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200 hover:shadow-md transition">
+          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-400 text-white text-sm">
+            ✨
+          </span>
+          <span className="font-semibold text-gray-900 text-sm">
+            AI Nutrition
+          </span>
+        </button>
 
         <SplitText
           text="Cek Nutrisi Lebih Mudah, Hidup Lebih Sehat."
-          className="text-black font-extrabold text-4xl md:text-6xl leading-tight mb-6 text-left"
+          className="text-black font-extrabold font-serif text-4xl md:text-6xl leading-tight mb-6 text-center"
           delay={100}
           duration={0.6}
           ease="power3.out"
@@ -36,21 +32,15 @@ export default function Hero() {
           to={{ opacity: 1, y: 0 }}
           threshold={0.1}
           rootMargin="-100px"
-          textAlign="left"
+          textAlign="center"
           onLetterAnimationComplete={handleAnimationComplete}
         />
 
-        {/* Description */}
-        <p className="text-black/80 text-sm md:text-base leading-relaxed text-left font-semibold">
-          Yuk, jadi bagian dari <span className="text-[#FFD41D]">#SahabatSehat</span>
+        <p className="text-black/80 text-sm md:text-base leading-relaxed font-semibold">
+          NutriOne membantu menganalisis asupan makanan, aktivitas, dan
+          kebiasaan harianmu secara otomatis, sehingga kamu dapat memahami
+          kebutuhan nutrisi tubuh dengan lebih akurat.
         </p>
-
-        <button 
-        onClick={() => router.push(authActions.register)}
-        className="border border-black rounded-2xl text-white text-sm px-6 py-3 mt-5 bg-black">
-            Mulai Sekarang
-        </button>
-
       </div>
     </section>
   );

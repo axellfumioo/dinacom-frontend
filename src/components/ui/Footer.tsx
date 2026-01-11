@@ -1,8 +1,16 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function Footer() {
+
+  const router = useRouter();
+    const authActions = {
+    login: "/auth/login",
+    register: "/auth/register",
+  };
+
   return (
     <footer className="border border-gray-200">
       <div className="bg-gray-50 py-12 px-4">
@@ -36,47 +44,29 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Use cases Section */}
-            <div className="">
-              <p className="font-bold text-gray-900 mb-4">Use cases</p>
+            {/* About */}
+            {/* <div className="">
+              <p className="font-bold text-gray-900 mb-4">About</p>
               <div className="space-y-2">
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">UI design</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">UX design</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Wireframing</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Diagramming</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Brainstorming</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Online whiteboard</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Team collaboration</p>
+                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Home</p>
+                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Fact</p>
+                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Features</p>
+              </div>
+            </div> */} 
+
+            {/* Get Started */}
+            <div className="">
+              <p className="font-bold text-gray-900 mb-4">Get Started</p>
+              <div className="space-y-2">
+                <p className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                onClick={() => router.push(authActions.login)}>Login</p>
+                <p className="text-gray-700 hover:text-gray-900 cursor-pointer"
+                onClick={() => router.push(authActions.register)}
+                >Register</p>
               </div>
             </div>
 
-            {/* Explore Section */}
-            <div className="">
-              <p className="font-bold text-gray-900 mb-4">Explore</p>
-              <div className="space-y-2">
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Design</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Prototyping</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Development features</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Design systems</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Collaboration features</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Design process</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">FigJam</p>
-              </div>
-            </div>
 
-            {/* Resources Section */}
-            <div className="">
-              <p className="font-bold text-gray-900 mb-4">Resources</p>
-              <div className="space-y-2">
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Blog</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Best practices</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Colors</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Color wheel</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Support</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Developers</p>
-                <p className="text-gray-700 hover:text-gray-900 cursor-pointer">Resource library</p>
-              </div>
-            </div>
 
           </div>
         </div>
