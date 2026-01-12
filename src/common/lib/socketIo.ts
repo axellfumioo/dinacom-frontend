@@ -1,19 +1,33 @@
-import { io, } from "socket.io-client"
-import { ApiBaseURL } from "../constants/api_base_url"
+import { SocketBaseURL } from "../constants/api_base_url"
 import { getCookies } from "@/lib/cookie"
+import { useEffect, useState } from "react"
+import io from "socket.io-client"
 
-let socket: ReturnType<typeof io> | null = null;
 
-export async function connectSocket() {
-  if (socket) return socket;
+export function useSocket() {
+    const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null)
 
-  const token = await getCookies();
-  if (!token) return null;
+    useEffect(() => {
+        let s: SocketIOClient.Socket | null = null
 
-  socket = io(ApiBaseURL, {
-    auth: { token },
-    transports: ["websocket"],
-  });
+        async function connect() {
+            const token = await getCookies()
+            if (!token) return
 
-  return socket;
+            s = io(SocketBaseURL || "", {
+                query: { token },
+                transports: ["websocket"],
+            })
+
+            setSocket(s)
+        }
+
+        connect()
+
+        return () => {
+            s?.disconnect()
+        }
+    }, [])
+
+    return socket
 }

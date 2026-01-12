@@ -38,7 +38,7 @@ export default function BtnScan() {
 
     scanMutation.mutate(dto, {
       onSuccess: () => {
-        router.push(`/scan/result?image=${encodeURIComponent(previewUrl)}`);
+        router.push(`/dashboard/scanmakanan/result?image=${encodeURIComponent(previewUrl)}`);
       },
     });
   };

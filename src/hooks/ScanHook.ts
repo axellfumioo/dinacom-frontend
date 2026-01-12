@@ -32,9 +32,6 @@ export const useGetUserScans = () => {
   return useQuery({
     queryKey: ["userFoodScans"],
     queryFn: () => foodScanService.getUserFoodScans(),
-
-    onError: (err: any) => {
-      toast.error(`Gagal mengambil data scan: ${err.message}`)
-    },
+    staleTime : 2 * 60 * 60
   })
 }
