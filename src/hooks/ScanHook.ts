@@ -32,6 +32,12 @@ export const useGetUserScans = () => {
   return useQuery({
     queryKey: ["userFoodScans"],
     queryFn: () => foodScanService.getUserFoodScans(),
-    staleTime : 2 * 60 * 60
+    staleTime: 2 * 60 * 60
+  })
+}
+
+export const useGetFoodscanResultByID = (id : string) => {
+  return useQuery({
+    queryKey: ["foodscanResult", ]
   })
 }
