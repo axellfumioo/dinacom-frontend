@@ -1,17 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame, Droplet, Activity, Bell, Settings } from 'lucide-react';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { NutritionCard } from '@/components/profile/NutritionCard';
 import { StravaCard } from '@/components/profile/StravaCard';
 import { SidebarCard } from '@/components/profile/SidebarCard';
+import { useProfile } from '@/hooks/useProfile';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 export default function ProfilePage() {
-  const [user] = useState({
-    name: 'Dodi Mulya',
-    avatar: '/images/avatar.jpg' // ganti dengan path gambar Anda
+  const { updateProfile, loading, error } = useProfile();
+  const { user: currentUser, loading: userLoading } = useCurrentUser();
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [user, setUser] = useState({
+    name: '',
+    avatar: '/images/avatar.jpg'
   });
+
+  const [profileData, setProfileData] = useState({
+    name: '',
+    date_of_birth: '',
+    gender: '',
+    height_cm: 0,
+    weight_kg: 0,
+    activity_level: ''
+  });
+
+  useEffect(() => {
+    if (currentUser) {
+      setUser({
+        name: currentUser.name,
+        avatar: '/images/avatar.jpg' // or from currentUser if available
+      });
+      setProfileData(prev => ({
+        ...prev,
+        name: currentUser.name
+      }));
+    }
+  }, [currentUser]);
 
   const [nutritionData] = useState({
     calories: { current: 420, target: 2000, value: '420', unit: 'kkal', label: 'Kalori' },
@@ -26,18 +55,134 @@ export default function ProfilePage() {
     totalCalories: 2567
   });
 
-  const handleSaveChanges = () => {
-    console.log('Saving changes...');
+  const handleSaveChanges = async () => {
+    try {
+      const { name, ...updateDto } = profileData;
+      await updateProfile(updateDto);
+      setUser(prev => ({ ...prev, name: name }));
+      setIsEditing(false);
+      console.log('Profile updated successfully');
+    } catch (err) {
+      console.error('Failed to update profile:', error);
+    }
+  };
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
   };
 
   const handleSync = () => {
     console.log('Syncing Strava data...');
   };
 
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <ProfileHeader user={user} onSave={handleSaveChanges} />
+        <ProfileHeader user={user} />
+
+        {isEditing && (
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Edit Profile</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                  type="text"
+                  value={profileData.name}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                <input
+                  type="date"
+                  value={profileData.date_of_birth}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, date_of_birth: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select
+                  value={profileData.gender}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, gender: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+                <input
+                  type="number"
+                  value={profileData.height_cm}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, height_cm: parseInt(e.target.value) || 0 }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Weight (kg)</label>
+                <input
+                  type="number"
+                  value={profileData.weight_kg}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, weight_kg: parseInt(e.target.value) || 0 }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Activity Level</label>
+                <select
+                  value={profileData.activity_level}
+                  onChange={(e) => setProfileData(prev => ({ ...prev, activity_level: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                >
+                  <option value="">Select Activity Level</option>
+                  <option value="sedentary">Sedentary</option>
+                  <option value="lightly_active">Lightly Active</option>
+                  <option value="moderately_active">Moderately Active</option>
+                  <option value="very_active">Very Active</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={handleSaveChanges}
+                disabled={loading}
+                className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-xl transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!isEditing && (
+          <div className="mb-6">
+            <button
+              onClick={handleEditToggle}
+              className="px-6 py-3 bg-blue-400 hover:bg-blue-500 text-white font-semibold rounded-xl transition-colors"
+            >
+              Edit Profile
+            </button>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">

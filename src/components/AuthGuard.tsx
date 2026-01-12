@@ -4,6 +4,7 @@ import validateToken from "@/common/lib/validateToken";
 import { getCookies } from "@/lib/cookie";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { setUserStore } from "@/common/lib/store";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -26,11 +27,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       }
 
       setTokenStatus("loading");
-      const isTokenValid = await validateToken(token);
-      if (!isTokenValid) {
+      const userData = await validateToken(token);
+      if (!userData) {
         setTokenStatus("false");
         router.push("/auth/login");
       } else {
+        setUserStore(userData);
         setTokenStatus("true");
       }
     };
@@ -51,10 +53,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           return;
         }
 
-        const isTokenValid = await validateToken(token);
-        if (!isTokenValid) {
+        const userData = await validateToken(token);
+        if (!userData) {
           setTokenStatus("false");
           router.push("/auth/login");
+        } else {
+          setUserStore(userData);
         }
       })();
     }, 3000);

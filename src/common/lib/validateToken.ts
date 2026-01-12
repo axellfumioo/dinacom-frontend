@@ -11,7 +11,8 @@ export default async function validateToken(token: string) {
         });
 
         if (res.success === true) {
-            return true;
+                        return res.data; // Return user data instead of true
+
         }
 
         return false;
