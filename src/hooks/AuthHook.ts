@@ -19,13 +19,17 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
     })
 }
 
-export const useRegister = (setError: React.Dispatch<React.SetStateAction<string | null>>) => {
-    const router = useRouter()
+export const useRegister = (
+  setError: React.Dispatch<React.SetStateAction<string | null>>,
+  onSuccess?: (user: any) => void
+) => {
     return useMutation({
         mutationKey: ['register'],
         mutationFn: (dto: RegisterDto) => authService.register(dto),
-        onSuccess: () => {
-            router.push("/auth/login")
+        onSuccess: (user) => {
+            if (onSuccess) {
+                onSuccess(user);
+            }
         },
         onError: (err) => {
             setError(err.message)

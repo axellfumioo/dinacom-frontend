@@ -33,10 +33,19 @@ class AuthService {
   }
 
   async register(dto: RegisterDto) {
-    const res = await axios.post(`${BASE_URL}/api/v1/auth/register`, dto);
-    setCookies(res.data);
+    const res = await apiClient<{ message: string; data: { user: any; token: string } }>({
+      url: `/api/v1/auth/register`,
+      data: dto,
+      method: "post",
+    });
+
+    if (!res.data) {
+      throw new Error("Invalid response from server");
+    }
+
+    setCookies(res.data.token);
     toast.success("Berhasil Register");
-    return true;
+    return res.data.user;
   }
 
   logout() {
