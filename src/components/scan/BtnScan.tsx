@@ -1,6 +1,6 @@
 "use client";
 
-import { Image as ImageIcon, Camera } from "lucide-react";
+import { Image as ImageIcon, Camera, LoaderIcon } from "lucide-react";
 import { useRef, ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCreateFoodScan } from "@/hooks/ScanHook";
@@ -43,8 +43,17 @@ export default function BtnScan() {
         onClick={() => fileInputRef.current?.click()}
         className="px-6 py-3 rounded-xl bg-[#FFE766] font-semibold flex gap-2 items-center"
       >
-        <ImageIcon className="w-5 h-5" />
-        Upload Foto Makanan
+        {isPending ? (
+          <>
+            <LoaderIcon className="w-5 h-5 animate-spin" />
+            Loading
+          </>
+        ) : (
+          <>
+            <ImageIcon className="w-5 h-5" />
+            Upload Foto Makanan
+          </>
+        )}
       </button>
 
       <input
@@ -75,10 +84,6 @@ export default function BtnScan() {
             onChange={handleFileChange}
           />
         </>
-      )}
-
-      {isPending && (
-        <p className="text-sm text-gray-500">Scanning...</p>
       )}
 
       {error && <p className="text-sm text-red-500">{error}</p>}

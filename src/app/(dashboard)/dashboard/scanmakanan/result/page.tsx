@@ -72,12 +72,10 @@ export default function ScanFoodPage() {
   // handle Websocket
   useEffect(() => {
     const handler = (data: FoodScanModel) => {
-      if (data.id) {
-        queryClient.invalidateQueries({
-          queryKey: ["foodscan", data.id],
-          refetchType: "all",
-        });
-      }
+      queryClient.invalidateQueries({
+        queryKey: ["foodscan", foodScanId],
+        refetchType: "all",
+      });
     };
 
     socket?.on("refresh:foodscan", handler);
