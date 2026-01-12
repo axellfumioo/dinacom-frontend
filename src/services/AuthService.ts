@@ -11,7 +11,7 @@ class AuthService {
   async login(dto: LoginDto) {
     try {
       const res = await apiClient<{ message: string; data: string }>({
-        url: `/api/v1/auth/login`,
+        url: `/auth/login`,
         data: dto,
         method: "post",
       });
@@ -21,7 +21,6 @@ class AuthService {
       }
 
       setCookies(res.data);
-      setUserStore(null); 
 
       toast.success("Berhasil Login");
 
@@ -36,7 +35,7 @@ class AuthService {
 
   async register(dto: RegisterDto) {
     const res = await apiClient<{ message: string; data: { user: any; token: string } }>({
-      url: `/api/v1/auth/register`,
+      url: `/auth/register`,
       data: dto,
       method: "post",
     });

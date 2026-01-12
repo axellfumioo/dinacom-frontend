@@ -12,7 +12,7 @@ class QuestionnaireService {
         message: string
         data: any[] // nanti bisa diganti QuestionnaireDto[]
       }>({
-        url: "/api/v1/quest",
+        url: "/quest",
         method: "get",
       })
 
@@ -35,7 +35,7 @@ class QuestionnaireService {
       const res = await apiClient<{
         message: string
       }>({
-        url: "/api/v1/quest/answer",
+        url: "/quest/answer",
         method: "patch",
         data: dto,
       })

@@ -1,26 +1,23 @@
+import { UserModel } from "../model/user";
 import { apiClient } from "./apiClient";
 
 
 export default async function validateToken(token: string) {
     try {
-        const res = await apiClient<{ success: boolean, message: string, data: any }>({
-            url: "/api/v1/users/session",
+        const res = await apiClient<{ success: boolean, message: string, data: UserModel }>({
+            url: "/users/session",
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
 
         if (res.success === true) {
-                        return res.data; // Return user data instead of true
+            return res.data; // Return user data instead of true
 
         }
 
         return false;
     } catch {
-        if (typeof window !== "undefined") {
-            sessionStorage.removeItem("token");
-        }
-
         return false;
     }
 }

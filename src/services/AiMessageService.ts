@@ -10,7 +10,7 @@ class AiMessageService {
   async deleteMessageById(messageId: string): Promise<void> {
     const token = await getCookies();
     await apiClient({
-      url: `/api/v1/aichats/message/${messageId}`,
+      url: `/aichats/message/${messageId}`,
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -28,7 +28,7 @@ async createNewMessage(
 
   const token = await getCookies();
   return apiClient({
-    url: `/api/v1/aichats/${aichatID}/message`,
+    url: `/aichats/${aichatID}/message`,
     method: "POST",
     data: dto,
     headers: { Authorization: `Bearer ${token}` },
@@ -49,7 +49,7 @@ async createNewMessage(
 
     const token = await getCookies();
     const res = await apiClient<{ data: any }>({
-      url: `/api/v1/aichats/${aichatID}/message-img`,
+      url: `/aichats/${aichatID}/message-img`,
       method: "POST",
       data: formData,
       headers: {
@@ -65,7 +65,7 @@ async createNewMessage(
   async getAIChatMessagesByChatID(chatID: string): Promise<any[]> {
     const token = await getCookies();
     const res = await apiClient<{ data: any[] }>({
-      url: `/api/v1/aichats/${chatID}/message`,
+      url: `/aichats/${chatID}/message`,
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -77,7 +77,7 @@ async createNewMessage(
   async deleteChatMessages(chatId: string): Promise<void> {
     const token = await getCookies();
     await apiClient({
-      url: `/api/v1/aichats/${chatId}/message`,
+      url: `/aichats/${chatId}/message`,
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });

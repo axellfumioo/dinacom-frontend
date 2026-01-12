@@ -1,9 +1,9 @@
 "use client";
 
 import { Image as ImageIcon, Camera } from "lucide-react";
-import React, { useRef, ChangeEvent, useEffect, useState } from "react";
+import { useRef, ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useImageInput } from "@/hooks/ScanHook";
+import { useCreateFoodScan } from "@/hooks/ScanHook";
 import { FoodScanDto } from "@/common/dto/foodscanDto";
 
 export default function BtnScan() {
@@ -14,7 +14,7 @@ export default function BtnScan() {
   const [isMobile, setIsMobile] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const scanMutation = useImageInput(setError);
+  const { mutate: foodScanMutation, isPending } = useCreateFoodScan(setError);
 
   useEffect(() => {
     if (typeof navigator !== "undefined") {
@@ -29,18 +29,11 @@ export default function BtnScan() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const previewUrl = URL.createObjectURL(file);
-
     const dto: FoodScanDto = {
       image: file,
     };
 
-    scanMutation.mutate(dto, {
-      onSuccess: () => {
-        router.push(`/dashboard/scanmakanan/result?image=${encodeURIComponent(previewUrl)}`);
-      },
-    });
+    foodScanMutation(dto);
   };
 
   return (
@@ -84,7 +77,7 @@ export default function BtnScan() {
         </>
       )}
 
-      {scanMutation.isPending && (
+      {isPending && (
         <p className="text-sm text-gray-500">Scanning...</p>
       )}
 

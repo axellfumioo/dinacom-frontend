@@ -1,30 +1,90 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
-import { Flame, Droplet, Cookie, Apple } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { Flame, Droplet, Cookie, Apple, InfoIcon } from "lucide-react";
 import { FoodDetailForm } from "@/components/scan/FoodDetailForm";
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
-import { useGetUserScans } from "@/hooks/ScanHook";
+import { useGetFoodScanByID, useGetUserScans } from "@/hooks/ScanHook";
+import Link from "next/link";
+import { Button } from "@headlessui/react";
+import { useSocket } from "@/common/lib/socketIo";
+import { FoodScanModel } from "@/common/model/foodscan";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ScanFoodPage() {
   const params = useSearchParams();
-  const uploadedImage = params.get("image");
+  const router = useRouter();
+  const socket = useSocket();
+  const queryClient = useQueryClient();
+
+  const foodScanId = params.get("id");
 
   const { sidebarCollapsed } = useSidebarLayout();
-  const { data, isLoading } = useGetUserScans();
+  const { data: foodscanResponse, isLoading } = useGetFoodScanByID(
+    foodScanId || ""
+  );
 
   const containerWidth = useMemo(
     () => (sidebarCollapsed ? "max-w-screen-2xl" : "max-w-7xl"),
     [sidebarCollapsed]
   );
 
+  const foodscan = foodscanResponse?.data;
+  const result = foodscanResponse?.data?.result;
+
   const nutritionData = {
-    calories: { value: 420, label: "Kalori", unit: "kcal", color: "bg-orange-500", icon: Flame },
-    protein: { value: 24, label: "Protein", unit: "g", color: "bg-blue-500", icon: Droplet },
-    carbs: { value: 18, label: "Karbo", unit: "g", color: "bg-yellow-500", icon: Cookie },
-    fat: { value: 14, label: "Lemak", unit: "g", color: "bg-red-500", icon: Apple },
+    calories: {
+      value:
+        foodscan?.status === "PENDING"
+          ? "Memuat..."
+          : result?.calories_kcal || 10,
+      label: "Kalori",
+      unit: "kcal",
+      color: "bg-orange-500",
+      icon: Flame,
+    },
+    protein: {
+      value:
+        foodscan?.status === "PENDING" ? "Memuat..." : result?.protein_g || 10,
+      label: "Protein",
+      unit: "g",
+      color: "bg-blue-500",
+      icon: Droplet,
+    },
+    carbs: {
+      value:
+        foodscan?.status === "PENDING" ? "Memuat..." : result?.carbs_g || 10,
+      label: "Karbo",
+      unit: "g",
+      color: "bg-yellow-500",
+      icon: Cookie,
+    },
+    fat: {
+      value: foodscan?.status === "PENDING" ? "Memuat..." : result?.fat_g || 10,
+      label: "Lemak",
+      unit: "g",
+      color: "bg-red-500",
+      icon: Apple,
+    },
   };
+
+  // handle Websocket
+  useEffect(() => {
+    const handler = (data: FoodScanModel) => {
+      if (data.id) {
+        queryClient.invalidateQueries({
+          queryKey: ["foodscan", data.id],
+          refetchType: "all",
+        });
+      }
+    };
+
+    socket?.on("refresh:foodscan", handler);
+    return () => {
+      socket?.off("refresh:foodscan", handler);
+    };
+  }, [socket, queryClient]);
 
   return (
     <div className={`${containerWidth} mx-auto px-4 py-6`}>
@@ -35,11 +95,22 @@ export default function ScanFoodPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* IMAGE */}
-        <div className="bg-white rounded-2xl p-6 border">
+        <div className="relative flex flex-col bg-white rounded-2xl p-6 border gap-2">
+          <div
+            className={`absolute text-white font-semibold p-2 rounded-tl-xl ${
+              foodscan?.status === "SUCCESS"
+                ? "bg-green-500"
+                : foodscan?.status === "PENDING"
+                ? "bg-yellow-400"
+                : "bg-red-500"
+            }`}
+          >
+            {foodscan?.status}
+          </div>
           <div className="aspect-video rounded-xl overflow-hidden bg-gray-100">
-            {uploadedImage ? (
+            {foodscanResponse?.data ? (
               <img
-                src={uploadedImage}
+                src={foodscanResponse?.data?.image_url}
                 alt="Scanned food"
                 className="w-full h-full object-cover"
               />
@@ -49,6 +120,16 @@ export default function ScanFoodPage() {
               </p>
             )}
           </div>
+
+          {foodscan?.status === "FAILED" && (
+            <Button
+              onClick={() => router.push("/dashboard/scanmakanan")}
+              className="flex text-sm text-white bg-red-500 font-semibold rounded-sm p-2 gap-2 hover:opacity-75"
+            >
+              <InfoIcon className="w-5 h-5" />
+              Scan gagal, klik untuk kembali ke halaman scan!
+            </Button>
+          )}
         </div>
 
         {/* NUTRITION */}

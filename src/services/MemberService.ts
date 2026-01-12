@@ -8,7 +8,7 @@ class MemberService {
     const token = await getCookies();
     return apiClient({
       method: "post",
-      url: "api/v1/members",
+      url: "/members",
       data: dto,
       headers: {
         Authorization: `Bearer ${token}`
@@ -20,7 +20,7 @@ class MemberService {
     const token = await getCookies();
     return apiClient({
       method: "get",
-      url: `api/v1/members/family/${familyID}`,
+      url: `/members/family/${familyID}`,
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -31,7 +31,7 @@ class MemberService {
     const token = await getCookies();
     return apiClient({
       method: "delete",
-      url: `api/v1/members/${ID}/family/${familyID}`,
+      url: `/members/${ID}/family/${familyID}`,
       headers: {
         Authorization: `Bearer ${token}`
       }

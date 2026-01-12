@@ -23,10 +23,6 @@ export function useSocket() {
         }
 
         connect()
-
-        return () => {
-            s?.disconnect()
-        }
     }, [])
 
     return socket

@@ -30,9 +30,9 @@ class FoodScanService {
       throw new Error("Image file is required");
     }
 
-    return apiClient({
+    return apiClient<{ data : FoodScanModel }>({
       method: "post",
-      url: "api/v1/foodscans/scan",
+      url: "/foodscans/scan",
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`
