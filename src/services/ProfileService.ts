@@ -28,7 +28,7 @@ class ProfileService {
 
     return apiClient({
       method: "post",
-      url: "api/v1/post",
+      url: "api/v1/profiles/avatar",
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`
