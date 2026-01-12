@@ -1,30 +1,23 @@
 "use client";
 
+import { userStore } from "@/common/lib/store";
 import { authService } from "@/services/AuthService";
+import { useStore } from "@tanstack/react-store";
 import { User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type SidebarUserCardProps = {
   collapsed: boolean;
-  user?: {
-    name: string;
-    role: {
-      role_name: string;
-    };
-  };
 };
 
-export default function SidebarUserCard({
-  collapsed,
-  user,
-}: SidebarUserCardProps) {
-
+export default function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
   const router = useRouter();
+  const user = useStore(userStore);
 
   const handleLogout = () => {
-  authService.logout();
-  router.replace("/");
-}
+    authService.logout();
+    router.replace("/");
+  };
 
   return (
     <div
@@ -34,47 +27,46 @@ export default function SidebarUserCard({
     >
       <div
         className={`rounded-2xl border border-yellow-100 bg-white/80 backdrop-blur shadow-sm ${
-          collapsed ? "p-2.5" : "p-3.5"
+          collapsed ? "p-2.5" : "p-4"
         }`}
       >
         {collapsed ? (
-          <>
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-yellow-500/15 text-yellow-600 flex items-center justify-center">
-                <User className="w-5 h-5" />
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="mt-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="sr-only">Keluar dari aplikasi</span>
-            </button>
-          </>
-        ) : (
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-yellow-500/15 text-yellow-600 flex items-center justify-center">
-                <User className="w-5 h-5" />
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {user?.name}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {user?.role.role_name}
-                </p>
-              </div>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-yellow-500/15 text-yellow-600 flex items-center justify-center">
+              <User className="w-5 h-5" />
             </div>
 
             <button
               type="button"
               onClick={handleLogout}
               className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="sr-only">Keluar dari aplikasi</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-start gap-3">
+            {/* Avatar */}
+            <div className="w-10 h-10 shrink-0 rounded-full bg-yellow-500/15 text-yellow-600 flex items-center justify-center">
+              <User className="w-5 h-5" />
+            </div>
+
+            {/* User Info */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900 leading-tight">
+                {user?.name}
+              </p>
+              <p className="text-xs text-gray-500 break-all">
+                {user?.email}
+              </p>
+            </div>
+
+            {/* Logout */}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />
               <span className="sr-only">Keluar dari aplikasi</span>

@@ -5,6 +5,7 @@ import { BASE_URL } from "@/common/lib/loadEnv";
 import { apiClient } from "@/common/lib/apiClient";
 import { deleteCookies, setCookies } from "@/lib/cookie";
 import toast from "react-hot-toast";
+import { setUserStore } from "@/common/lib/store";
 
 class AuthService {
   async login(dto: LoginDto) {
@@ -20,6 +21,7 @@ class AuthService {
       }
 
       setCookies(res.data);
+      setUserStore(null); 
 
       toast.success("Berhasil Login");
 
@@ -50,6 +52,7 @@ class AuthService {
 
   logout() {
     deleteCookies();
+    setUserStore(null);
     toast.success("Berhasil Logout");
   }
 }
