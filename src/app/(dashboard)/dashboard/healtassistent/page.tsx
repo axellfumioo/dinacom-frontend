@@ -43,7 +43,6 @@ export default function ChatAIPage() {
     enabled: Boolean(chatId),
   });
 
-  // ✅ FIX UTAMA DI SINI
   const messages = Array.isArray(messagesData) ? messagesData : [];
 
 
