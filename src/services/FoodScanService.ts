@@ -1,6 +1,7 @@
 import { apiClient } from "@/common/lib/apiClient";
 import { FoodScanDto } from "@/common/dto/foodscanDto";
 import { getCookies } from "@/lib/cookie";
+import { FoodScanModel } from "@/common/model/foodscan";
 
 class FoodScanService {
 
@@ -15,6 +16,10 @@ class FoodScanService {
     });
   }
 
+  async getFoodScanByID(foodScanID: string) {
+    const token = await getCookies();
+    return await apiClient<{ data: FoodScanModel }>({ url: `/foodscans/${foodScanID}/get`, headers: { Authorization: `Bearer ${token}` } })
+  }
 
   async scanFood(dto: FoodScanDto) {
     const token = await getCookies()

@@ -27,6 +27,14 @@ export const useImageInput = (
   })
 }
 
+export const useGetFoodScanByID = (foodscanId: string) => {
+  return useQuery({
+    queryKey: ['foodscan', foodscanId],
+    queryFn: () => foodScanService.getFoodScanByID(foodscanId),
+    staleTime: 1 * 60 * 60
+  })
+}
+
 
 export const useGetUserScans = () => {
   return useQuery({
@@ -36,8 +44,8 @@ export const useGetUserScans = () => {
   })
 }
 
-export const useGetFoodscanResultByID = (id : string) => {
+export const useGetFoodscanResultByID = (id: string) => {
   return useQuery({
-    queryKey: ["foodscanResult", ]
+    queryKey: ["foodscanResult",]
   })
 }
