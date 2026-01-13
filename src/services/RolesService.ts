@@ -8,7 +8,7 @@ class RolesService {
     const token = await getCookies();
     return apiClient({
       method: "patch",
-      url: `api/v1/role/${id}/update`,
+      url: `/role/${id}/update`,
       data: dto,
       headers: {
         Authorization: `Bearer ${token}`
@@ -20,7 +20,7 @@ class RolesService {
     const token = await getCookies();
     return apiClient({
       method: "get",
-      url: "api/v1/roles",
+      url: "/roles",
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -31,7 +31,7 @@ class RolesService {
     const token = await getCookies();
     return apiClient({
       method: "post",
-      url: "api/v1/roles/create",
+      url: "/roles/create",
       data: dto,
       headers: {
         Authorization: `Bearer ${token}`

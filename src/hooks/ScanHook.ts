@@ -2,23 +2,23 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { foodScanService } from "@/services/FoodScanService"
 import { FoodScanDto } from "@/common/dto/foodscanDto"
 import toast from "react-hot-toast"
+import { useRouter } from "next/navigation"
 
 
 
-export const useImageInput = (
+export const useCreateFoodScan = (
   setError: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationKey: ["scanFood"],
     mutationFn: (dto: FoodScanDto) => foodScanService.scanFood(dto),
 
-    onSuccess: () => {
+    onSuccess: ({ data: { id } }) => {
       toast.success("Scan berhasil")
-      queryClient.invalidateQueries({
-        queryKey: ["userFoodScans"],
-      })
+      router.push(`/dashboard/scanmakanan/result?id=${id}`)
     },
 
     onError: (err: any) => {
@@ -27,14 +27,25 @@ export const useImageInput = (
   })
 }
 
+export const useGetFoodScanByID = (foodscanId: string) => {
+  return useQuery({
+    queryKey: ['foodscan', foodscanId],
+    queryFn: () => foodScanService.getFoodScanByID(foodscanId),
+    staleTime: 1 * 60 * 60
+  })
+}
+
 
 export const useGetUserScans = () => {
   return useQuery({
     queryKey: ["userFoodScans"],
     queryFn: () => foodScanService.getUserFoodScans(),
+    staleTime: 2 * 60 * 60
+  })
+}
 
-    onError: (err: any) => {
-      toast.error(`Gagal mengambil data scan: ${err.message}`)
-    },
+export const useGetFoodscanResultByID = (id: string) => {
+  return useQuery({
+    queryKey: ["foodscanResult",]
   })
 }

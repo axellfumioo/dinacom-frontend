@@ -18,7 +18,7 @@ class FamilyService {
 
     return apiClient({
       method: "post",
-      url: "api/v1/families",
+      url: "/families",
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`
@@ -30,7 +30,7 @@ class FamilyService {
     const token = await getCookies();
     return apiClient({
       method: "patch",
-      url: `api/v1/families/${id}`,
+      url: `/families/${id}`,
       data: dto,
       headers: {
         Authorization: `Bearer ${token}`
@@ -49,7 +49,7 @@ class FamilyService {
 
     return apiClient({
       method: "patch",
-      url: `api/v1/families/${id}/avatar`,
+      url: `/families/${id}/avatar`,
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`
@@ -61,7 +61,7 @@ class FamilyService {
     const token = await getCookies();
     return apiClient({
       method: "delete",
-      url: `api/v1/families/${id}/delete`,
+      url: `/families/${id}/delete`,
       headers: {
         Authorization: `Bearer ${token}`
       }

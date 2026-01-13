@@ -32,38 +32,17 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         setTokenStatus("false");
         router.push("/auth/login");
       } else {
-        setUserStore(userData);
+        setUserStore({
+          id: userData.user_id,
+          email: userData.email,
+          name: userData.full_name,
+        });
         setTokenStatus("true");
       }
     };
 
     evaluate();
   }, [router]);
-
-  useEffect(() => {
-    if (tokenStatus !== "true") return;
-
-    const check = setInterval(() => {
-      (async () => {
-        const token = await getCookies()
-
-        if (!token) {
-          setTokenStatus("false");
-          router.push("/auth/login");
-          return;
-        }
-
-        const userData = await validateToken(token);
-        if (!userData) {
-          setTokenStatus("false");
-          router.push("/auth/login");
-        } else {
-          setUserStore(userData);
-        }
-      })();
-    }, 3000);
-    return () => clearInterval(check);
-  }, [tokenStatus, router]);
 
   if (tokenStatus === "loading") {
     return (

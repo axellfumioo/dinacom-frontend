@@ -1,9 +1,9 @@
 "use client";
 
-import { Image as ImageIcon, Camera } from "lucide-react";
-import React, { useRef, ChangeEvent, useEffect, useState } from "react";
+import { Image as ImageIcon, Camera, LoaderIcon } from "lucide-react";
+import { useRef, ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useImageInput } from "@/hooks/ScanHook";
+import { useCreateFoodScan } from "@/hooks/ScanHook";
 import { FoodScanDto } from "@/common/dto/foodscanDto";
 
 export default function BtnScan() {
@@ -14,7 +14,7 @@ export default function BtnScan() {
   const [isMobile, setIsMobile] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const scanMutation = useImageInput(setError);
+  const { mutate: foodScanMutation, isPending } = useCreateFoodScan(setError);
 
   useEffect(() => {
     if (typeof navigator !== "undefined") {
@@ -29,18 +29,11 @@ export default function BtnScan() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const previewUrl = URL.createObjectURL(file);
-
     const dto: FoodScanDto = {
       image: file,
     };
 
-    scanMutation.mutate(dto, {
-      onSuccess: () => {
-        router.push(`/scan/result?image=${encodeURIComponent(previewUrl)}`);
-      },
-    });
+    foodScanMutation(dto);
   };
 
   return (
@@ -50,8 +43,17 @@ export default function BtnScan() {
         onClick={() => fileInputRef.current?.click()}
         className="px-6 py-3 rounded-xl bg-[#FFE766] font-semibold flex gap-2 items-center"
       >
-        <ImageIcon className="w-5 h-5" />
-        Upload Foto Makanan
+        {isPending ? (
+          <>
+            <LoaderIcon className="w-5 h-5 animate-spin" />
+            Loading
+          </>
+        ) : (
+          <>
+            <ImageIcon className="w-5 h-5" />
+            Upload Foto Makanan
+          </>
+        )}
       </button>
 
       <input
@@ -82,10 +84,6 @@ export default function BtnScan() {
             onChange={handleFileChange}
           />
         </>
-      )}
-
-      {scanMutation.isPending && (
-        <p className="text-sm text-gray-500">Scanning...</p>
       )}
 
       {error && <p className="text-sm text-red-500">{error}</p>}
