@@ -4,6 +4,7 @@ import { authService } from "@/services/AuthService"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import React from "react"
+import toast from "react-hot-toast"
 
 
 export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | null>>) => {
@@ -12,9 +13,9 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
         mutationKey: ['login'],
         mutationFn: (dto: LoginDto) => authService.login(dto),
         onSuccess: () => {
-        sessionStorage.setItem("showLoginAlert", "true");
+        // sessionStorage.setItem("showLoginAlert", "true");
         router.push("/dashboard");
-        
+        toast.success("Berhasil login!")
         },
         onError: (err) => {
             setError(err.message)
