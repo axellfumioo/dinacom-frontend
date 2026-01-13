@@ -1,3 +1,4 @@
+import { ProfileModel } from "./profile"
 import { RoleModel } from "./role"
 
 export interface UserModel {
@@ -7,7 +8,7 @@ export interface UserModel {
   phone_number: string | null
   role_id: string
   role: RoleModel | null
-  profile: any
+  profile: ProfileModel
   created_at: string
   updated_at: string
 }
