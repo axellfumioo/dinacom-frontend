@@ -25,7 +25,6 @@ export default function DashboardPage() {
   const { sidebarCollapsed } = useSidebarLayout();
   const [openAlert, setOpenAlert] = useState(false);
 
-  // 🔑 CHECK SESSION LOGIN ALERT
   useEffect(() => {
     const showAlert = sessionStorage.getItem("showLoginAlert");
     if (showAlert === "true") {
