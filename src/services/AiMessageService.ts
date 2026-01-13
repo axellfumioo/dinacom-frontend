@@ -4,12 +4,13 @@ import {
   CreateMessageWithMediaRequestDto,
 } from "@/common/dto/ai/ai_messageDto";
 import { getCookies } from "@/lib/cookie";
+import { AIMessageModel } from "@/common/model/aimessage";
 
 class AiMessageService {
   // 1. DELETE /aichats/message/{messageId} - DeleteMessageByID
-  async deleteMessageById(messageId: string): Promise<void> {
+  async deleteMessageById(messageId: string) {
     const token = await getCookies();
-    await apiClient({
+    return await apiClient({
       url: `/aichats/message/${messageId}`,
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
@@ -18,22 +19,22 @@ class AiMessageService {
   }
 
   // 2. POST /aichats/{aichatID}/message - CreateNewMessage
-async createNewMessage(
-  aichatID: string,
-  dto: CreateMessageRequestDto
-) {
-  if (!aichatID) {
-    throw new Error("Chat ID is required");
-  }
+  async createNewMessage(
+    aichatID: string,
+    dto: CreateMessageRequestDto
+  ) {
+    if (!aichatID) {
+      throw new Error("Chat ID is required");
+    }
 
-  const token = await getCookies();
-  return apiClient({
-    url: `/aichats/${aichatID}/message`,
-    method: "POST",
-    data: dto,
-    headers: { Authorization: `Bearer ${token}` },
-  });
-}
+    const token = await getCookies();
+    return apiClient<{ data: AIMessageModel }>({
+      url: `/aichats/${aichatID}/message`,
+      method: "POST",
+      data: dto,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
 
 
   // 3. POST /aichats/{aichatID}/message-img - CreateNewMessageWithImage
@@ -48,7 +49,7 @@ async createNewMessage(
     formData.append("image", dto.image);
 
     const token = await getCookies();
-    const res = await apiClient<{ data: any }>({
+    const res = await apiClient<{ data: AIMessageModel }>({
       url: `/aichats/${aichatID}/message-img`,
       method: "POST",
       data: formData,
@@ -64,7 +65,7 @@ async createNewMessage(
   // 4. GET /aichats/{chatID}/message - GetAIChatMessageByChatID
   async getAIChatMessagesByChatID(chatID: string): Promise<any[]> {
     const token = await getCookies();
-    const res = await apiClient<{ data: any[] }>({
+    const res = await apiClient<{ data: AIMessageModel[] }>({
       url: `/aichats/${chatID}/message`,
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
@@ -74,9 +75,9 @@ async createNewMessage(
   }
 
   // 5. DELETE /aichats/{chatID}/message - DeleteChatMessages
-  async deleteChatMessages(chatId: string): Promise<void> {
+  async deleteChatMessages(chatId: string) {
     const token = await getCookies();
-    await apiClient({
+    return await apiClient({
       url: `/aichats/${chatId}/message`,
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
