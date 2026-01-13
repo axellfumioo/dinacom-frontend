@@ -23,15 +23,9 @@ import ActionCard from "@/components/dashboard/ActionCard";
 
 export default function DashboardPage() {
   const { sidebarCollapsed } = useSidebarLayout();
-  const [openAlert, setOpenAlert] = useState(false);
 
-  useEffect(() => {
-    const showAlert = sessionStorage.getItem("showLoginAlert");
-    if (showAlert === "true") {
-      setOpenAlert(true);
-      sessionStorage.removeItem("showLoginAlert"); // biar cuma muncul sekali
-    }
-  }, []);
+
+
 
   const containerWidth = useMemo(
     () => (sidebarCollapsed ? "max-w-screen-2xl" : "max-w-7xl"),
@@ -40,22 +34,21 @@ export default function DashboardPage() {
 
   return (
     <>
-      {/* ALERT LOGIN */}
-      <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Login Berhasil 🎉</AlertDialogTitle>
-            <AlertDialogDescription>
-              Selamat datang kembali! Pantau kesehatan dan nutrisi harianmu di
-              dashboard.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction>Siap</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
+            <AlertDialog>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Login Berhasil 🎉</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Selamat datang kembali! Pantau kesehatan dan nutrisi harianmu di dashboard.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogAction>
+                    Siap
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
       {/* DASHBOARD UI */}
       <div
         className={`${containerWidth} mx-auto px-4 bg-gray-50 min-h-screen py-6`}

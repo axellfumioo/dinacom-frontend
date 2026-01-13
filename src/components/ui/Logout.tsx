@@ -5,6 +5,7 @@ import { authService } from "@/services/AuthService";
 import { useStore } from "@tanstack/react-store";
 import { User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type SidebarUserCardProps = {
   collapsed: boolean;
@@ -16,13 +17,15 @@ export default function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
 
   const handleLogout = () => {
     authService.logout();
+    toast.success("Berhasil Logout");
     router.replace("/");
+
   };
 
   return (
     <div
       className={`mt-36 border-t border-yellow-100 bg-linear-to-tr from-yellow-50/60 to-white ${
-        collapsed ? "px-2 py-4" : "px-4 py-5"
+        collapsed ? "px-2 py-4" : "px-4 py-3"
       }`}
     >
       <div
@@ -42,7 +45,6 @@ export default function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
               className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              <span className="sr-only">Keluar dari aplikasi</span>
             </button>
           </div>
         ) : (
@@ -69,7 +71,6 @@ export default function SidebarUserCard({ collapsed }: SidebarUserCardProps) {
               className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-500 text-white shadow hover:bg-yellow-600 transition-colors"
             >
               <LogOut className="w-4 h-4" />
-              <span className="sr-only">Keluar dari aplikasi</span>
             </button>
           </div>
         )}
