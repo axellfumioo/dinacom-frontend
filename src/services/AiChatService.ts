@@ -8,7 +8,7 @@ class AIChatService {
     const token = await getCookies();
 
     const res = await apiClient<ApiResponse<AIChatDto[]>>({
-      url: `/api/v1/aichats/user`,
+      url: `/aichats/user`,
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -20,7 +20,7 @@ async CreateNewChat(): Promise<AIChatDto & { id: string }> {
   const token = await getCookies();
 
   const res = await apiClient<ApiResponse<AIChatDto>>({
-    url: `/api/v1/aichats/`,
+    url: `/aichats/`,
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -38,7 +38,7 @@ async CreateNewChat(): Promise<AIChatDto & { id: string }> {
     const token = await getCookies();
 
     const res = await apiClient<ApiResponse<AIChatDto>>({
-      url: `/api/v1/aichats/${id}`,
+      url: `/aichats/${id}`,
       headers: { Authorization: `Bearer ${token}` },
       method: "DELETE",
     });

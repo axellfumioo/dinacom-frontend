@@ -1,4 +1,4 @@
-import { AIMessageModel } from "./aiMessage"
+import { AIMessageModel } from "./aimessage"
 import { UserModel } from "./user"
 
 export type AIChatRoomModel = {
