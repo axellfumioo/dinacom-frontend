@@ -2,7 +2,7 @@ import { User } from "lucide-react";
 
 interface Message {
   id: string;
-  type: "user" | "ai";
+  type: "USER" | "ASSISTANT";
   content: string;
   timestamp: Date;
 }
@@ -12,7 +12,7 @@ interface ChatMessageProps {
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
-  const isUser = message.type === "user";
+  const isUser = message.type === "USER";
 
   return (
     <div className={`flex items-start gap-3 ${isUser ? "flex-row-reverse" : ""}`}>

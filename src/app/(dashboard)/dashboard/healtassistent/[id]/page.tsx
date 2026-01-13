@@ -20,7 +20,7 @@ export default function ChatDetailPage() {
     enabled: Boolean(id),
   });
 
-  const messages = Array.isArray(data?.data) ? data.data : [];
+  const messages = Array.isArray(data) ? data : [];
 
   const { handleSubmit, isLoading: sending } = useChatSubmit({
     chatId: id,
@@ -41,7 +41,7 @@ export default function ChatDetailPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
-      <div className="bg-white rounded-xl shadow-sm p-4 min-h-[500px] max-h-[600px] overflow-y-auto space-y-4">
+      <div className="bg-white rounded-xl shadow-sm p-4 min-h-125 max-h-150 overflow-y-auto space-y-4">
         {messages.length === 0 && (
           <SuggestionCards onSuggestionClick={() => {}} />
         )}
