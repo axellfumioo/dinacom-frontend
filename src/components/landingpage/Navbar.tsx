@@ -17,7 +17,7 @@ export default function Navbar({ onNavigate }: NavbarProps) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-blend-saturation ">
+    <nav className="fixed top-0 left-0 z-50 w-full backdrop-blur-lg bg-white/10 border-b border-white/10">
       <div className="mx-auto max-w-7xl px-8 py-6">
         <div className="flex items-center justify-between">
           {/* Logo */}

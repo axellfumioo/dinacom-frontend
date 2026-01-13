@@ -6,15 +6,20 @@
 .bg-yellow-section {
   background: linear-gradient(
     to bottom,
-    #ffffff 0%,
+    #F3F4F6 0%,
+    #F3F4F6 8%,
     #fff7cc 20%,
     #ffe766 45%,
-    #ffe766 50%,
-    #ffe766 55%,
-    #fff7cc 80%,
+    #ffe766 75%,
+    #fff7cc 95%,
     #ffffff 100%
   );
 }
+
+
+
+
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

@@ -5,7 +5,8 @@ import CountUp from "../../common/reactbits/CountUp";
 
 export default function Section2() {
   return (
-    <section className="min-h-screen snap-start flex flex-col items-center justify-center bg-yellow-section">
+<section className="relative min-h-screen snap-start flex flex-col items-center justify-center bg-yellow-section z-0 pt-28">
+
       <h1 className="text-black font-bold text-4xl text-center">
          <span> 
         <CountUp
