@@ -20,7 +20,7 @@ class AuthService {
       }
 
       setCookies(res.data);
-
+      sessionStorage.setItem("showLoginAlert", "true");
       toast.success("Berhasil Login");
 
       return true;
