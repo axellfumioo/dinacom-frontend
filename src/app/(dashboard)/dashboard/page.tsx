@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
 import { KonsultasiCard } from "@/components/dashboard/KonsultasiCard";
 import { LaporanCard } from "@/components/dashboard/LaporanMingguan";
@@ -20,44 +21,55 @@ import { AiCard } from "@/components/dashboard/AiCard";
 import { NutritionCard } from "@/components/dashboard/NutritionCard";
 import { CalorieRing } from "@/components/dashboard/CalorieRing";
 import ActionCard from "@/components/dashboard/ActionCard";
+import { userStore } from "@/common/lib/store";
+import { useStore } from "@tanstack/react-store";
 
 export default function DashboardPage() {
   const { sidebarCollapsed } = useSidebarLayout();
 
-
-
+  const [showLoginAlert, setShowLoginAlert] = useState(false);
 
   const containerWidth = useMemo(
     () => (sidebarCollapsed ? "max-w-screen-2xl" : "max-w-7xl"),
     [sidebarCollapsed]
   );
 
+  useEffect(() => {
+    const flag = sessionStorage.getItem("showLoginAlert");
+
+    if (flag === "true") {
+      setShowLoginAlert(true);
+    }
+  }, []);
+
+  const user = useStore(userStore);
+
   return (
     <>
-            <AlertDialog>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Login Berhasil 🎉</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Selamat datang kembali! Pantau kesehatan dan nutrisi harianmu di dashboard.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction>
-                    Siap
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-      {/* DASHBOARD UI */}
+      <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Login Berhasil 🎉</AlertDialogTitle>
+            <AlertDialogDescription>
+              Selamat datang kembali! Pantau kesehatan dan nutrisi harianmu
+              langsung dari dashboard ini.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction>Siap</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* ===== DASHBOARD UI ===== */}
       <div
         className={`${containerWidth} mx-auto px-4 bg-gray-50 min-h-screen py-6`}
       >
         {/* HEADER */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Halo Elitis</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Halo {user?.name}</h1>
           <p className="text-sm text-gray-600 mt-1">
-            Pantau kesehatan dan nutrisi harianmu disini.
+            Pantau kesehatan dan nutrisi harianmu di sini.
           </p>
         </div>
 
@@ -71,14 +83,14 @@ export default function DashboardPage() {
             highlight
           />
           <ActionCard
-            title="Healt Assist"
+            title="Health Assist"
             description="Dapatkan penjelasan data dan saran kesehatan dari AI."
             buttonText="Tanya AI"
             icon="health"
           />
           <ActionCard
             title="Konsultasi"
-            description="Chat atau video call dengan dokter mengenai penyakit yang sudah didiagnosa oleh AI"
+            description="Chat atau video call dengan dokter terkait hasil analisis AI"
             buttonText="Buat Janji"
             icon="consultation"
             highlight
@@ -96,7 +108,6 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <CalorieRing current={1540} target={2100} />
-
                 <NutritionCard label="Protein" value={85} unit="g" target={140} progress={60} />
                 <NutritionCard label="Karbohidrat" value={180} unit="g" target={250} progress={72} />
                 <NutritionCard label="Lemak" value={45} unit="g" target={70} progress={64} />
