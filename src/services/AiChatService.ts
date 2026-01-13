@@ -6,7 +6,6 @@ import { ApiResponse } from "@/common/dto/ai/apiResponse";
 class AIChatService {
   async GetUserAIChat() {
     const token = await getCookies();
-
     const res = await apiClient<ApiResponse<AIChatDto[]>>({
       url: `/aichats/user`,
       headers: { Authorization: `Bearer ${token}` },
