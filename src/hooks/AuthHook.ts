@@ -12,8 +12,8 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
         mutationKey: ['login'],
         mutationFn: (dto: LoginDto) => authService.login(dto),
         onSuccess: () => {
-            sessionStorage.setItem("showLoginAlert", "true");
-router.push("/dashboard");
+        sessionStorage.setItem("showLoginAlert", "true");
+        router.push("/dashboard");
 
         },
         onError: (err) => {
