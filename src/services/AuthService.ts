@@ -1,7 +1,6 @@
 
 import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 import axios from "axios";
-import { BASE_URL } from "@/common/lib/loadEnv";
 import { apiClient } from "@/common/lib/apiClient";
 import { deleteCookies, setCookies } from "@/lib/cookie";
 import toast from "react-hot-toast";
@@ -11,7 +10,7 @@ class AuthService {
   async login(dto: LoginDto) {
     try {
       const res = await apiClient<{ message: string; data: string }>({
-        url: `api/v1/auth/login`,
+        url: `/auth/login`,
         data: dto,
         method: "post",
       });
@@ -52,7 +51,6 @@ class AuthService {
   logout() {
     deleteCookies();
     setUserStore(null);
-    toast.success("Berhasil Logout");
   }
 }
 
