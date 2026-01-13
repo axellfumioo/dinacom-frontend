@@ -11,7 +11,7 @@ class AuthService {
   async login(dto: LoginDto) {
     try {
       const res = await apiClient<{ message: string; data: string }>({
-        url: `/auth/login`,
+        url: `api/v1/auth/login`,
         data: dto,
         method: "post",
       });

@@ -1,4 +1,5 @@
 import { LoginDto, RegisterDto } from "@/common/dto/authDto"
+import { UserModel } from "@/common/model/user"
 import { authService } from "@/services/AuthService"
 import { useMutation } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
@@ -11,7 +12,9 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
         mutationKey: ['login'],
         mutationFn: (dto: LoginDto) => authService.login(dto),
         onSuccess: () => {
-            router.push("/dashboard")
+            sessionStorage.setItem("showLoginAlert", "true");
+router.push("/dashboard");
+
         },
         onError: (err) => {
             setError(err.message)
@@ -21,7 +24,7 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
 
 export const useRegister = (
   setError: React.Dispatch<React.SetStateAction<string | null>>,
-  onSuccess?: (user: any) => void
+  onSuccess?: (user: UserModel) => void
 ) => {
     return useMutation({
         mutationKey: ['register'],
