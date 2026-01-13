@@ -6,7 +6,7 @@ export const useGetUserAIChat = () => {
         queryKey: ["userAIChat"],
         queryFn: async () => {
             const data = await aiChatService.GetUserAIChat()
-            return data[0]
+            return data
         },
         staleTime: 2 * 60 * 60
     })

@@ -14,6 +14,8 @@ import { aiChatService } from "@/services/AiChatService";
 import { ChatList } from "@/components/healtassistent/ChatList";
 import { useDeleteChat } from "@/hooks/useDeleteChat";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useGetAIChatMessagesByChatID } from "@/hooks/useAIMessage";
+import { useGetUserAIChat } from "@/hooks/useAIchat";
 
 export default function ChatAIPage() {
   const [input, setInput] = useState("");
@@ -28,25 +30,17 @@ export default function ChatAIPage() {
     () => (sidebarCollapsed ? "max-w-screen-2xl" : "max-w-7xl"),
     [sidebarCollapsed]
   );
-
-
-  const { data: chatsData, isLoading: chatsLoading } = useQuery({
-    queryKey: ["user-chats"],
-    queryFn: () => aiChatService.GetUserAIChat(),
-  });
-
-  const chats = Array.isArray(chatsData?.data) ? chatsData.data : [];
-
-  const { data: messagesData, isLoading: messagesLoading } = useQuery({
-    queryKey: ["messages", chatId],
-    queryFn: () => aiMessageService.getAIChatMessagesByChatID(chatId!),
-    enabled: Boolean(chatId),
-  });
+  const { data: chats, isPending : chatsLoading } = useGetUserAIChat();
+  const { data: messagesData, isLoading: messagesLoading } =
+    useGetAIChatMessagesByChatID(chatId || "");
 
   const messages = Array.isArray(messagesData) ? messagesData : [];
 
-
-  const { handleSubmit, isDisabled, isLoading: submitLoading } = useChatSubmit({
+  const {
+    handleSubmit,
+    isDisabled,
+    isLoading: submitLoading,
+  } = useChatSubmit({
     chatId: chatId ?? "",
     input,
     setInput,
@@ -56,7 +50,6 @@ export default function ChatAIPage() {
       });
     },
   });
-
 
   const { handleSuggestionClick, isLoading: suggestionLoading } =
     useSuggestionChat({
@@ -70,7 +63,6 @@ export default function ChatAIPage() {
 
   const { mutate: deleteChat, isPending: isDeleting } = useDeleteChat();
 
-
   if (chatsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -79,8 +71,7 @@ export default function ChatAIPage() {
     );
   }
 
-
-  if (!chatId && chats.length === 0) {
+  if (!chatId && chats?.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
@@ -101,7 +92,7 @@ export default function ChatAIPage() {
     );
   }
 
-  if (!chatId && chats.length > 0) {
+  if (!chatId && chats?.length === 0) {
     return (
       <div className={`${containerWidth} mx-auto px-4 min-h-screen py-6 -mt-6`}>
         <div className="mb-6">
@@ -124,14 +115,17 @@ export default function ChatAIPage() {
                   <div
                     key={chat.ID}
                     className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 cursor-pointer transition-colors"
-                    onClick={() => router.push(`/dashboard/healtassistent?chatId=${chat.ID}`)}
+                    onClick={() =>
+                      router.push(`/dashboard/healtassistent?chatId=${chat.ID}`)
+                    }
                   >
                     <div>
                       <p className="font-medium text-gray-900">
                         Chat {chat.ID}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Dibuat pada {new Date(chat.CreatedAt).toLocaleDateString('id-ID')}
+                        Dibuat pada{" "}
+                        {new Date(chat?.createdAt || new Date()).toLocaleDateString("id-ID")}
                       </p>
                     </div>
                     <button
@@ -212,7 +206,8 @@ export default function ChatAIPage() {
             </>
           ) : (
             <ChatList
-              chats={chats}
+              chats={chats!}
+              onChatSelect={() => {}}
               onDeleteChat={deleteChat}
               isDeleting={isDeleting}
             />

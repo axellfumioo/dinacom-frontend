@@ -33,30 +33,58 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const { data: AIChat, isPending } = useGetUserAIChat();
-  
+
   const menuItems = [
-    { label: "Dashboard", icon: Home, path: "/dashboard" },
-    { label: "Scan Makan", icon: Scan, path: "/dashboard/scanmakanan" },
+    {
+      label: "Dashboard",
+      icon: Home,
+      path: "/dashboard",
+      active: "/dashboard",
+    },
+    {
+      label: "Scan Makan",
+      icon: Scan,
+      path: "/dashboard/scanmakanan",
+      active: "/dashboard/scanmakanan",
+    },
     {
       label: "Health Assistant",
       icon: Sparkles,
       path:
-        AIChat?.ID && !isPending
-          ? `/dashboard/healtassistent?chatId=${AIChat.ID}`
+        AIChat && AIChat?.length! > 0 && !isPending
+          ? `/dashboard/healtassistent?chatId=${AIChat[0]?.ID}`
           : "/dashboard/healtassistent",
+      active: "/dashboard/healtassistent",
     },
     {
       label: "Riwayat Harian",
       icon: CalendarDays,
       path: "/dashboard/riwayatharian",
+      active: "/dashboard/riwayatharian",
     },
-    { label: "Konsultasi", icon: MessageCircle, path: "/dashboard/konsultasi" },
-    { label: "Parental Mode", icon: Infinity, path: "/dashboard/parentalmode" },
-    { label: "Strava", icon: Activity, path: "/dashboard/strava" },
+    {
+      label: "Konsultasi",
+      icon: MessageCircle,
+      path: "/dashboard/konsultasi",
+      active: "/dashboard/konsultasi",
+    },
+    {
+      label: "Parental Mode",
+      icon: Infinity,
+      path: "/dashboard/parentalmode",
+      active: "/dashboard/parentalmode",
+    },
+    {
+      label: "Strava",
+      icon: Activity,
+      path: "/dashboard/strava",
+      active: "/dashboard/strava",
+    },
     {
       label: "Weekly Report",
       icon: BarChart3,
       path: "/dashboard/weeklyreport/",
+      active: "/dashboard/weeklyreport",
     },
   ];
 
@@ -129,7 +157,7 @@ export default function Sidebar({
           <nav className="p-4 space-y-1 flex-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const active = pathname === item.path;
+              const active = pathname === item.active;
 
               return (
                 <Link
