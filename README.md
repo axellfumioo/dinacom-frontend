@@ -1,5 +1,6 @@
 
 # Dinacom 2026 - Bismillah Menang
+----
 
 Website NutrioOne oleh tim Bismillah Menang, dengan peserta:
 - Axel Azhar P. A. (0096620008)
@@ -9,7 +10,7 @@ Website NutrioOne oleh tim Bismillah Menang, dengan peserta:
 - M. Nurul Abshoor (0096336161
 
 ----
-----
+
 Terdapat 3 Link Repository, untuk Frontend, Backend, dan AI Service
 
 Link Repository:
