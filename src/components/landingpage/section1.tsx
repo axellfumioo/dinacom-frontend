@@ -5,9 +5,11 @@ import Hero from './Hero'
 
 export default function Section1() {
   return (
-      <section className='min-h-screen snap-start bg-[#ffffff]'>
-         <Hero />
-      </section>
+<section className="relative min-h-screen snap-start bg-gray-100 z-10 overflow-visible">
+  <Hero />
+</section>
+
+
 
 
 )

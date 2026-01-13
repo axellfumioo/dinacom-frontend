@@ -46,18 +46,7 @@ export default function LoginPage() {
         }
     }
 
-    // Strava Icon SVG Component
-    const StravaIcon = () => (
-        <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="currentColor"
-            className="w-5 h-5"
-        >
-            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7.02 13.828h4.169"/>
-        </svg>
-    );
+
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -121,16 +110,7 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    {/* Strava Login Button */}
-                    <button
-                        type="button"
-                        onClick={handleLoginStrava}
-                        disabled={loading}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md text-white bg-[#FC4C02] hover:bg-[#E03D00] transition font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <StravaIcon />
-                        {loading ? "Memproses..." : "Masuk dengan Strava"}
-                    </button>
+
 
                     <p className="text-sm text-center text-gray-500 mt-6">
                         Belum punya akun?{" "}
