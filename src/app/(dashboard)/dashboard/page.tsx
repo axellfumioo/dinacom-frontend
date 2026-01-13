@@ -36,27 +36,37 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const flag = sessionStorage.getItem("showLoginAlert");
-
     if (flag === "true") {
-      setShowLoginAlert(true);
+      setShowLoginAlert(true); // tampilkan alert
+      // jangan hapus dulu, tunggu user klik "Siap"
     }
   }, []);
+
+  // Hapus flag ketika user menutup alert
+  const handleCloseAlert = () => {
+    setShowLoginAlert(false);
+    sessionStorage.removeItem("showLoginAlert");
+  };
 
   const user = useStore(userStore);
 
   return (
     <>
-      <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+ <AlertDialog open={showLoginAlert} onOpenChange={handleCloseAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Login Berhasil 🎉</AlertDialogTitle>
+            <AlertDialogTitle>Peringatan ⚠️⚠️⚠️</AlertDialogTitle>
             <AlertDialogDescription>
-              Selamat datang kembali! Pantau kesehatan dan nutrisi harianmu
-              langsung dari dashboard ini.
+              Aplikasi ini harus digunakan sebagai alat bantu dan bukan pengganti
+              nasihat medis profesional. Selalu konsultasikan dengan dokter atau
+              ahli kesehatan sebelum membuat keputusan terkait kesehatan Anda.
+              dan jangan mengandalkan sepenuhnya pada hasil analisis AI untuk diagnosis
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction>Siap</AlertDialogAction>
+            <AlertDialogAction onClick={handleCloseAlert}>
+              Siap
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

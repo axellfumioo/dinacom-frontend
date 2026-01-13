@@ -13,7 +13,6 @@ export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | 
         mutationKey: ['login'],
         mutationFn: (dto: LoginDto) => authService.login(dto),
         onSuccess: () => {
-        // sessionStorage.setItem("showLoginAlert", "true");
         router.push("/dashboard");
         toast.success("Berhasil login!")
         },
@@ -27,13 +26,16 @@ export const useRegister = (
   setError: React.Dispatch<React.SetStateAction<string | null>>,
   onSuccess?: (user: UserModel) => void
 ) => {
+    const router = useRouter()
     return useMutation({
         mutationKey: ['register'],
         mutationFn: (dto: RegisterDto) => authService.register(dto),
         onSuccess: (user) => {
             if (onSuccess) {
                 onSuccess(user);
+                router.push("/auth/register/questioner");
             }
+            
         },
         onError: (err) => {
             setError(err.message)

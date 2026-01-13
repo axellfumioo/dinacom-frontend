@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Mail, Lock, UserPlus, Calendar, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRegister } from "@/hooks/AuthHook";
-import StravaQuestioner from "@/components/StravaQuestioner";
 
 interface FormData {
   name: string;
@@ -26,16 +25,14 @@ export default function RegisterPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [showQuestioner, setShowQuestioner] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
   const { mutate: registerMutation, isPending: loading } = useRegister(
     setError,
     (user) => {
       // Assuming user has id
-      setUserId(user.id);
-      localStorage.setItem("userId", user.id);
-      setShowQuestioner(true);
+      setUserId(user?.user_id);
+      localStorage.setItem("userId", user?.user_id);
     }
   );
 
@@ -60,15 +57,7 @@ export default function RegisterPage() {
     });
   }
 
-  const handleStravaYes = () => {
-    const userid = localStorage.getItem("userId") || userId;
-    window.location.href = `/auth/strava/redirect?userid=${userid}`;
-  };
 
-  const handleStravaNo = () => {
-    setShowQuestioner(false);
-    router.push("/auth/login");
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -188,11 +177,6 @@ export default function RegisterPage() {
           </p>
         </div>
       </div>
-      <StravaQuestioner
-        isOpen={showQuestioner}
-        onYes={handleStravaYes}
-        onNo={handleStravaNo}
-      />
     </div>
   );
 }

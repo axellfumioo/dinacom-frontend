@@ -4,7 +4,6 @@ import { authService } from '@/services/AuthService';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
-import axios from 'axios';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -24,28 +23,12 @@ export default function LoginPage() {
                 router.push("/dashboard");
             }
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Terjadi kesalahan saat login";
+            const message = err instanceof Error ? err.message : "Email atau Password salah";
             setError(message);
         } finally {
             setLoading(false);
         }
     };
-
-    async function handleLoginStrava() {
-        setLoading(true);
-        try {
-            await axios.get("http://localhost:8080/api/v1/auth/strava/redirect", {
-                headers : {
-                    "Authorization" : "Bearer"
-                }
-            })
-        } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Terjadi kesalahan saat login";
-            setError(message);
-            setLoading(false);
-        }
-    }
-
 
 
     return (
@@ -67,7 +50,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-10 pr-3 py-2.5 rounded-md border border-gray-300 focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200 transition bg-white"
-                                    placeholder="contoh@gmail.com"
+                                    placeholder="budi@gmail.com"
                                     required
                                 />
                             </div>
