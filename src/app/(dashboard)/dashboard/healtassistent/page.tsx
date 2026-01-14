@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChatInput } from "@/components/healtassistent/BtnChat";
 import { SuggestionCards } from "@/components/healtassistent/SuggestionAI";
@@ -10,12 +10,17 @@ import { useSidebarLayout } from "@/components/ui/LayoutClient";
 import { useChatSubmit } from "@/hooks/useChatSubmit";
 import { useDeleteChat } from "@/hooks/useDeleteChat";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCreateMessageWithSuggestion, useGetAIChatMessagesByChatID } from "@/hooks/useAIMessage";
+import {
+  useCreateMessageWithSuggestion,
+  useGetAIChatMessagesByChatID,
+} from "@/hooks/useAIMessage";
 import { useGetUserAIChat } from "@/hooks/useAIchat";
+import { useSocket } from "@/common/lib/socketIo";
+import toast from "react-hot-toast";
 
 export default function ChatAIPage() {
+  const socket = useSocket();
   const [input, setInput] = useState("");
-  const router = useRouter();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
 
@@ -43,43 +48,33 @@ export default function ChatAIPage() {
     setInput,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["AIMessage", chatId],
+        queryKey: ["AIMessages", chatId],
       });
     },
   });
 
-  const { mutate: sendSuggesstion, isPending: suggestionLoading } = useCreateMessageWithSuggestion(chatId || "" );
+  const { mutate: sendSuggesstion, isPending: suggestionLoading } =
+    useCreateMessageWithSuggestion(chatId || "");
   const { mutate: deleteChat, isPending: isDeleting } = useDeleteChat();
 
-  if (chatsLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400" />
-      </div>
-    );
-  }
+  useEffect(() => {
+    socket?.emit("join:room", chatId);
+  }, [socket, chatId]);
 
-  if (!chatId && !chat) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Belum Ada Chat
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Mulai percakapan baru dengan Health Assistant AI
-          </p>
-          <button
-            onClick={() => router.push("/dashboard/healtassistent/add")}
-            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 px-6 rounded-xl"
-          >
-            Buat Chat Baru
-          </button>
-        </div>
-      </div>
-    );
-  }
-  
+  useEffect(() => {
+    const handler = () => {
+      queryClient.invalidateQueries({
+        queryKey: ["AIMessages", chatId],
+        refetchType: "all",
+      });
+    };
+    socket?.on("refresh:room", handler);
+
+    return () => {
+      socket?.off("refresh:room", handler);
+    };
+  }, [socket, queryClient]);
+
   return (
     <div className={`${containerWidth} mx-auto px-4 min-h-screen py-6 -mt-6`}>
       <div className="mb-6">
@@ -96,11 +91,13 @@ export default function ChatAIPage() {
         <div className="lg:col-span-2 space-y-4">
           {messages.length === 0 && (
             <SuggestionCards
-              onSuggestionClick={(suggestion) => sendSuggesstion({ content: suggestion })}
+              onSuggestionClick={(suggestion) =>
+                sendSuggesstion({ content: suggestion })
+              }
             />
           )}
           {messages.length > 0 && (
-            <div className="bg-white rounded-2xl p-6 shadow-sm min-h-[500px] max-h-[600px] overflow-y-auto space-y-4">
+            <div className="bg-white rounded-2xl p-6 shadow-sm h-[535px] overflow-y-scroll space-y-4">
               {messages.map((message) => (
                 <ChatMessage key={message.id} message={message} />
               ))}
