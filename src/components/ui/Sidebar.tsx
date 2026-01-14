@@ -51,8 +51,8 @@ export default function Sidebar({
       label: "Health Assistant",
       icon: Sparkles,
       path:
-        AIChat && AIChat?.length! > 0 && !isPending
-          ? `/dashboard/healtassistent?chatId=${AIChat[0]?.ID}`
+        AIChat?.data && !isPending
+          ? `/dashboard/healtassistent?chatId=${AIChat?.data?.ID}`
           : "/dashboard/healtassistent",
       active: "/dashboard/healtassistent",
     },

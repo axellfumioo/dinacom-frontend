@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { aiMessageService } from "@/services/AiMessageService";
 import { CreateMessageRequestDto } from "@/common/dto/ai/ai_messageDto";
 import toast from "react-hot-toast";
@@ -10,9 +10,11 @@ interface UseSuggestionChatProps {
 }
 
 export function useSuggestionChat({ chatId, onSuccess, onError }: UseSuggestionChatProps) {
-  const mutation = useMutation({
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: (message: CreateMessageRequestDto) => aiMessageService.createNewMessage(chatId, message),
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["AIMessage", chatId] });
       toast.success("Suggestion berhasil dikirim");
       onSuccess?.(data);
     },
@@ -21,13 +23,4 @@ export function useSuggestionChat({ chatId, onSuccess, onError }: UseSuggestionC
       onError?.(error);
     },
   });
-
-  const handleSuggestionClick = (suggestion: string) => {
-    mutation.mutate({ content: suggestion });
-  };
-
-  return {
-    handleSuggestionClick,
-    isLoading: mutation.isPending,
-  };
 }
