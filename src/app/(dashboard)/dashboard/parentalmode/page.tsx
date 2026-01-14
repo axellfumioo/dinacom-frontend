@@ -6,7 +6,7 @@ import { FamilyProfileCard } from '@/components/parentalmode/FamilyProfileCard';
 import { useFamilyMembers } from '@/hooks/useFamilyMember';
 
 export default function ParentalModePage() {
-  const familyID = 'family-id-dari-backend'; // 🔥 ambil dari auth / params
+  const familyID = 'family-id-dari-backend'; 
 
   const {
     members,
@@ -36,7 +36,7 @@ export default function ParentalModePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        Loading...
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400" />
       </div>
     );
   }
