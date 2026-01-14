@@ -13,7 +13,7 @@ export function LaporanCard() {
         </div>
       </div>
 
-      <button className="w-full bg-yellow-400 text-gray-900 py-3 px-4 rounded-xl font-semibold text-sm transition-colors hover:bg-yellow-500 flex items-center justify-center gap-2">
+      <button className="w-full bg-yellow-400 text-gray-900 py-3 px-4 rounded-xl font-semibold text-sm transition-colors hover:bg-yellow-500 flex items-center justify-center gap-2 cursor-pointer">
         <Download className="w-4 h-4" />
         Unduh PDF
       </button>
