@@ -56,7 +56,7 @@ export default function ActionCard({
       </p>
 
       <button
-        className={`w-full ${buttonClass} py-3 px-4 rounded-xl font-semibold text-sm transition-colors flex items-center justify-center gap-2`}
+        className={`w-full ${buttonClass} py-3 px-4 rounded-xl font-semibold text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer`}
       >
         {icon === "scan" && <Camera className="w-4 h-4" />}
         {icon === "health" && <Sparkles className="w-4 h-4" />}

@@ -11,7 +11,6 @@ import { useChatSubmit } from "@/hooks/useChatSubmit";
 import { useSuggestionChat } from "@/hooks/useSuggestionChat";
 import { aiMessageService } from "@/services/AiMessageService";
 import { aiChatService } from "@/services/AiChatService";
-import { ChatList } from "@/components/healtassistent/ChatList";
 import { useDeleteChat } from "@/hooks/useDeleteChat";
 import { useRouter, useSearchParams } from "next/navigation";
 

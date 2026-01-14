@@ -15,7 +15,7 @@ export function KonsultasiCard() {
         didiagnosa oleh AI
       </p>
 
-      <button className="w-full bg-white text-gray-900 py-3 px-4 rounded-xl font-semibold text-sm transition-colors hover:bg-gray-50 flex items-center justify-center gap-2">
+      <button className="w-full bg-white text-gray-900 py-3 px-4 rounded-xl font-semibold text-sm transition-colors hover:bg-gray-50 flex items-center justify-center gap-2 cursor-pointer">
         <Calendar className="w-4 h-4" />
         Buat Janji
       </button>

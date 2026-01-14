@@ -15,7 +15,7 @@ export function PantauKeluargaCard() {
           </div>
           <h3 className="text-base font-bold text-gray-900">Pantau Keluarga</h3>
         </div>
-        <button className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors">
+        <button className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors cursor-pointer">
           <Settings className="w-4 h-4 text-gray-600" />
         </button>
       </div>
