@@ -8,10 +8,9 @@ import { NutritionSummary } from "@/components/healtassistent/RingkasanNutrition
 import { ChatMessage } from "@/components/healtassistent/Message";
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
 import { useChatSubmit } from "@/hooks/useChatSubmit";
-import { useSuggestionChat } from "@/hooks/useSuggestionChat";
 import { useDeleteChat } from "@/hooks/useDeleteChat";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useGetAIChatMessagesByChatID } from "@/hooks/useAIMessage";
+import { useCreateMessageWithSuggestion, useGetAIChatMessagesByChatID } from "@/hooks/useAIMessage";
 import { useGetUserAIChat } from "@/hooks/useAIchat";
 
 export default function ChatAIPage() {
@@ -49,8 +48,7 @@ export default function ChatAIPage() {
     },
   });
 
-  const { mutate: sendSuggesstion, isPending: suggestionLoading } =
-    useSuggestionChat({ chatId: chatId || "" });
+  const { mutate: sendSuggesstion, isPending: suggestionLoading } = useCreateMessageWithSuggestion(chatId || "" );
   const { mutate: deleteChat, isPending: isDeleting } = useDeleteChat();
 
   if (chatsLoading) {
@@ -98,7 +96,7 @@ export default function ChatAIPage() {
         <div className="lg:col-span-2 space-y-4">
           {messages.length === 0 && (
             <SuggestionCards
-              onSuggestionClick={() => sendSuggesstion({ content: input })}
+              onSuggestionClick={(suggestion) => sendSuggesstion({ content: suggestion })}
             />
           )}
           {messages.length > 0 && (
