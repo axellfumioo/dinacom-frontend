@@ -52,15 +52,16 @@ export default function DashboardPage() {
 
   return (
     <>
- <AlertDialog open={showLoginAlert} onOpenChange={handleCloseAlert}>
+      <AlertDialog open={showLoginAlert} onOpenChange={handleCloseAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Peringatan ⚠️⚠️⚠️</AlertDialogTitle>
             <AlertDialogDescription>
-              Aplikasi ini harus digunakan sebagai alat bantu dan bukan pengganti
-              nasihat medis profesional. Selalu konsultasikan dengan dokter atau
-              ahli kesehatan sebelum membuat keputusan terkait kesehatan Anda.
-              dan jangan mengandalkan sepenuhnya pada hasil analisis AI untuk diagnosis
+              Aplikasi ini harus digunakan sebagai alat bantu dan bukan
+              pengganti nasihat medis profesional. Selalu konsultasikan dengan
+              dokter atau ahli kesehatan sebelum membuat keputusan terkait
+              kesehatan Anda. dan jangan mengandalkan sepenuhnya pada hasil
+              analisis AI untuk diagnosis
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -73,11 +74,13 @@ export default function DashboardPage() {
 
       {/* ===== DASHBOARD UI ===== */}
       <div
-        className={`${containerWidth} mx-auto px-4 bg-gray-50 min-h-screen py-6`}
+        className={`${containerWidth} mx-auto px-4  min-h-screen py-6`}
       >
         {/* HEADER */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Halo {user?.name}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Halo {user?.name}
+          </h1>
           <p className="text-sm text-gray-600 mt-1">
             Pantau kesehatan dan nutrisi harianmu di sini.
           </p>
@@ -118,9 +121,27 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <CalorieRing current={1540} target={2100} />
-                <NutritionCard label="Protein" value={85} unit="g" target={140} progress={60} />
-                <NutritionCard label="Karbohidrat" value={180} unit="g" target={250} progress={72} />
-                <NutritionCard label="Lemak" value={45} unit="g" target={70} progress={64} />
+                <NutritionCard
+                  label="Protein"
+                  value={85}
+                  unit="g"
+                  target={140}
+                  progress={60}
+                />
+                <NutritionCard
+                  label="Karbohidrat"
+                  value={180}
+                  unit="g"
+                  target={250}
+                  progress={72}
+                />
+                <NutritionCard
+                  label="Lemak"
+                  value={45}
+                  unit="g"
+                  target={70}
+                  progress={64}
+                />
               </div>
             </div>
 

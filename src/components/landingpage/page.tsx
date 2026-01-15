@@ -4,9 +4,9 @@ import { useRef } from "react";
 import Navbar from "@/components/landingpage/Navbar";
 
 import Section4 from "@/components/landingpage/Section4";
-import Section1 from "./section1";
-import Section2 from "./section2";
-import Section3 from "./section3";
+import Section1 from "./Section1";
+import Section2 from "./Section2";
+import Section3 from "./Section3";
 
 
 export default function LandingPage() {

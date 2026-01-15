@@ -33,55 +33,74 @@ export default function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const { data: AIChat, isPending } = useGetUserAIChat();
-  
+
   const menuItems = [
-    { label: "Dashboard", icon: Home, path: "/dashboard" },
-    { label: "Scan Makan", icon: Scan, path: "/dashboard/scanmakanan" },
+    {
+      label: "Dashboard",
+      icon: Home,
+      path: "/dashboard",
+      active: "/dashboard",
+    },
+    {
+      label: "Scan Makan",
+      icon: Scan,
+      path: "/dashboard/scanmakanan",
+      active: "/dashboard/scanmakanan",
+    },
     {
       label: "Health Assistant",
       icon: Sparkles,
       path:
-        AIChat?.ID && !isPending
-          ? `/dashboard/healtassistent?chatId=${AIChat.ID}`
+        AIChat?.data && !isPending
+          ? `/dashboard/healtassistent?chatId=${AIChat?.data?.ID}`
           : "/dashboard/healtassistent",
+      active: "/dashboard/healtassistent",
     },
     {
       label: "Riwayat Harian",
       icon: CalendarDays,
       path: "/dashboard/riwayatharian",
+      active: "/dashboard/riwayatharian",
     },
-    { label: "Konsultasi", icon: MessageCircle, path: "/dashboard/konsultasi" },
-    { label: "Parental Mode", icon: Infinity, path: "/dashboard/parentalmode" },
-    { label: "Strava", icon: Activity, path: "/dashboard/strava" },
+    {
+      label: "Konsultasi",
+      icon: MessageCircle,
+      path: "/dashboard/konsultasi",
+      active: "/dashboard/konsultasi",
+    },
+    {
+      label: "Parental Mode",
+      icon: Infinity,
+      path: "/dashboard/parentalmode",
+      active: "/dashboard/parentalmode",
+    },
+    {
+      label: "Strava",
+      icon: Activity,
+      path: "/dashboard/strava",
+      active: "/dashboard/strava",
+    },
     {
       label: "Weekly Report",
       icon: BarChart3,
       path: "/dashboard/weeklyreport/",
+      active: "/dashboard/weeklyreport",
     },
   ];
 
   return (
     <>
-      {/* open dekstop sidebar */}
+      {/* OPEN DESKTOP SIDEBAR */}
       {collapsed && (
         <button
           onClick={() => onCollapseChange(false)}
-          className="
-            fixed top-4 left-4 z-40
-            hidden lg:flex
-            items-center justify-center
-            w-10 h-10
-            rounded-md
-            bg-white border shadow
-            hover:bg-gray-100
-          "
-          aria-label="Open Sidebar"
+          className="fixed top-4 left-4 z-40 hidden lg:flex w-10 h-10 items-center justify-center rounded-md bg-white border shadow hover:bg-gray-100"
         >
           <Menu size={20} />
         </button>
       )}
 
-      {/* open mobile sidebar */}
+      {/* OVERLAY MOBILE */}
       {open && (
         <div
           className="fixed inset-0 z-40 bg-black/30 lg:hidden"
@@ -89,15 +108,16 @@ export default function Sidebar({
         />
       )}
 
-      {/* isi sidebar */}
+      {/* SIDEBAR */}
       <aside
         className={`
-    fixed z-50 inset-y-0 left-0 bg-white border-r
-    transition-all duration-300
-    ${collapsed ? "w-0" : "w-64"}
-    ${open ? "translate-x-0" : "-translate-x-full"}
-    lg:translate-x-0
-  `}
+          fixed inset-y-0 left-0 z-50
+          bg-white border-r
+          transition-all duration-300
+          ${collapsed ? "w-0" : "w-64"}
+          ${open ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+        `}
       >
         {/* HEADER */}
         {!collapsed && (
@@ -107,14 +127,13 @@ export default function Sidebar({
             <button
               onClick={() => onCollapseChange(true)}
               className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
-              aria-label="Close Sidebar"
             >
               <Transition
                 show={!collapsed}
-                enter="transition-opacity duration-300"
+                enter="transition-opacity duration-200"
                 enterFrom="opacity-0"
                 enterTo="opacity-100"
-                leave="transition-opacity duration-300"
+                leave="transition-opacity duration-200"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
@@ -126,10 +145,10 @@ export default function Sidebar({
 
         {/* MENU */}
         {!collapsed && (
-          <nav className="p-4 space-y-1 flex-1">
+          <nav className="p-4 space-y-1">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const active = pathname === item.path;
+              const active = pathname === item.active;
 
               return (
                 <Link
@@ -137,25 +156,24 @@ export default function Sidebar({
                   href={item.path}
                   onClick={() => setOpen(false)}
                   className={`
-              flex items-center gap-3 px-4 py-3 rounded-md
-              text-sm font-medium transition
-              ${
-                active
-                  ? "bg-yellow-100 text-yellow-600"
-                  : "text-gray-700 hover:bg-gray-100"
-              }
-            `}
+                    flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium
+                    ${
+                      active
+                        ? "bg-yellow-100 text-yellow-600"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }
+                  `}
                 >
                   <Icon size={20} />
-                  <span className="whitespace-nowrap">{item.label}</span>
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
           </nav>
         )}
 
-        {/* USER CARD + LOGOUT */}
-        <SidebarUserCard collapsed={collapsed} />
+        {/* USER CARD (FIX: HANYA RENDER SAAT TIDAK COLLAPSED) */}
+        {!collapsed && <SidebarUserCard />}
       </aside>
     </>
   );
