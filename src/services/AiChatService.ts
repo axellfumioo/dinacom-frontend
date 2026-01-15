@@ -6,31 +6,29 @@ import { ApiResponse } from "@/common/dto/ai/apiResponse";
 class AIChatService {
   async GetUserAIChat() {
     const token = await getCookies();
-    const res = await apiClient<ApiResponse<AIChatDto[]>>({
+    return await apiClient<{ data: AIChatDto }>({
       url: `/aichats/user`,
       headers: { Authorization: `Bearer ${token}` },
     });
-
-    return res.data;
   }
 
 
-async CreateNewChat(): Promise<AIChatDto & { id: string }> {
-  const token = await getCookies();
+  async CreateNewChat(): Promise<AIChatDto & { id: string }> {
+    const token = await getCookies();
 
-  const res = await apiClient<ApiResponse<AIChatDto>>({
-    url: `/aichats/`,
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
-  });
+    const res = await apiClient<ApiResponse<AIChatDto>>({
+      url: `/aichats/`,
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  const chat = res.data;
+    const chat = res.data;
 
-  return {
-    ...chat,
-    id: chat.ID, 
-  };
-}
+    return {
+      ...chat,
+      id: chat.ID,
+    };
+  }
 
 
   async DeleteAIChat(id: string) {

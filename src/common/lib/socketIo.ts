@@ -15,11 +15,16 @@ export function useSocket() {
             if (!token) return
 
             s = io(SocketBaseURL || "", {
+                path: "/socket.io/",
+                autoConnect: true,
                 query: { token },
                 transports: ["websocket"],
             })
 
             setSocket(s)
+            return () => {
+                s?.disconnect()
+            }
         }
 
         connect()

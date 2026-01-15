@@ -63,7 +63,7 @@ class AiMessageService {
   }
 
   // 4. GET /aichats/{chatID}/message - GetAIChatMessageByChatID
-  async getAIChatMessagesByChatID(chatID: string): Promise<any[]> {
+  async getAIChatMessagesByChatID(chatID: string): Promise<AIMessageModel[]> {
     const token = await getCookies();
     const res = await apiClient<{ data: AIMessageModel[] }>({
       url: `/aichats/${chatID}/message`,

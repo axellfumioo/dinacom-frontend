@@ -13,6 +13,6 @@ export type AIMessageModel = {
     user: UserModel
     chat: AIChatRoomModel
 
-    created_at: Date
-    updated_at: Date
+    CreatedAt: Date
+    UpdatedAt: Date
 }
