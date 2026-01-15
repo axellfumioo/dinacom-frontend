@@ -35,6 +35,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         setUserStore({
           id: userData.user_id,
           email: userData.email,
+          avatar: userData.profile.avatar || "",
           name: userData.full_name,
         });
         setTokenStatus("true");

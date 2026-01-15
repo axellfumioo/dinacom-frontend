@@ -3,12 +3,14 @@ import "../../globals.css";
 import LayoutClient from "@/components/ui/LayoutClient";
 import AuthGuard from "@/components/AuthGuard";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    // <AuthGuard>
-      <LayoutClient>
-        {children}
-      </LayoutClient>
-    //  </AuthGuard>
+    <AuthGuard>
+      <LayoutClient>{children}</LayoutClient>
+    </AuthGuard>
   );
 }
