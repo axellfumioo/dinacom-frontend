@@ -4,6 +4,17 @@ import { getCookies } from "@/lib/cookie";
 
 class ProfileService {
 
+  async getProfile() {
+    const token = await getCookies();
+    return await apiClient({
+      method: "get",
+      url: "api/v1/profiles",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }
+
   async updateProfile(dto: UpdateProfileDto) {
     const token = await getCookies();
     return apiClient({
