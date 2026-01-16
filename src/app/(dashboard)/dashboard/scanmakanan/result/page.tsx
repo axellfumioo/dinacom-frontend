@@ -148,7 +148,7 @@ export default function ScanFoodPage() {
             })}
           </div>
 
-          <FoodDetailForm onSave={(data) => console.log("Save:", data)} />
+          <FoodDetailForm  />
 
           {isLoading && (
             <p className="text-sm text-gray-500">Memuat data scan...</p>
