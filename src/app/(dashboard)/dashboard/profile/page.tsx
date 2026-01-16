@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Flame, Droplet, Activity, Bell, Settings } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
 
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { NutritionCard } from '@/components/profile/NutritionCard';
@@ -10,37 +9,26 @@ import { StravaCard } from '@/components/profile/StravaCard';
 import { SidebarCard } from '@/components/profile/SidebarCard';
 
 import { useProfile } from '@/hooks/useProfile';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { ProfileModel } from '@/common/model/profile';
 import { UpdateProfileDto } from '@/common/dto/profileDto';
 
 export default function ProfilePage() {
-  const { updateProfile, loading, error } = useProfile();
 
-  /**
-   * ============================
-   * GET CURRENT USER (useQuery)
-   * ============================
-   */
+  const { useCurrentProfile, updateProfile } = useProfile();
+
   const {
-    data: currentUser,
-    isLoading: userLoading,
-  } = useQuery({
-    queryKey: ['current-user'],
-    queryFn: async () => {
-      const res = await useCurrentUser().getCurrentUser();
-      return res;
-    },
-  });
+    data: profile,
+    isLoading,
+  } = useCurrentProfile();
 
   const [isEditing, setIsEditing] = useState(false);
 
-  // UI user (bukan DTO)
+
   const [user, setUser] = useState({
     name: '',
     avatar: '/images/avatar.jpg',
   });
 
-  // Form state (DTO + name hanya untuk UI)
   const [profileData, setProfileData] = useState({
     name: '',
     date_of_birth: '',
@@ -50,52 +38,36 @@ export default function ProfilePage() {
     activity_level: '',
   });
 
-  /**
-   * ============================
-   * SYNC DATA FROM QUERY
-   * ============================
-   */
   useEffect(() => {
-    if (currentUser) {
-      setUser({
-        name: currentUser.name,
-        avatar: '/images/avatar.jpg',
-      });
+    if (!profile) return;
 
-      setProfileData((prev) => ({
-        ...prev,
-        name: currentUser.name,
-      }));
-    }
-  }, [currentUser]);
+    const data = profile as ProfileModel;
 
-  /**
-   * ============================
-   * UPDATE PROFILE
-   * ============================
-   */
+    setUser({
+      name: data.user_id, // UI-only
+      avatar: data.avatar ?? '/images/avatar.jpg',
+    });
+
+    setProfileData((prev) => ({
+      ...prev,
+      date_of_birth: data.date_of_birth ?? '',
+      height_cm: data.height_cm ?? 0,
+      weight_kg: data.weight_kg ?? 0,
+    }));
+  }, [profile]);
+
   const handleSaveChanges = async () => {
-    try {
-      const dto: UpdateProfileDto = {
-        date_of_birth: profileData.date_of_birth || undefined,
-        gender: profileData.gender || undefined,
-        height_cm: profileData.height_cm || undefined,
-        weight_kg: profileData.weight_kg || undefined,
-        activity_level: profileData.activity_level || undefined,
-      };
+    const dto: UpdateProfileDto = {
+      date_of_birth: profileData.date_of_birth || undefined,
+      gender: profileData.gender || undefined,
+      height_cm: profileData.height_cm || undefined,
+      weight_kg: profileData.weight_kg || undefined,
+      activity_level: profileData.activity_level || undefined,
+    };
 
-      await updateProfile(dto);
+    await updateProfile.mutateAsync(dto);
 
-      // update UI saja
-      setUser((prev) => ({
-        ...prev,
-        name: profileData.name,
-      }));
-
-      setIsEditing(false);
-    } catch (err) {
-      console.error('Failed to update profile:', error);
-    }
+    setIsEditing(false);
   };
 
   const handleEditToggle = () => {
@@ -106,11 +78,6 @@ export default function ProfilePage() {
     console.log('Syncing Strava data...');
   };
 
-  /**
-   * ============================
-   * STATIC DATA
-   * ============================
-   */
   const nutritionData = {
     calories: { current: 420, target: 2000, value: '420', unit: 'kkal', label: 'Kalori' },
     protein: { current: 24, target: 150, value: '24g', unit: 'kkal', label: 'Protein' },
@@ -124,12 +91,7 @@ export default function ProfilePage() {
     totalCalories: 2567,
   };
 
-  /**
-   * ============================
-   * LOADING STATE
-   * ============================
-   */
-  if (userLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400" />
@@ -137,15 +99,10 @@ export default function ProfilePage() {
     );
   }
 
-  /**
-   * ============================
-   * UI (UNCHANGED)
-   * ============================
-   */
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <ProfileHeader user={user} />
+        <ProfileHeader />
 
         {isEditing && (
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
@@ -258,10 +215,10 @@ export default function ProfilePage() {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSaveChanges}
-                disabled={loading}
+                disabled={updateProfile.isPending}
                 className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-xl transition-colors disabled:opacity-50"
               >
-                {loading ? 'Saving...' : 'Save Changes'}
+                {updateProfile.isPending ? 'Saving...' : 'Save Changes'}
               </button>
 
               <button

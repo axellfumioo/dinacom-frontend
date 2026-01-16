@@ -1,43 +1,53 @@
-import { useState } from 'react';
-import { profileService } from '@/services/ProfileService';
-import { UpdateProfileDto, UploadAvatarDto } from '@/common/dto/profileDto';
+"use client";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { profileService } from "@/services/ProfileService";
+import {
+  UpdateProfileDto,
+  UploadAvatarDto,
+} from "@/common/dto/profileDto";
 
 export const useProfile = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const updateProfile = async (dto: UpdateProfileDto) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await profileService.updateProfile(dto);
-      return response;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update profile');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
+
+  const useCurrentProfile = () => {
+    return useQuery({
+      queryKey: ["profile"],
+      queryFn: async () => {
+        profileService.getProfile();
+      },
+    });
   };
 
-  const uploadAvatar = async (dto: UploadAvatarDto) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await profileService.uploadAvatar(dto);
-      return response;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to upload avatar');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const updateProfileMutation = useMutation({
+    mutationKey: ["updateProfile"],
+    mutationFn: async (dto: UpdateProfileDto) => {
+      profileService.updateProfile(dto);
+    },
+    onSuccess: () => {
+      // refresh profile setelah update
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
+
+  const uploadAvatarMutation = useMutation({
+    mutationKey: ["uploadAvatar"],
+    mutationFn: async (dto: UploadAvatarDto) => {
+      profileService.uploadAvatar(dto);
+    },
+    onSuccess: () => {
+      // refresh profile setelah upload avatar
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
 
   return {
-    updateProfile,
-    uploadAvatar,
-    loading,
-    error,
+    // query
+    useCurrentProfile,
+
+    // mutations
+    updateProfile: updateProfileMutation,
+    uploadAvatar: uploadAvatarMutation,
   };
 };
