@@ -13,26 +13,14 @@ import { ProfileModel } from '@/common/model/profile';
 import { UpdateProfileDto } from '@/common/dto/profileDto';
 
 export default function ProfilePage() {
-
   const { useCurrentProfile, updateProfile } = useProfile();
 
-  const {
-    data: profile,
-    isLoading,
-  } = useCurrentProfile();
+  const { data: profile, isLoading } = useCurrentProfile();
 
   const [isEditing, setIsEditing] = useState(false);
 
-
-  const [user, setUser] = useState({
-    name: '',
-    avatar: '/images/avatar.jpg',
-  });
-
   const [profileData, setProfileData] = useState({
-    name: '',
     date_of_birth: '',
-    gender: '',
     height_cm: 0,
     weight_kg: 0,
     activity_level: '',
@@ -43,40 +31,47 @@ export default function ProfilePage() {
 
     const data = profile as ProfileModel;
 
-    setUser({
-      name: data.user_id, // UI-only
-      avatar: data.avatar ?? '/images/avatar.jpg',
-    });
-
-    setProfileData((prev) => ({
-      ...prev,
-      date_of_birth: data.date_of_birth ?? '',
+    setProfileData({
+      date_of_birth: data.date_of_birth
+        ? data.date_of_birth.split('T')[0]
+        : '',
       height_cm: data.height_cm ?? 0,
       weight_kg: data.weight_kg ?? 0,
-    }));
+      activity_level: data.activity_level ?? '',
+    });
   }, [profile]);
 
   const handleSaveChanges = async () => {
     const dto: UpdateProfileDto = {
-      date_of_birth: profileData.date_of_birth || undefined,
-      gender: profileData.gender || undefined,
-      height_cm: profileData.height_cm || undefined,
-      weight_kg: profileData.weight_kg || undefined,
-      activity_level: profileData.activity_level || undefined,
+      ...(profileData.date_of_birth
+        ? {
+            date_of_birth: new Date(
+              profileData.date_of_birth
+            ).toISOString(),
+          }
+        : {}),
+      ...(profileData.height_cm > 0 && {
+        height_cm: profileData.height_cm,
+      }),
+      ...(profileData.weight_kg > 0 && {
+        weight_kg: profileData.weight_kg,
+      }),
+      ...(profileData.activity_level && {
+        activity_level: profileData.activity_level,
+      }),
     };
 
     await updateProfile.mutateAsync(dto);
-
     setIsEditing(false);
   };
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleSync = () => {
-    console.log('Syncing Strava data...');
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400" />
+      </div>
+    );
+  }
 
   const nutritionData = {
     calories: { current: 420, target: 2000, value: '420', unit: 'kkal', label: 'Kalori' },
@@ -91,14 +86,6 @@ export default function ProfilePage() {
     totalCalories: 2567,
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400" />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -106,21 +93,11 @@ export default function ProfilePage() {
 
         {isEditing && (
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Edit Profile</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Edit Profile
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  value={profileData.name}
-                  onChange={(e) =>
-                    setProfileData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                />
-              </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Date of Birth
@@ -134,25 +111,8 @@ export default function ProfilePage() {
                       date_of_birth: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Gender
-                </label>
-                <select
-                  value={profileData.gender}
-                  onChange={(e) =>
-                    setProfileData((prev) => ({ ...prev, gender: e.target.value }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
               </div>
 
               <div>
@@ -168,7 +128,7 @@ export default function ProfilePage() {
                       height_cm: Number(e.target.value) || 0,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 />
               </div>
 
@@ -185,30 +145,8 @@ export default function ProfilePage() {
                       weight_kg: Number(e.target.value) || 0,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Activity Level
-                </label>
-                <select
-                  value={profileData.activity_level}
-                  onChange={(e) =>
-                    setProfileData((prev) => ({
-                      ...prev,
-                      activity_level: e.target.value,
-                    }))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                >
-                  <option value="">Select Activity Level</option>
-                  <option value="sedentary">Sedentary</option>
-                  <option value="lightly_active">Lightly Active</option>
-                  <option value="moderately_active">Moderately Active</option>
-                  <option value="very_active">Very Active</option>
-                </select>
               </div>
             </div>
 
@@ -216,14 +154,14 @@ export default function ProfilePage() {
               <button
                 onClick={handleSaveChanges}
                 disabled={updateProfile.isPending}
-                className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-xl transition-colors disabled:opacity-50"
+                className="px-6 py-3 bg-yellow-400 rounded-xl font-semibold"
               >
                 {updateProfile.isPending ? 'Saving...' : 'Save Changes'}
               </button>
 
               <button
                 onClick={() => setIsEditing(false)}
-                className="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-900 font-semibold rounded-xl transition-colors"
+                className="px-6 py-3 bg-gray-300 rounded-xl font-semibold"
               >
                 Cancel
               </button>
@@ -232,14 +170,12 @@ export default function ProfilePage() {
         )}
 
         {!isEditing && (
-          <div className="mb-6">
-            <button
-              onClick={handleEditToggle}
-              className="px-6 py-3 bg-blue-400 hover:bg-blue-500 text-white font-semibold rounded-xl transition-colors"
-            >
-              Edit Profile
-            </button>
-          </div>
+          <button
+            onClick={() => setIsEditing(true)}
+            className="mb-6 px-6 py-3 bg-blue-500 text-white rounded-xl"
+          >
+            Edit Profile
+          </button>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -251,20 +187,20 @@ export default function ProfilePage() {
               <NutritionCard icon={Droplet} {...nutritionData.fat} color="red" />
             </div>
 
-            <StravaCard activities={stravaActivities} onSync={handleSync} />
+            <StravaCard activities={stravaActivities} onSync={() => {}} />
           </div>
 
           <div className="space-y-6">
             <SidebarCard icon={Bell} title="Notifikasi">
-              <div className="h-32 flex items-center justify-center text-gray-400">
-                <p className="text-sm">Tidak ada notifikasi</p>
-              </div>
+              <p className="text-sm text-gray-400 text-center">
+                Tidak ada notifikasi
+              </p>
             </SidebarCard>
 
             <SidebarCard icon={Settings} title="Setelan">
-              <div className="h-64 flex items-center justify-center text-gray-400">
-                <p className="text-sm">Pengaturan profil</p>
-              </div>
+              <p className="text-sm text-gray-400 text-center">
+                Pengaturan profil
+              </p>
             </SidebarCard>
           </div>
         </div>

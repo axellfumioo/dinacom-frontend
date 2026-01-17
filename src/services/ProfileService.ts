@@ -8,7 +8,7 @@ class ProfileService {
     const token = await getCookies();
     return await apiClient({
       method: "get",
-      url: "api/v1/profiles",
+      url: "profiles",
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -19,7 +19,7 @@ class ProfileService {
     const token = await getCookies();
     return apiClient({
       method: "patch",
-      url: "api/v1/profiles",
+      url: "profiles",
       data: dto,
       headers: {
         Authorization: `Bearer ${token}`
@@ -39,7 +39,7 @@ class ProfileService {
 
     return apiClient({
       method: "post",
-      url: "api/v1/profiles/avatar",
+      url: "profiles/avatar",
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`
