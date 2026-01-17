@@ -6,6 +6,7 @@ export interface ProfileModel {
   height_cm: number | null;
   weight_kg: number | null;
   created_at: string; // ISO Date string
+  activity_level: string | null;
 }
 
 //   gender: "PRIA" | "WANITA";

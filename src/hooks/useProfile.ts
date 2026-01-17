@@ -6,19 +6,23 @@ import {
   UpdateProfileDto,
   UploadAvatarDto,
 } from "@/common/dto/profileDto";
+import { ApiResponse } from "@/common/dto/ai/apiResponse";
+import { ProfileModel } from "@/common/model/profile";
 
 export const useProfile = () => {
   const queryClient = useQueryClient();
 
 
-  const useCurrentProfile = () => {
-    return useQuery({
-      queryKey: ["profile"],
-      queryFn: async () => {
-        profileService.getProfile();
-      },
-    });
-  };
+const useCurrentProfile = () => {
+  return useQuery<ProfileModel>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await profileService.getProfile() as ApiResponse<ProfileModel>;
+      return res.data;
+    },
+  });
+};
+
 
   const updateProfileMutation = useMutation({
     mutationKey: ["updateProfile"],
