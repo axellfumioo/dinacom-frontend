@@ -10,7 +10,9 @@ export default function RootLayout({
 }) {
   return (
     <AuthGuard>
-      <LayoutClient>{children}</LayoutClient>
-    </AuthGuard>
+      <LayoutClient>
+        {children}
+      </LayoutClient>
+     </AuthGuard>
   );
 }

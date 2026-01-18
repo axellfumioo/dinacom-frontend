@@ -1,6 +1,5 @@
 export interface UpdateProfileDto {
   date_of_birth?: string; // ISO string (YYYY-MM-DD / ISO8601)
-  gender?: string;
   height_cm?: number;
   weight_kg?: number;
   activity_level?: string;
