@@ -1,34 +1,24 @@
 "use client";
 
-import { QuestionnaireAnswerDto, UpdateQuestionnairesDto } from "@/common/dto/questionDto";
+import {
+  QuestionnaireAnswerDto,
+  UpdateQuestionnairesDto,
+} from "@/common/dto/questionDto";
 import { questionnaireService } from "@/services/QuestService";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-export const useQuestionnaire = () => {
-    const router = useRouter();
-    return useMutation({
-        mutationKey: ['getquestionnaire'],
-        mutationFn: (dto: QuestionnaireAnswerDto) => questionnaireService.getUserQuestionnaires(dto),
-        onSuccess: () => {
-            console.log("Berhasil mendapatkan questionnaire!");
-        },
-        onError: (err) => {
-            console.log(err);
-        }
-    })
-}
+export const useGetQuestionnaire = () => {
+  return useQuery({
+    queryKey: ["questionnaire"],
+    queryFn: () => questionnaireService.getUserQuestionnaires(),
+  });
+};
+
 
 export const useUpdateQuestionnaire = () => {
-    const router = useRouter();
-    return useMutation({
-        mutationKey: ['updatequestionnaire'],
-        mutationFn: (dto: UpdateQuestionnairesDto) => questionnaireService.updateQuestionnaires(dto),
-        onSuccess: () => {
-            console.log("Berhasil mengupdate questionnaire!");
-        },
-        onError: (err) => {
-            console.log(err);
-        }
-    })
-}
+  return useMutation({
+    mutationKey: ["update-questionnaire"],
+    mutationFn: (dto: UpdateQuestionnairesDto) =>
+      questionnaireService.updateQuestionnaires(dto),
+  });
+};
