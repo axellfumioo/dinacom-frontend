@@ -15,7 +15,7 @@ export interface FoodScan {
 }
 
 export interface UserStore {
-  id: string;
+  user_id: string;
   name: string;
   email: string;
   avatar: string;
