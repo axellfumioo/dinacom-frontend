@@ -8,7 +8,10 @@ import { setUserStore } from "@/common/lib/store";
 class AuthService {
   async login(dto: LoginDto) {
     try {
-      const res = await apiClient<{ message: string; data: string }>({
+      const res = await apiClient<{
+        message: string;
+         data: ({token: string, user: {user_id: string, id: string, name: string, email: string, avatar: string}});
+      }>({
         url: `/auth/login`,
         data: dto,
         method: "post",
@@ -18,7 +21,9 @@ class AuthService {
         throw new Error("Invalid response from server");
       }
 
-      setCookies(res.data);
+      setCookies(res.data.token);
+      setUserStore(res.data.user);
+
       sessionStorage.setItem("showLoginAlert", "true");
       toast.success("Berhasil Login");
 
@@ -34,7 +39,7 @@ class AuthService {
   async register(dto: RegisterDto) {
     const res = await apiClient<{
       message: string;
-      data: { user: any; token: string };
+      data: ({token: string, user: {user_id: string, id: string, name: string, email: string, avatar: string}});
     }>({
       url: `/auth/register`,
       data: dto,
@@ -46,18 +51,10 @@ class AuthService {
     }
 
     setCookies(res.data.token);
+    setUserStore(res.data.user);
     toast.success("Berhasil Register");
 
     return res.data.user;
-  }
-
-  connectStrava() {
-    if (!process.env.NEXT_PUBLIC_API_URL) {
-      throw new Error("NEXT_PUBLIC_API_URL belum diset");
-    }
-
-    window.location.href =
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/strava/redirect`;
   }
 
   logout() {
