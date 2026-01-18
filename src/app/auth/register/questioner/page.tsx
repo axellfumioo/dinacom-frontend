@@ -1,5 +1,11 @@
-import QuestionerContainer from "@/components/quest/QuestionerContainer"
+"use client";
 
-export default function QuestionerPage() {
-  return <QuestionerContainer />
+import QuestionnaireContainer from "@/components/quest/QuestionnaireContainer";
+
+export default function QuestionnairePage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <QuestionnaireContainer />
+    </div>
+  );
 }

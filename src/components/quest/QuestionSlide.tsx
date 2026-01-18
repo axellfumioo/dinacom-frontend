@@ -1,80 +1,127 @@
-"use client"
+"use client";
 
-import React from "react"
+import { QuestionnaireAnswerDto } from "@/common/dto/questionDto";
 
 interface Props {
-  title: string
-  type: "boolean" | "slider" | "radio"
-  value: string
-  onChange: (v: string) => void
-  options?: { label: string; value: string }[]
-  min?: number
-  max?: number
+  question: QuestionnaireAnswerDto;
+  step: number;
+  total: number;
+  answers: QuestionnaireAnswerDto[];
+  onAnswer: (val: string) => void;
+  onNext: () => void;
+  onSubmit: () => void;
 }
 
-export const QuestionSlide: React.FC<Props> = ({
-  title,
-  type,
-  value,
-  onChange,
-  options,
-  min,
-  max,
-}) => {
-  return (
-    <div className="w-full max-w-md bg-white p-6 rounded-xl shadow">
-      <h2 className="text-xl font-semibold mb-6">{title}</h2>
+export default function QuestionSlide({
+  question,
+  step,
+  total,
+  answers,
+  onAnswer,
+  onNext,
+  onSubmit,
+}: Props) {
+  const currentAnswer = answers.find(
+    (a) => a.question_id === question.question_id
+  )?.answer;
 
-      {/* YES / NO */}
-      {type === "boolean" && (
+  const isLast = step === total - 1;
+
+  return (
+    <div className="space-y-6">
+      <p className="text-sm text-gray-500">
+        Pertanyaan {step + 1} dari {total}
+      </p>
+
+      <h2 className="text-lg font-semibold">{question.question_id}</h2>
+
+      {/* QUESTION TYPE HANDLING */}
+      {step === 0 && (
         <div className="flex gap-4">
-          {["ya", "tidak"].map((v) => (
+          {["Ya", "Tidak"].map((v) => (
             <button
               key={v}
-              onClick={() => onChange(v)}
-              className={`flex-1 py-3 rounded-lg border ${
-                value === v ? "bg-black text-white" : "bg-white"
+              onClick={() => onAnswer(v)}
+              className={`px-4 py-2 rounded border ${
+                currentAnswer === v ? "bg-black text-white" : ""
               }`}
             >
-              {v.toUpperCase()}
+              {v}
             </button>
           ))}
         </div>
       )}
 
-      {/* SLIDER */}
-      {type === "slider" && (
-        <>
-          <input
-            type="range"
-            min={min}
-            max={max}
-            value={value || min}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full"
-          />
-          <p className="mt-4 text-center">{value || min} jam</p>
-        </>
+      {step === 1 && (
+        <div className="flex gap-4">
+          {["Ya", "Tidak"].map((v) => (
+            <button
+              key={v}
+              onClick={() => onAnswer(v)}
+              className={`px-4 py-2 rounded border ${
+                currentAnswer === v ? "bg-black text-white" : ""
+              }`}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
       )}
 
-      {/* RADIO */}
-      {type === "radio" && (
-        <div className="space-y-3">
-          {options?.map((opt) => (
-            <label
-              key={opt.value}
-              className="flex items-center gap-3 cursor-pointer"
-            >
+      {step === 2 && (
+        <div>
+          <input
+            type="range"
+            min={1}
+            max={12}
+            value={currentAnswer || 6}
+            onChange={(e) => onAnswer(e.target.value)}
+            className="w-full"
+          />
+          <p className="text-center mt-2">{currentAnswer || 6} Jam</p>
+        </div>
+      )}
+
+      {step === 3 && (
+        <div className="space-y-2">
+          {[
+            { label: "< 1 Jam", value: "<1" },
+            { label: "> 1 Jam", value: ">1" },
+            { label: "> 2 Jam", value: ">2" },
+            { label: "> 3 Jam", value: ">3" },
+          ].map((opt) => (
+            <label key={opt.value} className="flex items-center gap-2">
               <input
                 type="radio"
-                checked={value === opt.value}
-                onChange={() => onChange(opt.value)}
+                name="exercise"
+                checked={currentAnswer === opt.value}
+                onChange={() => onAnswer(opt.value)}
               />
-              <span>{opt.label}</span>
+              {opt.label}
             </label>
           ))}
         </div>
       )}
+
+      <div className="flex justify-end pt-4">
+        {!isLast ? (
+          <button
+            disabled={!currentAnswer}
+            onClick={onNext}
+            className="px-4 py-2 bg-black text-white rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        ) : (
+          <button
+            disabled={!currentAnswer}
+            onClick={onSubmit}
+            className="px-4 py-2 bg-green-600 text-white rounded disabled:opacity-50"
+          >
+            Submit
+          </button>
+        )}
+      </div>
     </div>
-  )
+  );
 }

@@ -7,3 +7,9 @@ export interface QuestionnaireAnswerDto {
 export interface UpdateQuestionnairesDto {
   answers: QuestionnaireAnswerDto[];
 }
+
+// hanya untuk GET response
+export interface QuestionnaireResponse {
+  message: string;
+  data: QuestionnaireAnswerDto[];
+}

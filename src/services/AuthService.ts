@@ -1,4 +1,3 @@
-
 import { LoginDto, RegisterDto } from "@/common/dto/authDto";
 import axios from "axios";
 import { apiClient } from "@/common/lib/apiClient";
@@ -33,7 +32,10 @@ class AuthService {
   }
 
   async register(dto: RegisterDto) {
-    const res = await apiClient<{ message: string; data: { user: any; token: string } }>({
+    const res = await apiClient<{
+      message: string;
+      data: { user: any; token: string };
+    }>({
       url: `/auth/register`,
       data: dto,
       method: "post",
@@ -45,7 +47,17 @@ class AuthService {
 
     setCookies(res.data.token);
     toast.success("Berhasil Register");
+
     return res.data.user;
+  }
+
+  connectStrava() {
+    if (!process.env.NEXT_PUBLIC_API_URL) {
+      throw new Error("NEXT_PUBLIC_API_URL belum diset");
+    }
+
+    window.location.href =
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/strava/redirect`;
   }
 
   logout() {
@@ -55,6 +67,3 @@ class AuthService {
 }
 
 export const authService = new AuthService();
-
-
-
