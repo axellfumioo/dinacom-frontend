@@ -8,6 +8,7 @@ import {
 } from "@/common/dto/profileDto";
 import { ApiResponse } from "@/common/dto/ai/apiResponse";
 import { ProfileModel } from "@/common/model/profile";
+import toast from "react-hot-toast";
 
 export const useProfile = () => {
   const queryClient = useQueryClient();
@@ -32,6 +33,7 @@ const useCurrentProfile = () => {
     onSuccess: () => {
       // refresh profile setelah update
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success("Profile updated successfully");
     },
   });
 
@@ -43,6 +45,7 @@ const useCurrentProfile = () => {
     onSuccess: () => {
       // refresh profile setelah upload avatar
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success("Avatar uploaded successfully");
     },
   });
 
