@@ -10,13 +10,7 @@ export default async function validateToken(token: string) {
                 Authorization: `Bearer ${token}`
             }
         });
-
-        if (res.success === true) {
-            return res.data; // Return user data instead of true
-
-        }
-
-        return false;
+        return res.data;
     } catch {
         return false;
     }

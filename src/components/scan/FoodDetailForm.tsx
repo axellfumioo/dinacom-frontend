@@ -3,42 +3,37 @@
 import { useState } from "react";
 import { ChevronDown, Save } from "lucide-react";
 
-interface FoodDetailFormProps {
-  onSave: (data: FoodFormData) => void;
-}
-
 interface FoodFormData {
   foodName: string;
   portion: number;
   unit: string;
-  mealTime: string;
+  mealTime: { title: string; value: string };
 }
 
-export function FoodDetailForm({ onSave }: FoodDetailFormProps) {
+export function FoodDetailForm() {
   const [formData, setFormData] = useState<FoodFormData>({
     foodName: "Alpukat, Telur & Roti",
     portion: 350,
     unit: "gram",
-    mealTime: "Makan Siang",
+    mealTime: { title: "", value: "" },
   });
 
   const [showMealDropdown, setShowMealDropdown] = useState(false);
 
   const mealOptions = [
-    "Makan Pagi",
-    "Makan Siang",
-    "Makan Malam",
-    "Snack Pagi",
-    "Snack Sore",
+    { text: "Makan Pagi", value: "BREAKFAST" },
+    { text: "Makan Siang", value: "LUNCH" },
+    { text: "Makan Malam", value: "DiNNER" },
+    { text: "Snack", value: "SNACK" },
   ];
 
-  const handleSubmit = () => {
-    onSave(formData);
-  };
+  const handleSubmit = () => {};
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-      <h3 className="text-base font-bold text-gray-900 mb-5">Konfirmasi Detail Makanan</h3>
+      <h3 className="text-base font-bold text-gray-900 mb-5">
+        Konfirmasi Detail Makanan
+      </h3>
 
       <div className="space-y-4">
         {/* Nama Makanan */}
@@ -49,7 +44,9 @@ export function FoodDetailForm({ onSave }: FoodDetailFormProps) {
           <input
             type="text"
             value={formData.foodName}
-            onChange={(e) => setFormData({ ...formData, foodName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, foodName: e.target.value })
+            }
             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
             placeholder="Masukkan nama makanan"
           />
@@ -66,7 +63,9 @@ export function FoodDetailForm({ onSave }: FoodDetailFormProps) {
               <input
                 type="number"
                 value={formData.portion}
-                onChange={(e) => setFormData({ ...formData, portion: Number(e.target.value) })}
+                onChange={(e) =>
+                  setFormData({ ...formData, portion: Number(e.target.value) })
+                }
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent pr-16"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500">
@@ -85,22 +84,25 @@ export function FoodDetailForm({ onSave }: FoodDetailFormProps) {
                 onClick={() => setShowMealDropdown(!showMealDropdown)}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent text-left flex items-center justify-between"
               >
-                <span>{formData.mealTime}</span>
+                <span>{formData.mealTime.title}</span>
                 <ChevronDown className="w-4 h-4 text-gray-500" />
               </button>
 
               {showMealDropdown && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-                  {mealOptions.map((option) => (
+                  {mealOptions.map(({ text, value }) => (
                     <button
-                      key={option}
+                      key={value}
                       onClick={() => {
-                        setFormData({ ...formData, mealTime: option });
+                        setFormData({
+                          ...formData,
+                          mealTime: { title: text, value },
+                        });
                         setShowMealDropdown(false);
                       }}
                       className="w-full px-4 py-3 text-left text-sm text-gray-900 hover:bg-gray-50 transition-colors"
                     >
-                      {option}
+                      {text}
                     </button>
                   ))}
                 </div>
