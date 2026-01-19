@@ -7,20 +7,28 @@ import React from "react"
 import toast from "react-hot-toast"
 
 
-export const useLogin = (setError: React.Dispatch<React.SetStateAction<string | null>>) => {
-    const router = useRouter()
-    return useMutation({
-        mutationKey: ['login'],
-        mutationFn: (dto: LoginDto) => authService.login(dto),
-        onSuccess: () => {
-        router.push("/dashboard");
-        toast.success("Berhasil login!")
-        },
-        onError: (err) => {
-            setError(err.message)
-        }
-    })
-}
+export const useLogin = (
+  setError: React.Dispatch<React.SetStateAction<string | null>>
+) => {
+  const router = useRouter();
+
+  return useMutation({
+    mutationKey: ["login"],
+    mutationFn: (dto: LoginDto) => authService.login(dto),
+
+    onSuccess: (user) => {
+      if (!user) return;
+
+      toast.success("Berhasil login!");
+      router.push("/dashboard");
+    },
+
+    onError: (err: Error) => {
+      setError(err.message);
+    },
+  });
+};
+
 
 export const useRegister = (
   setError: React.Dispatch<React.SetStateAction<string | null>>,
