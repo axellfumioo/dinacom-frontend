@@ -4,42 +4,43 @@ import { apiClient } from "@/common/lib/apiClient";
 import { deleteCookies, setCookies } from "@/lib/cookie";
 import toast from "react-hot-toast";
 import { setUserStore } from "@/common/lib/store";
+import { UserModel } from "@/common/model/user";
 
 class AuthService {
-  async login(dto: LoginDto) {
-    try {
-      const res = await apiClient<{
-        message: string;
-         data: ({token: string, user: {user_id: string, id: string, name: string, email: string, avatar: string}});
-      }>({
-        url: `/auth/login`,
-        data: dto,
-        method: "post",
-      });
+async login(dto: LoginDto) {
+  try {
+    const res = await apiClient<{
+      message: string;
+      data: { token: string; user: UserModel };
+    }>({
+      url: `/auth/login`,
+      data: dto,
+      method: "post",
+    });
 
-      if (!res.data) {
-        throw new Error("Invalid response from server");
-      }
-
-      setCookies(res.data.token);
-      setUserStore(res.data.user);
-
-      sessionStorage.setItem("showLoginAlert", "true");
-      toast.success("Berhasil Login");
-
-      return true;
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        throw error.response?.data.message;
-      }
-      throw error;
+    if (!res.data) {
+      throw new Error("Invalid response from server");
     }
+
+    setCookies(res.data.token);
+    setUserStore(res.data.user);
+
+    sessionStorage.setItem("showLoginAlert", "true");
+
+    return res.data.user; // return user
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Login gagal");
+    }
+    throw new Error("Terjadi kesalahan");
   }
+}
+
 
   async register(dto: RegisterDto) {
     const res = await apiClient<{
       message: string;
-      data: ({token: string, user: {user_id: string, id: string, name: string, email: string, avatar: string}});
+      data: {token: string, user: UserModel};
     }>({
       url: `/auth/register`,
       data: dto,
@@ -50,7 +51,6 @@ class AuthService {
       throw new Error("Invalid response from server");
     }
 
-    setCookies(res.data.token);
     setUserStore(res.data.user);
     toast.success("Berhasil Register");
 

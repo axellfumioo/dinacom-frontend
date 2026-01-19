@@ -11,4 +11,5 @@ export interface UserModel {
   profile: ProfileModel
   created_at: string
   updated_at: string
+  avatar: string;
 }

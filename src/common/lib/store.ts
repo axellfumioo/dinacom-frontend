@@ -1,9 +1,9 @@
-import { UserStore } from "../model/indext";
 import { Store } from "@tanstack/react-store";
+import { UserModel } from "../model/user";
 
 
-export const userStore = new Store<UserStore | null>(null);
+export const userStore = new Store<UserModel | null>(null);
 
-export const setUserStore = (user: UserStore | null) => {
+export const setUserStore = (user: UserModel | null) => {
     userStore.setState(user);
 }

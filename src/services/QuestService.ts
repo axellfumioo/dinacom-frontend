@@ -8,10 +8,7 @@ import { userStore } from "@/common/lib/store";
 class QuestionnaireService {
   private getUserId() {
     const user = userStore.state;
-    if (!user?.user_id) {
-      throw new Error("User belum login");
-    }
-    return user.user_id
+    return user?.user_id || null;
   }
 
   async getUserQuestionnaires() {
@@ -25,9 +22,7 @@ class QuestionnaireService {
       },
     });
 
-    if (!res.data) {
-      throw new Error("Invalid response from server");
-    }
+    if (!userId) return null;
 
     return res.data;
     
