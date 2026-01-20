@@ -1,23 +1,22 @@
 "use client";
 
 import { UpdateQuestionnairesDto } from "@/common/dto/questionDto";
-import { userStore } from "@/common/lib/store";
 import { questionnaireService } from "@/services/QuestService";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 
-export const useGetQuestionnaire = () => {
+export const useGetQuestionnaire = (userId :string) => {
   return useQuery({
-    queryKey: ["questionnaire", userStore.state?.user_id],
-    queryFn: () => questionnaireService.getUserQuestionnaires(),
-    enabled: !!userStore.state?.user_id,
+    queryKey: ["questionnaire", userId],
+    queryFn: () => questionnaireService.getUserQuestionnaires(userId),
+    enabled: !!userId,
   });
 };
 
-export const useUpdateQuestionnaire = () => {
+export const useUpdateQuestionnaire = (userId: string) => {
   return useMutation({
-    mutationKey: ["update-questionnaire"],
-    mutationFn: (dto: UpdateQuestionnairesDto) =>
-      questionnaireService.updateQuestionnaires(dto),
+    mutationKey: ["update-questionnaire", userId],
+    mutationFn: (dto: UpdateQuestionnairesDto[]) =>
+      questionnaireService.updateQuestionnaires(userId, dto),
   });
 };

@@ -14,12 +14,12 @@ export interface FoodScan {
   scannedAt: string;
 }
 
-// export interface UserStore {
-//   user_id: string;
-//   name: string;
-//   email: string;
-//   avatar: string;
-// }
+export interface UserStore {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+}
 
 export interface Profile {
   id: string;

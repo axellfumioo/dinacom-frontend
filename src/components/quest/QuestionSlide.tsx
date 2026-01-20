@@ -1,12 +1,12 @@
 "use client";
 
-import { QuestionnaireAnswerDto } from "@/common/dto/questionDto";
+import { QuestionnaireDto,UpdateQuestionnairesDto } from "@/common/dto/questionDto";
 
 interface Props {
-  question: QuestionnaireAnswerDto;
+  question: QuestionnaireDto;
   step: number;
   total: number;
-  answers: QuestionnaireAnswerDto[];
+  answers: UpdateQuestionnairesDto[];
   onAnswer: (val: string) => void;
   onNext: () => void;
   onSubmit: () => void;
@@ -22,7 +22,7 @@ export default function QuestionSlide({
   onSubmit,
 }: Props) {
   const currentAnswer = answers.find(
-    (a) => a.question_id === question.question_id
+    (a) => a.question_id === question.ID
   )?.answer;
 
   const isLast = step === total - 1;
@@ -33,7 +33,7 @@ export default function QuestionSlide({
         Pertanyaan {step + 1} dari {total}
       </p>
 
-      <h2 className="text-lg font-semibold">{question.question_id}</h2>
+      <h2 className="text-lg font-semibold">{question.Question}</h2>
 
       {/* QUESTION TYPE HANDLING */}
       {step === 0 && (
