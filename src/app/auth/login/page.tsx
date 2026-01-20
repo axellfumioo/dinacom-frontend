@@ -4,30 +4,19 @@ import { authService } from '@/services/AuthService';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Mail, Lock } from 'lucide-react';
+import { useLogin } from '@/hooks/AuthHook';
 
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null); // bisa string atau null tipenya
+
+    const { mutate: login, isPending: loading } = useLogin(setError);
 
     async function handleLogin(e:React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setError(null);
-        setLoading(true);
-
-        try {
-            const res = await authService.login({ email, password });
-            if (res) {
-                router.push("/dashboard");
-            }
-        } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Email atau Password salah";
-            setError(message);
-        } finally {
-            setLoading(false);
-        }
+        login({ email, password });
     };
 
 

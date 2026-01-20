@@ -3,23 +3,13 @@ import {
   QuestionnaireResponse,
   UpdateQuestionnairesDto,
 } from "@/common/dto/questionDto";
-import { userStore } from "@/common/lib/store";
 
 class QuestionnaireService {
-  private getUserId() {
-    const user = userStore.state;
-    return user?.user_id || null;
-  }
 
-  async getUserQuestionnaires() {
-    const userId = this.getUserId();
-
+  async getUserQuestionnaires(userId:  string) {
     const res = await apiClient<QuestionnaireResponse>({
-      url: "/quest",
+      url: `/quest?userId=${userId}`,
       method: "get",
-      params: {
-        userId,
-      },
     });
 
     if (!userId) return null;
@@ -28,16 +18,11 @@ class QuestionnaireService {
     
   }
 
-async updateQuestionnaires(dto: UpdateQuestionnairesDto) {
-  const userId = this.getUserId();
-
+async updateQuestionnaires( userId: string, dto: UpdateQuestionnairesDto[]) {
   await apiClient({
-    url: "/quest/answer",
+    url: `/quest/answer?userId=${userId}`,
     method: "patch",
-    data: {
-      ...dto,
-      userId,
-    },
+    data: dto,
   });
 
   return true;

@@ -5,13 +5,15 @@ import { deleteCookies, setCookies } from "@/lib/cookie";
 import toast from "react-hot-toast";
 import { setUserStore } from "@/common/lib/store";
 import { UserModel } from "@/common/model/user";
+import { UserStore } from "@/common/model/indext";
+import { setUserIdStore, userIdStore } from "@/common/lib/userId";
 
 class AuthService {
 async login(dto: LoginDto) {
   try {
     const res = await apiClient<{
       message: string;
-      data: { token: string; user: UserModel };
+      data: string;
     }>({
       url: `/auth/login`,
       data: dto,
@@ -22,12 +24,10 @@ async login(dto: LoginDto) {
       throw new Error("Invalid response from server");
     }
 
-    setCookies(res.data.token);
-    setUserStore(res.data.user);
-
+    await setCookies(res.data);
     sessionStorage.setItem("showLoginAlert", "true");
 
-    return res.data.user; // return user
+    return res.data; // return user
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "Login gagal");
@@ -40,7 +40,7 @@ async login(dto: LoginDto) {
   async register(dto: RegisterDto) {
     const res = await apiClient<{
       message: string;
-      data: {token: string, user: UserModel};
+      data:UserModel;
     }>({
       url: `/auth/register`,
       data: dto,
@@ -51,11 +51,12 @@ async login(dto: LoginDto) {
       throw new Error("Invalid response from server");
     }
 
-    setUserStore(res.data.user);
+    setUserIdStore(res.data.user_id);
     toast.success("Berhasil Register");
 
-    return res.data.user;
+    return res.data;
   }
+
 
   logout() {
     deleteCookies();

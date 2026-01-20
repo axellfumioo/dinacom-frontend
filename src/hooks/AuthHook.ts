@@ -11,14 +11,10 @@ export const useLogin = (
   setError: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
   const router = useRouter();
-
   return useMutation({
     mutationKey: ["login"],
     mutationFn: (dto: LoginDto) => authService.login(dto),
-
-    onSuccess: (user) => {
-      if (!user) return;
-
+    onSuccess: () => {
       toast.success("Berhasil login!");
       router.push("/dashboard");
     },
