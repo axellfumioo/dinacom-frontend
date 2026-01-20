@@ -5,15 +5,15 @@ import { deleteCookies, setCookies } from "@/lib/cookie";
 import toast from "react-hot-toast";
 import { setUserStore } from "@/common/lib/store";
 import { UserModel } from "@/common/model/user";
+import { setUserIdStore } from "@/common/lib/userId";
 import { UserStore } from "@/common/model/indext";
-import { setUserIdStore, userIdStore } from "@/common/lib/userId";
 
 class AuthService {
 async login(dto: LoginDto) {
   try {
     const res = await apiClient<{
       message: string;
-      data: string;
+      data: UserStore;
     }>({
       url: `/auth/login`,
       data: dto,
@@ -25,6 +25,7 @@ async login(dto: LoginDto) {
     }
 
     await setCookies(res.data);
+    setUserStore(res.data);
     sessionStorage.setItem("showLoginAlert", "true");
 
     return res.data; // return user
@@ -57,6 +58,9 @@ async login(dto: LoginDto) {
     return res.data;
   }
 
+   connectStrava() {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/strava/redirect`;
+  }
 
   logout() {
     deleteCookies();
