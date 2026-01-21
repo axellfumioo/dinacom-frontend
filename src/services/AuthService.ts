@@ -6,14 +6,13 @@ import toast from "react-hot-toast";
 import { setUserStore } from "@/common/lib/store";
 import { UserModel } from "@/common/model/user";
 import { setUserIdStore } from "@/common/lib/userId";
-import { UserStore } from "@/common/model/indext";
 
 class AuthService {
 async login(dto: LoginDto) {
   try {
     const res = await apiClient<{
       message: string;
-      data: UserStore;
+      data: string;
     }>({
       url: `/auth/login`,
       data: dto,
@@ -25,7 +24,6 @@ async login(dto: LoginDto) {
     }
 
     await setCookies(res.data);
-    setUserStore(res.data);
     sessionStorage.setItem("showLoginAlert", "true");
 
     return res.data; // return user
