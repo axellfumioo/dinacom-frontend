@@ -47,6 +47,10 @@ const useCurrentProfile = () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Avatar uploaded successfully");
     },
+
+    onError: (error) => {
+      toast.error("Failed to upload avatar");
+    }
   });
 
   return {

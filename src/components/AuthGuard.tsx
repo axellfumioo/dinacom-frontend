@@ -33,10 +33,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         router.push("/auth/login");
       } else {
         setUserStore({
-          id: userData.id,
+          id: userData.user_id,
           email: userData.email,
           avatar: userData.avatar || "",
-          name: userData.name,
+          name: userData?.full_name || "",
         });
         setTokenStatus("true");
       }

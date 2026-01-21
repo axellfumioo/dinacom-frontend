@@ -6,6 +6,7 @@ import { useStore } from "@tanstack/react-store";
 import { ImageUp } from "lucide-react";
 import Image from "next/image";
 import React, { useRef } from "react";
+import toast from "react-hot-toast";
 
 export const ProfileHeader = () => {
   const { uploadAvatar, useCurrentProfile } = useProfile();
@@ -19,11 +20,10 @@ export const ProfileHeader = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user?.id) return;
+    if (!file || !user?.id) toast.error("Gambar g ada");
 
     uploadAvatar.mutate({
-      user_id: user.id,
-      avatar: file,
+      avatar: file!,
     });
 
     e.target.value = "";

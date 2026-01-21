@@ -6,6 +6,5 @@ export interface UpdateProfileDto {
 }
 
 export interface UploadAvatarDto {
-  user_id: string;
   avatar: File;
 }

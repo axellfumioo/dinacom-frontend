@@ -1,6 +1,7 @@
 "use client";
 
 import { userStore } from "@/common/lib/store";
+import { useProfile } from "@/hooks/useProfile";
 import { authService } from "@/services/AuthService";
 import { useStore } from "@tanstack/react-store";
 import { LogOut } from "lucide-react";
@@ -10,7 +11,9 @@ import toast from "react-hot-toast";
 
 export default function SidebarUserCard() {
   const router = useRouter();
-  const user = useStore(userStore); // ✅ SATU SUMBER DATA
+  const userData = useStore(userStore); 
+  const { useCurrentProfile } = useProfile();
+  const { data: user } = useCurrentProfile();
 
   const handleLogout = () => {
     authService.logout();
@@ -48,10 +51,10 @@ export default function SidebarUserCard() {
           {/* User Info */}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-gray-900 truncate">
-              {user.name || "User"}
+              {userData?.name || "User"}
             </p>
             <p className="text-xs text-gray-500 truncate">
-              {user.email}
+              {userData?.email}
             </p>
           </div>
 

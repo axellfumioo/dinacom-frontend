@@ -8,7 +8,7 @@ class ProfileService {
     const token = await getCookies();
     return await apiClient({
       method: "get",
-      url: "profiles",
+      url: "/profiles",
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -19,7 +19,7 @@ class ProfileService {
     const token = await getCookies();
     return apiClient({
       method: "patch",
-      url: "profiles",
+      url: "/profiles",
       data: dto,
       headers: {
         Authorization: `Bearer ${token}`
@@ -30,7 +30,6 @@ class ProfileService {
   async uploadAvatar(dto: UploadAvatarDto) {
     const token = await getCookies();
     const formData = new FormData();
-    formData.append("user_id", dto.user_id);
     formData.append("avatar", dto.avatar);
 
     if (!dto.avatar) {
@@ -39,7 +38,7 @@ class ProfileService {
 
     return apiClient({
       method: "post",
-      url: "profiles/avatar",
+      url: "/profiles/avatar",
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`

@@ -50,13 +50,7 @@ export default function Hero() {
     width={600}
     height={550}
     alt="Hero Image"
-    className="
-    absolute
-      mt-2
-      translate-y-10
-      md:translate-y-10
-      drop-shadow-2xl
-    "
+    className="absolute mt-2 translate-y-10 md:translate-y-10 drop-shadow-2xl"
   />
 </div>
 
