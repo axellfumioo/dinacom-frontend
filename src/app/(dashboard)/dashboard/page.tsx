@@ -38,11 +38,11 @@ export default function DashboardPage() {
     const flag = sessionStorage.getItem("showLoginAlert");
     if (flag === "true") {
       setShowLoginAlert(true); // tampilkan alert
-      // jangan hapus dulu, tunggu user klik "Siap"
+      // jangan hapus dulu, tunggu user klik Siap
     }
   }, []);
 
-  // Hapus flag ketika user menutup alert
+  // Hapus flag pas user menutup alert
   const handleCloseAlert = () => {
     setShowLoginAlert(false);
     sessionStorage.removeItem("showLoginAlert");
@@ -72,7 +72,6 @@ export default function DashboardPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* ===== DASHBOARD UI ===== */}
       <div
         className={`${containerWidth} mx-auto px-4  min-h-screen py-6`}
       >
@@ -86,13 +85,13 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* ACTION CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <ActionCard
             title="Scan Makanan"
             description="Analisis kalori & nutrisi otomatis dengan AI (NutriScan)"
             buttonText="Upload Foto"
             icon="scan"
+            href="/dashboard/scanmakanan"
             highlight
           />
           <ActionCard
@@ -100,12 +99,14 @@ export default function DashboardPage() {
             description="Dapatkan penjelasan data dan saran kesehatan dari AI."
             buttonText="Tanya AI"
             icon="health"
+            href="/dashboard/healtassistent"
           />
           <ActionCard
             title="Konsultasi"
             description="Chat atau video call dengan dokter terkait hasil analisis AI"
             buttonText="Buat Janji"
             icon="consultation"
+            href="/dashboard/konsultasi"
             highlight
           />
         </div>

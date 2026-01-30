@@ -1,30 +1,42 @@
 import { apiClient } from "@/common/lib/apiClient";
-import { CreateFamilyRequestDto, UpdateFamilyRequestDto } from "@/common/dto/familyDto";
+import { CreateFamilyRequestDto, UpdateFamilyAvatar, UpdateFamilyRequestDto } from "@/common/dto/familyDto";
 import { getCookies } from "@/lib/cookie";
 
 class FamilyService {
 
-  async createNewFamily(dto: CreateFamilyRequestDto) {
+  async getFamilies() {
     const token = await getCookies();
-    const formData = new FormData();
-    formData.append("name", dto.name);
-    formData.append("description", dto.description);
-    formData.append("memberIds", JSON.stringify(dto.memberIds));
-    formData.append("familyAvatar", dto.familyAvatar);
-
-    if (!dto.familyAvatar) {
-      throw new Error("Family avatar file is required");
-    }
-
     return apiClient({
-      method: "post",
-      url: "/families",
-      data: formData,
+      method: "get",
+      url: "/families/user",
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
   }
+
+async createNewFamily(dto: CreateFamilyRequestDto) {
+  const token = await getCookies();
+
+  if (!dto.familyAvatar) {
+    throw new Error("Family avatar file is required");
+  }
+
+  const formData = new FormData();
+  formData.append("name", dto.name);
+  formData.append("description", dto.description);
+  formData.append("image", dto.familyAvatar); // WAJIB "image"
+
+  return apiClient({
+    method: "post",
+    url: "/families",
+    data: formData,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
 
   async updateFamily(id: string, dto: UpdateFamilyRequestDto) {
     const token = await getCookies();
@@ -38,24 +50,26 @@ class FamilyService {
     });
   }
 
-  async updateFamilyAvatar(id: string, avatar: File) {
-    const token = await getCookies();
-    const formData = new FormData();
-    formData.append("avatar", avatar);
+async updateFamilyAvatar(dto: UpdateFamilyAvatar) {
+  const token = await getCookies();
 
-    if (!avatar) {
-      throw new Error("Avatar file is required");
-    }
-
-    return apiClient({
-      method: "patch",
-      url: `/families/${id}/avatar`,
-      data: formData,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+  if (!dto.familyAvatar) {
+    throw new Error("Avatar file is required");
   }
+
+  const formData = new FormData();
+  formData.append("avatar", dto.familyAvatar); 
+
+  return apiClient({
+    method: "patch",
+    url: `/families/${dto.familyID}/avatar`,
+    data: formData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
+}
+
 
   async deleteFamily(id: string) {
     const token = await getCookies();

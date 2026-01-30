@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { FamilyMemberCard } from '@/components/parentalmode/FamilyMemberCard';
 import { FamilyProfileCard } from '@/components/parentalmode/FamilyProfileCard';
-import { useFamilyMembers } from '@/hooks/useFamilyMember';
+import { useFamilyMembers } from '@/hooks/useFamily';
 
 export default function ParentalModePage() {
   const familyID = 'family-id-dari-backend'; 

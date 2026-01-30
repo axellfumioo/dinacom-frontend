@@ -1,7 +1,13 @@
 import React from 'react';
 import { Settings, Users } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-export const FamilyProfileCard = ({ family, onAddMember }) => {
+export const FamilyProfileCard = ({ family }) => {
+  const router = useRouter();
+  const addmember = {
+    add: "/dashboard/parentalmode/add"
+  }
+
   return (
     <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 relative">
       <button className="absolute top-6 right-6 p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -21,7 +27,7 @@ export const FamilyProfileCard = ({ family, onAddMember }) => {
         <p className="text-gray-500 mb-6">Dibuat {family.createdDate}</p>
         
         <button
-          onClick={onAddMember}
+          onClick={() => router.push(addmember.add)}
           className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
         >
           <Users className="w-5 h-5" />
