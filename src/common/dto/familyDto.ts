@@ -10,7 +10,7 @@ export interface UpdateFamilyRequestDto {
     description: string;
 }
 
-export interface UpdateFamilyAvatar {
+export interface UpdateFamilyAvatarDto {
     familyID: string;
     familyAvatar: File;
 }

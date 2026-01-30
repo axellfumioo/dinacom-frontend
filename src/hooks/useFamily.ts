@@ -1,15 +1,18 @@
 'use client';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { CreateFamilyRequestDto, UpdateFamilyAvatar } from '@/common/dto/familyDto';
+import { CreateFamilyRequestDto, UpdateFamilyAvatarDto } from '@/common/dto/familyDto';
 import toast from 'react-hot-toast';
 import { familyService } from '@/services/FamilyService';
 
 export const useGetFamily = () => {
   return useQuery({
     queryKey: ['families'],
-    queryFn: () => familyService.getFamilies(),
-  })
+    queryFn: async () => { 
+    const res = await familyService.getFamilies();
+    return res.data
+}
+})
 }
 
 export const useCreateFamily = () => {
@@ -26,7 +29,7 @@ export const useCreateFamily = () => {
 export const useUpdateAvatar = () => {
   return useMutation({
     mutationKey: ['updateFamilyAvatar'],
-    mutationFn: (dto: UpdateFamilyAvatar) => familyService.updateFamilyAvatar(dto),
+    mutationFn: (dto: UpdateFamilyAvatarDto) => familyService.updateFamilyAvatar(dto),
   })
 }
 
