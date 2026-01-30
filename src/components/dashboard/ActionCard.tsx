@@ -1,4 +1,5 @@
 import { Camera, Sparkles, Video } from "lucide-react";
+import Link from "next/link";
 
 interface ActionCardProps {
   title: string;
@@ -6,6 +7,7 @@ interface ActionCardProps {
   buttonText: string;
   icon?: "scan" | "health" | "consultation";
   highlight?: boolean;
+  href?: string;
 }
 
 export default function ActionCard({
@@ -14,6 +16,7 @@ export default function ActionCard({
   buttonText,
   icon = "scan",
   highlight = false,
+  href,
 }: ActionCardProps) {
   const getIcon = () => {
     switch (icon) {
@@ -51,18 +54,22 @@ export default function ActionCard({
         <h3 className="text-base font-bold text-gray-900">{title}</h3>
       </div>
 
-      <p className="text-sm text-gray-700 mb-6 leading-relaxed min-h-[48px]">
+      <p className="text-sm text-gray-700 mb-6 leading-relaxed min-h-12">
         {description}
       </p>
+{href && (
+  <Link
+    href={href}
+  >
+  <button
+    className={`w-full ${buttonClass} py-3 px-4 rounded-xl font-semibold text-sm`}
+  >
+    {buttonText}
+  </button>
+  </Link>
+)}
 
-      <button
-        className={`w-full ${buttonClass} py-3 px-4 rounded-xl font-semibold text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer`}
-      >
-        {icon === "scan" && <Camera className="w-4 h-4" />}
-        {icon === "health" && <Sparkles className="w-4 h-4" />}
-        {icon === "consultation" && <Video className="w-4 h-4" />}
-        {buttonText}
-      </button>
+
     </div>
   );
 }

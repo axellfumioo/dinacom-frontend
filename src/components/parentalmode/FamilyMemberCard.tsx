@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 export interface FamilyMember {
@@ -22,10 +23,10 @@ export const FamilyMemberCard: React.FC<Props> = ({
 
   return (
     <div className="flex items-center gap-4 p-4 bg-white rounded-lg">
-      <img
+      <Image
         src={member.avatar}
         alt={member.name}
-        className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+        className="w-16 h-16 rounded-full object-cover shrink-0"
       />
 
       <div className="flex-1 min-w-0">
@@ -53,7 +54,7 @@ export const FamilyMemberCard: React.FC<Props> = ({
 
       <button
         onClick={() => onViewDetail(member)}
-        className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors flex-shrink-0"
+        className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shrink-0"
       >
         Lihat detail
       </button>
