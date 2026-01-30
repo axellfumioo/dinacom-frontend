@@ -1,5 +1,5 @@
 import { apiClient } from "@/common/lib/apiClient";
-import { CreateFamilyRequestDto, UpdateFamilyAvatar, UpdateFamilyRequestDto } from "@/common/dto/familyDto";
+import { CreateFamilyRequestDto, UpdateFamilyAvatarDto, UpdateFamilyRequestDto } from "@/common/dto/familyDto";
 import { getCookies } from "@/lib/cookie";
 
 class FamilyService {
@@ -17,6 +17,7 @@ class FamilyService {
 
 async createNewFamily(dto: CreateFamilyRequestDto) {
   const token = await getCookies();
+  console.log("TOKEN:", token);
 
   if (!dto.familyAvatar) {
     throw new Error("Family avatar file is required");
@@ -25,7 +26,7 @@ async createNewFamily(dto: CreateFamilyRequestDto) {
   const formData = new FormData();
   formData.append("name", dto.name);
   formData.append("description", dto.description);
-  formData.append("image", dto.familyAvatar); // WAJIB "image"
+  formData.append("image", dto.familyAvatar, dto.familyAvatar.name); 
 
   return apiClient({
     method: "post",
@@ -50,7 +51,7 @@ async createNewFamily(dto: CreateFamilyRequestDto) {
     });
   }
 
-async updateFamilyAvatar(dto: UpdateFamilyAvatar) {
+async updateFamilyAvatar(dto: UpdateFamilyAvatarDto) {
   const token = await getCookies();
 
   if (!dto.familyAvatar) {
