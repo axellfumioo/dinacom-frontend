@@ -1,35 +1,63 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { Users, Trash2, Edit } from 'lucide-react';
 
 export const FamilyProfileCard = ({ family, onDelete }) => {
   const router = useRouter();
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow-sm relative">
-      <div className="flex flex-col items-center text-center">
-        <Image
-          alt="avatar"
-          src={family.avatar}
-          className="w-40 h-40 rounded-full object-cover mb-4"
-        />
+    <div className="bg-white rounded-2xl shadow-sm sticky top-4">
+      {/* Header */}
+      <div className="bg-gradient-to-br from-yellow-400 to-orange-400 rounded-t-2xl p-6 text-center">
+        <div className="bg-white w-32 h-32 rounded-full mx-auto mb-4 p-1">
+          <Image
+            alt="avatar"
+            src={family.avatar}
+            width={120}
+            height={120}
+            className="w-full h-full rounded-full object-cover"
+          />
+        </div>
+        <h2 className="text-2xl font-bold text-white drop-shadow-sm">
+          {family.name}
+        </h2>
+      </div>
 
-        <h2 className="text-2xl font-bold">{family.name}</h2>
-        <p className="text-gray-500 mb-6">{family.description}</p>
+      {/* Content */}
+      <div className="p-6">
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+            Deskripsi
+          </h3>
+          <p className="text-gray-700 leading-relaxed">
+            {family.description || 'Tidak ada deskripsi'}
+          </p>
+        </div>
 
-        <div className="flex gap-3">
-          <button
-            onClick={() => router.push('/dashboard/parentalmode/add-member')}
-            className="bg-yellow-400 px-5 py-2 rounded-lg"
-          >
-            Add Member
-          </button>
+        {/* Stats */}
+        <div className="bg-gray-50 rounded-xl p-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="bg-yellow-100 p-3 rounded-lg">
+              <Users className="w-6 h-6 text-yellow-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">
+                {family.memberCount || 0}
+              </p>
+              <p className="text-sm text-gray-600">Anggota Keluarga</p>
+            </div>
+          </div>
+        </div>
 
+        {/* Actions */}
+        <div className="space-y-3">
           <button
             onClick={onDelete}
-            className="bg-red-500 text-white px-5 py-2 rounded-lg"
+            className="w-full bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 border-2 border-red-200"
           >
-            Delete Family
+            <Trash2 className="w-5 h-5" />
+            Hapus Family
           </button>
         </div>
       </div>
