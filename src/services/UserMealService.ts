@@ -34,10 +34,19 @@ class userMealService {
     });
   }
 
-  async addUserMeals(dto: CreateUserMealRequest): Promise<void> {
+  async addUserMeals(dto: CreateUserMealRequest) {
     const token = await getCookies();
 
-    await apiClient({
+    // return apiClient<{dto: CreateUserMealRequest}>({
+    //   method: "post",
+    //   url: "/usermeals",
+    //   data: dto,
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+
+    return apiClient({
       method: "post",
       url: "/usermeals",
       data: dto,

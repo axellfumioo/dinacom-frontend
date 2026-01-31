@@ -31,9 +31,9 @@ export default function RegisterPage() {
   });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white shadow-sm border border-gray-200 rounded-xl px-8 py-10">
+<div className="min-h-screen bg-gray-50 overflow-y-auto">
+  <div className="flex items-start justify-center px-4 py-10">
+    <div className="w-full max-w-md bg-white border border-gray-50 shadow-sm rounded-2xl p-6 ">
           <h1 className="text-2xl font-semibold text-gray-900 text-center">
             Buat akun Anda
           </h1>

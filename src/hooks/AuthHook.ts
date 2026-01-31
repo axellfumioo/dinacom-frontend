@@ -32,7 +32,7 @@ export const useRegister = (
     const router = useRouter()
     return useMutation({
         mutationKey: ['register'],
-        mutationFn: (dto: RegisterDto) => authService.register(dto),
+        mutationFn: (dto: RegisterDto) => authService.register({ name : dto.name, phone_number : dto.phone_number, email : dto.email, gender : dto.gender, password: dto.password, date_of_birth : new Date(dto.date_of_birth).toISOString() }),
         onSuccess: () => {
          
                 router.push("/auth/register/questioner");
