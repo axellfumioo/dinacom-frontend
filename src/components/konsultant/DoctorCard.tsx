@@ -1,7 +1,24 @@
-import React from "react";
+import type { ReactNode } from "react";
 import { Star, Calendar, Clock, FileText } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-export const DoctorCard = ({ doctor, onChat }) => {
+export interface Doctor {
+  id: number;
+  name: string;
+  rating: number;
+  reviews: number;
+  price: string;
+  alumnus: string;
+  practice: string;
+  str: string;
+}
+
+type DoctorCardProps = {
+  doctor: Doctor;
+  onChat: (doctor: Doctor) => void;
+};
+
+export const DoctorCard = ({ doctor, onChat }: DoctorCardProps) => {
   return (
     <div className="bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
       <div className="bg-gray-100 p-6 relative">
@@ -22,9 +39,9 @@ export const DoctorCard = ({ doctor, onChat }) => {
         </div>
 
         <div className="space-y-2 text-sm mb-4">
-          <Info icon={<Calendar />} title="Alumnus" value={doctor.alumnus} />
-          <Info icon={<FileText />} title="Praktek" value={doctor.practice} />
-          <Info icon={<Clock />} title="STR" value={doctor.str} />
+          <Info icon={Calendar} title="Alumnus" value={doctor.alumnus} />
+          <Info icon={FileText} title="Praktek" value={doctor.practice} />
+          <Info icon={Clock} title="STR" value={doctor.str} />
         </div>
 
         <button
@@ -38,10 +55,16 @@ export const DoctorCard = ({ doctor, onChat }) => {
   );
 };
 
-const Info = ({ icon, title, value }) => (
+type InfoProps = {
+  icon: LucideIcon;
+  title: string;
+  value: ReactNode;
+};
+
+const Info = ({ icon: Icon, title, value }: InfoProps) => (
   <div className="flex gap-2">
     <div className="w-5 h-5 bg-yellow-400 rounded flex items-center justify-center text-white">
-      {icon}
+      <Icon className="w-3.5 h-3.5" />
     </div>
     <div>
       <div className="font-medium">{title}</div>
