@@ -8,7 +8,6 @@ import {
   CreateUserMealRequest,
 } from "@/common/dto/usermealDto";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 export const useGetUserMeals = (
   page: number = 1,
