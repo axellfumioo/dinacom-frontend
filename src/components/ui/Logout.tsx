@@ -30,7 +30,7 @@ export default function SidebarUserCard() {
   }
 
   return (
-    <div className="mt-36 border-t border-yellow-100 bg-linear-to-tr from-yellow-50/60 to-white px-4 py-3">
+<div className="border-t border-yellow-100 bg-linear-to-tr from-yellow-50/60 to-white px-4 py-3">
       <div className="rounded-2xl border border-yellow-100 bg-white/80 backdrop-blur shadow-sm p-4">
         <div className="flex items-start gap-3">
 

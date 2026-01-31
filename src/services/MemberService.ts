@@ -1,12 +1,12 @@
 import { apiClient } from "@/common/lib/apiClient";
-import { AddFamilyMembersRequestDto } from "@/common/dto/memberDto";
+import { AddFamilyMembersRequestDto, FamilyMemberDto } from "@/common/dto/memberDto";
 import { getCookies } from "@/lib/cookie";
 
 class MemberService {
 
   async getFamilyMembers(familyID: string) {
     const token = await getCookies();
-    return apiClient({
+    return apiClient<FamilyMemberDto[]>({
       method: "get",
       url: `/members/family/${familyID}`,
       headers: {

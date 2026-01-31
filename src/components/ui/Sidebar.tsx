@@ -75,12 +75,6 @@ export default function Sidebar({
       active: "/dashboard/parentalmode",
     },
     {
-      label: "Strava",
-      icon: Activity,
-      path: "/dashboard/strava",
-      active: "/dashboard/strava",
-    },
-    {
       label: "Weekly Report",
       icon: BarChart3,
       path: "/dashboard/weeklyreport/",
@@ -111,13 +105,14 @@ export default function Sidebar({
       {/* SIDEBAR */}
       <aside
         className={`
-          fixed inset-y-0 left-0 z-50
-          bg-white border-r
-          transition-all duration-300
-          ${collapsed ? "w-0" : "w-64"}
-          ${open ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0
-        `}
+    fixed inset-y-0 left-0 z-50
+    bg-white border-r
+    transition-all duration-300
+    flex flex-col
+    ${collapsed ? "w-0" : "w-64"}
+    ${open ? "translate-x-0" : "-translate-x-full"}
+    lg:translate-x-0
+  `}
       >
         {/* HEADER */}
         {!collapsed && (
@@ -144,33 +139,36 @@ export default function Sidebar({
         )}
 
         {/* MENU */}
-        {!collapsed && (
-          <nav className="p-4 space-y-1">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const active = pathname === item.active;
+{!collapsed && (
+  <div className="flex-1 overflow-y-auto">
+    <nav className="p-4 space-y-1">
+      {menuItems.map((item) => {
+        const Icon = item.icon;
+        const active = pathname === item.active;
 
-              return (
-                <Link
-                  key={item.label}
-                  href={item.path}
-                  onClick={() => setOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium
-                    ${
-                      active
-                        ? "bg-yellow-100 text-yellow-600"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        )}
+        return (
+          <Link
+            key={item.label}
+            href={item.path}
+            onClick={() => setOpen(false)}
+            className={`
+              flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium
+              ${
+                active
+                  ? "bg-yellow-100 text-yellow-600"
+                  : "text-gray-700 hover:bg-gray-100"
+              }
+            `}
+          >
+            <Icon size={20} />
+            <span>{item.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  </div>
+)}
+
 
         {/* USER CARD (FIX: HANYA RENDER SAAT TIDAK COLLAPSED) */}
         {!collapsed && <SidebarUserCard />}
