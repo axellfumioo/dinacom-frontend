@@ -8,7 +8,12 @@ export interface FamilyMemberDto {
   UpdatedAt: string;
 }
 
+export interface AddFamilyMemberDto {
+  userID: string;
+  role: string;
+}
+
 export interface AddFamilyMembersRequestDto {
   familyID: string;
-  members: FamilyMemberDto[];
+  members: AddFamilyMemberDto[];
 }

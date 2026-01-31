@@ -16,7 +16,8 @@ interface Doctor {
 export const ChatSidebar: React.FC<{
   messages: Message[];
   activeDoctor: Doctor | null;
-}> = ({ messages, activeDoctor }) => {
+  onChatClick?: (message: Message) => void;
+}> = ({ messages, activeDoctor, onChatClick }) => {
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-4">
       <h2 className="text-lg font-bold text-gray-900 mb-4">Pesan</h2>
@@ -25,7 +26,8 @@ export const ChatSidebar: React.FC<{
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex gap-3 p-3 rounded-lg transition ${
+            onClick={() => onChatClick?.(message)}
+            className={`flex gap-3 p-3 rounded-lg transition cursor-pointer ${
               activeDoctor?.id === message.doctorId
                 ? "bg-gray-100"
                 : "hover:bg-gray-50"
