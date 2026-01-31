@@ -3,11 +3,11 @@ import { UserMealTime } from "./usermealtimeDto";
 
 export interface UserMeal {
   id: string;
-  food_name: string;
-  calories: number;
-  protein: number;
-  fat: number;
-  carbohydrate: number;
+  food_names: string;
+  Calories: number;
+  Protein: number;
+  Fat: number;
+  Carbs: number;
   portion: number;
   time: UserMealTime;
   created_at: string;

@@ -4,44 +4,33 @@ import { useState } from "react";
 import { ChevronDown, Save } from "lucide-react";
 import { useAddUserMeals } from "@/hooks/useUserMeal";
 import { UserMealTime } from "@/common/dto/usermealtimeDto";
-import { useRouter } from "next/navigation";
 
-
-interface NutritionValue {
+interface FormData {
+  foodName: string;
+  portion: number;
   calories: number;
   protein: number;
   fat: number;
   carbohydrate: number;
+  time: {
+    title: string;
+    value: UserMealTime | "";
+  };
 }
 
-interface FoodFormData {
-  foodName: string;
-  portion: number;
-  time: { title: string; value: UserMealTime | "" };
-}
+export function UserMealForm() {
+  const { mutate: addUserMeal, isPending } = useAddUserMeals();
+  const [showMealDropdown, setShowMealDropdown] = useState(false);
 
-interface FoodDetailFormProps {
-  nutrition: NutritionValue;
-}
-
-
-export function FoodDetailForm({ nutrition }: FoodDetailFormProps) {
-  
-const router = useRouter();
-  const { mutate: addUserMeal, isPending } = useAddUserMeals({
-    onSuccess: () => {
-      router.push("/dashboard/scanmakanan");
-      router.refresh();
-    }
-  });
-
-  const [formData, setFormData] = useState<FoodFormData>({
+  const [formData, setFormData] = useState<FormData>({
     foodName: "",
-    portion: 0,
+    portion: 1,
+    calories: 0,
+    protein: 0,
+    fat: 0,
+    carbohydrate: 0,
     time: { title: "", value: "" },
   });
-
-  const [showMealDropdown, setShowMealDropdown] = useState(false);
 
   const mealOptions: { text: string; value: UserMealTime }[] = [
     { text: "Makan Pagi", value: "BREAKFAST" },
@@ -65,22 +54,21 @@ const router = useRouter();
       food_name: formData.foodName,
       portion: formData.portion,
       time: formData.time.value,
-
-      calories: nutrition.calories,
-      protein: nutrition.protein,
-      fat: nutrition.fat,
-      carbohydrate: nutrition.carbohydrate,
+      calories: formData.calories,
+      protein: formData.protein,
+      fat: formData.fat,
+      carbohydrate: formData.carbohydrate,
     });
   };
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
       <h3 className="text-base font-bold text-gray-900 mb-5">
-        Konfirmasi Detail Makanan
+        Tambah Makanan Manual
       </h3>
 
       <div className="space-y-4">
-        {/* Nama */}
+        {/* Nama Makanan */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Nama Makanan
@@ -92,7 +80,43 @@ const router = useRouter();
               setFormData({ ...formData, foodName: e.target.value })
             }
             className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm focus:ring-2 focus:ring-yellow-400"
-            placeholder="Masukkan nama makanan"
+            placeholder="Contoh: Nasi Goreng"
+          />
+        </div>
+
+        {/* Nutrisi */}
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            type="number"
+            placeholder="Kalori (kkal)"
+            className="px-4 py-3 bg-gray-50 border rounded-xl text-sm"
+            onChange={(e) =>
+              setFormData({ ...formData, calories: +e.target.value })
+            }
+          />
+          <input
+            type="number"
+            placeholder="Protein (g)"
+            className="px-4 py-3 bg-gray-50 border rounded-xl text-sm"
+            onChange={(e) =>
+              setFormData({ ...formData, protein: +e.target.value })
+            }
+          />
+          <input
+            type="number"
+            placeholder="Lemak (g)"
+            className="px-4 py-3 bg-gray-50 border rounded-xl text-sm"
+            onChange={(e) =>
+              setFormData({ ...formData, fat: +e.target.value })
+            }
+          />
+          <input
+            type="number"
+            placeholder="Karbohidrat (g)"
+            className="px-4 py-3 bg-gray-50 border rounded-xl text-sm"
+            onChange={(e) =>
+              setFormData({ ...formData, carbohydrate: +e.target.value })
+            }
           />
         </div>
 
@@ -107,13 +131,16 @@ const router = useRouter();
               type="number"
               value={formData.portion}
               onChange={(e) =>
-                setFormData({ ...formData, portion: Number(e.target.value) })
+                setFormData({
+                  ...formData,
+                  portion: Number(e.target.value),
+                })
               }
-              className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm focus:ring-2 focus:ring-yellow-400"
+              className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm"
             />
           </div>
 
-          {/* Waktu */}
+          {/* Waktu Makan */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Waktu Makan
@@ -124,7 +151,9 @@ const router = useRouter();
                 onClick={() => setShowMealDropdown(!showMealDropdown)}
                 className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm flex justify-between items-center"
               >
-                <span>{formData.time.title || "Pilih waktu makan"}</span>
+                <span>
+                  {formData.time.title || "Pilih waktu makan"}
+                </span>
                 <ChevronDown className="w-4 h-4" />
               </button>
 
@@ -151,10 +180,24 @@ const router = useRouter();
           </div>
         </div>
 
-        {/* Buttons */}
+        {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 pt-2">
-          <button className="py-3 bg-gray-100 rounded-xl text-sm font-semibold">
-            Batalkan
+          <button
+            type="button"
+            className="py-3 bg-gray-100 rounded-xl text-sm font-semibold"
+            onClick={() =>
+              setFormData({
+                foodName: "",
+                portion: 1,
+                calories: 0,
+                protein: 0,
+                fat: 0,
+                carbohydrate: 0,
+                time: { title: "", value: "" },
+              })
+            }
+          >
+            Reset
           </button>
 
           <button
@@ -163,7 +206,7 @@ const router = useRouter();
             className="py-3 bg-yellow-400 hover:bg-yellow-500 disabled:opacity-60 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
           >
             <Save className="w-4 h-4" />
-            {isPending ? "Menyimpan..." : "Simpan ke Riwayat Harian"}
+            {isPending ? "Menyimpan..." : "Simpan ke Riwayat"}
           </button>
         </div>
       </div>
