@@ -27,22 +27,19 @@ export const useLogin = (
 
 
 export const useRegister = (
-  setError: React.Dispatch<React.SetStateAction<string | null>>,
   onSuccess?: (user: UserModel) => void
 ) => {
     const router = useRouter()
     return useMutation({
         mutationKey: ['register'],
         mutationFn: (dto: RegisterDto) => authService.register(dto),
-        onSuccess: (user) => {
-            if (onSuccess) {
-                onSuccess(user);
+        onSuccess: () => {
+         
                 router.push("/auth/register/questioner");
-            }
             
         },
         onError: (err) => {
-            setError(err.message)
+          toast.error(err.message)
         }
     })
 }

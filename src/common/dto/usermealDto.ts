@@ -15,11 +15,12 @@ export interface UserMeal {
 
 export interface PaginatedUserMealResponse {
   data: UserMeal[];
-  meta: {
+  pagination: {
     page: number;
     page_size: number;
-    total: number;
-  };
+    total_pages: number;
+    total_rows: number;    
+  }
 }
 
 export interface CreateUserMealRequest {
