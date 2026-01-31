@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const MealCard = ({ meal }) => {
+export const MealCard = ({ meal } : any) => {
   return (
     <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-100">
       <img 

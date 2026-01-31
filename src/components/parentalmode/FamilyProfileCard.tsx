@@ -1,8 +1,14 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { Family } from '@/common/model/family';
 
-export const FamilyProfileCard = ({ family, onDelete }) => {
+interface FamilyProfileCardProps {
+  family: Family
+  onDelete: () => void
+}
+
+export const FamilyProfileCard = ({ family, onDelete }: FamilyProfileCardProps) => {
   const router = useRouter();
 
   return (
@@ -10,7 +16,7 @@ export const FamilyProfileCard = ({ family, onDelete }) => {
       <div className="flex flex-col items-center text-center">
         <Image
           alt="avatar"
-          src={family.avatar}
+          src={family.avatar_url}
           className="w-40 h-40 rounded-full object-cover mb-4"
         />
 

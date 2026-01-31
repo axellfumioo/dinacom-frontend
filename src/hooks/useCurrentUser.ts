@@ -19,7 +19,7 @@ export const useCurrentUser = () => {
         }
         const userData = await validateToken(token);
         if (userData) {
-          setUser(userData);
+          setUser({ email: userData.email, name: userData.full_name, password: "", phone_number: userData.phone_number || "" });
         } else {
           setError('Invalid token');
         }

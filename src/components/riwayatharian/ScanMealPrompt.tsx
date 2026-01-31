@@ -1,7 +1,7 @@
 import React from 'react';
 import { Scan } from 'lucide-react';
 
-export const ScanMealPrompt = ({ onScan }) => {
+export const ScanMealPrompt = ({ onScan } : { onScan: () => void }) => {
   return (
     <div className="p-4 bg-yellow-50 border-2 border-dashed border-yellow-300 rounded-xl">
       <div className="flex items-center justify-between">

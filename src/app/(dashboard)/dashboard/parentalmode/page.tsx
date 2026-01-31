@@ -7,12 +7,13 @@ import { useRouter } from 'next/navigation';
 import { FamilyProfileCard } from '@/components/parentalmode/FamilyProfileCard';
 import { FamilyMemberCard } from '@/components/parentalmode/FamilyMemberCard';
 import { AddFamilyMemberForm } from '@/components/parentalmode/AddMember';
+import { Family } from '@/common/model/family';
 
 export default function ParentalModePage() {
   const router = useRouter();
   const { data: family, isLoading } = useGetFamily();
   const deleteFamily = useDeleteFamily();
-  console.log(family?.data); 
+  console.log(family?.data);
   const { data: members, isLoading: membersLoading } =
     useGetFamilyMembers(family?.data.id);
 
@@ -39,27 +40,27 @@ export default function ParentalModePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Members */}
         <div className="bg-white rounded-2xl p-6 shadow-sm">
-        <AddFamilyMemberForm familyID={family?.data.id || ""} />
+          <AddFamilyMemberForm familyID={family?.data.id || ""} />
 
           {membersLoading && <p>Loading members...</p>}
           {!membersLoading && members?.length === 0 && (
-          <p className="text-gray-500 text-sm">
-            Belum ada member di family ini
-          </p>
-        )}
+            <p className="text-gray-500 text-sm">
+              Belum ada member di family ini
+            </p>
+          )}
 
           {members?.map((member: any) => (
             <FamilyMemberCard
               key={member.id}
               member={member}
-              onViewDetail={() => {}}
+              onViewDetail={() => { }}
             />
           ))}
         </div>
 
         {/* Profile */}
         <FamilyProfileCard
-          family={family}
+          family={family?.data as Family}
           onDelete={() => deleteFamily.mutate(family?.data.id || "")}
         />
       </div>
