@@ -6,7 +6,6 @@ import {
 } from "@/common/dto/questionDto";
 import { useGetQuestionnaire, useUpdateQuestionnaire } from "@/hooks/useQuestionare";
 import QuestionSlide from "./QuestionSlide";
-import StravaPopup from "./StravaPopUp";
 import { userIdStore } from "@/common/lib/userId";
 export default function QuestionnaireContainer() {  
 const  userId = userIdStore.state;
@@ -71,7 +70,7 @@ updateQuestion(payload, {
         answers={answers}
       />
 
-      {showPopup && <StravaPopup />}
+      {showPopup}
     </div>
   );
 }
