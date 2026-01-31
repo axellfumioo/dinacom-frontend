@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Navbar from "@/components/landingpage/Navbar";
 
-import Section4 from "@/components/landingpage/section4";
+import Section4 from "@/components/landingpage/Section4";
 import Section1 from "@/components/landingpage/section1";
 import Section2 from "@/components/landingpage/section2";
 import Section3 from "@/components/landingpage/section3";
