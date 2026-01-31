@@ -13,11 +13,11 @@ import {
 
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
 import { PantauKeluargaCard } from "@/components/dashboard/PantauKeluarga";
-import { AiCard } from "@/components/dashboard/AiCard";
 import ActionCard from "@/components/dashboard/ActionCard";
 import { userStore } from "@/common/lib/store";
 import { useStore } from "@tanstack/react-store";
 import { UserMealTodayCard } from "@/components/dashboard/UserMealToday";
+import AiInsightCard from "@/components/dashboard/AiCard";
 
 export default function DashboardPage() {
   const { sidebarCollapsed } = useSidebarLayout();
@@ -122,7 +122,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <AiCard />
+              <AiInsightCard />
             </div>
           </div>
 
