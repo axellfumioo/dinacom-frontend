@@ -9,10 +9,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthGuard>
       <LayoutClient>
         {children}
       </LayoutClient>
-     </AuthGuard>
   );
 }
