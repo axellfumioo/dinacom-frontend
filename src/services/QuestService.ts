@@ -7,25 +7,22 @@ import {
 class QuestionnaireService {
 
   async getUserQuestionnaires(userId:  string) {
-    const res = await apiClient<QuestionnaireResponse>({
+     const res = await apiClient<QuestionnaireResponse>({
       url: `/quest?userId=${userId}`,
       method: "get",
     });
-
-    if (!userId) return null;
-
-    return res.data;
-    
+    return res.data
   }
 
 async updateQuestionnaires( userId: string, dto: UpdateQuestionnairesDto[]) {
-  await apiClient({
+ return await apiClient({
     url: `/quest/answer?userId=${userId}`,
     method: "patch",
-    data: dto,
+    data: {
+      answers: dto
+    },
   });
 
-  return true;
 }
 
 }

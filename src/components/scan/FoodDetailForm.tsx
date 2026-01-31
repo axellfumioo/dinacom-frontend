@@ -2,32 +2,66 @@
 
 import { useState } from "react";
 import { ChevronDown, Save } from "lucide-react";
+import { useAddUserMeals } from "@/hooks/useUserMeal";
+import { UserMealTime } from "@/common/dto/usermealtimeDto";
+
+interface NutritionValue {
+  calories: number;
+  protein: number;
+  fat: number;
+  carbohydrate: number;
+}
 
 interface FoodFormData {
   foodName: string;
   portion: number;
-  unit: string;
-  mealTime: { title: string; value: string };
+  time: { title: string; value: UserMealTime | "" };
 }
 
-export function FoodDetailForm() {
+interface FoodDetailFormProps {
+  nutrition: NutritionValue;
+}
+
+export function FoodDetailForm({ nutrition }: FoodDetailFormProps) {
+  const { mutate: addUserMeal, isPending } = useAddUserMeals();
+
   const [formData, setFormData] = useState<FoodFormData>({
-    foodName: "Alpukat, Telur & Roti",
-    portion: 350,
-    unit: "gram",
-    mealTime: { title: "", value: "" },
+    foodName: "",
+    portion: 0,
+    time: { title: "", value: "" },
   });
 
   const [showMealDropdown, setShowMealDropdown] = useState(false);
 
-  const mealOptions = [
+  const mealOptions: { text: string; value: UserMealTime }[] = [
     { text: "Makan Pagi", value: "BREAKFAST" },
     { text: "Makan Siang", value: "LUNCH" },
-    { text: "Makan Malam", value: "DiNNER" },
+    { text: "Makan Malam", value: "DINNER" },
     { text: "Snack", value: "SNACK" },
   ];
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    if (!formData.foodName) {
+      alert("Nama makanan wajib diisi");
+      return;
+    }
+
+    if (!formData.time.value) {
+      alert("Silakan pilih waktu makan");
+      return;
+    }
+
+    addUserMeal({
+      food_name: formData.foodName,
+      portion: formData.portion,
+      time: formData.time.value,
+
+      calories: nutrition.calories,
+      protein: nutrition.protein,
+      fat: nutrition.fat,
+      carbohydrate: nutrition.carbohydrate,
+    });
+  };
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
@@ -36,7 +70,7 @@ export function FoodDetailForm() {
       </h3>
 
       <div className="space-y-4">
-        {/* Nama Makanan */}
+        {/* Nama */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Nama Makanan
@@ -47,60 +81,56 @@ export function FoodDetailForm() {
             onChange={(e) =>
               setFormData({ ...formData, foodName: e.target.value })
             }
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+            className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm focus:ring-2 focus:ring-yellow-400"
             placeholder="Masukkan nama makanan"
           />
         </div>
 
-        {/* Porsi & Waktu Makan */}
+        {/* Porsi & Waktu */}
         <div className="grid grid-cols-2 gap-4">
           {/* Porsi */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Porsi
             </label>
-            <div className="relative">
-              <input
-                type="number"
-                value={formData.portion}
-                onChange={(e) =>
-                  setFormData({ ...formData, portion: Number(e.target.value) })
-                }
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent pr-16"
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-500">
-                {formData.unit}
-              </span>
-            </div>
+            <input
+              type="number"
+              value={formData.portion}
+              onChange={(e) =>
+                setFormData({ ...formData, portion: Number(e.target.value) })
+              }
+              className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm focus:ring-2 focus:ring-yellow-400"
+            />
           </div>
 
-          {/* Waktu Makan */}
+          {/* Waktu */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Waktu Makan
             </label>
             <div className="relative">
               <button
+                type="button"
                 onClick={() => setShowMealDropdown(!showMealDropdown)}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent text-left flex items-center justify-between"
+                className="w-full px-4 py-3 bg-gray-50 border rounded-xl text-sm flex justify-between items-center"
               >
-                <span>{formData.mealTime.title}</span>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
+                <span>{formData.time.title || "Pilih waktu makan"}</span>
+                <ChevronDown className="w-4 h-4" />
               </button>
 
               {showMealDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
+                <div className="absolute mt-2 w-full bg-white border rounded-xl shadow z-10">
                   {mealOptions.map(({ text, value }) => (
                     <button
                       key={value}
                       onClick={() => {
                         setFormData({
                           ...formData,
-                          mealTime: { title: text, value },
+                          time: { title: text, value },
                         });
                         setShowMealDropdown(false);
                       }}
-                      className="w-full px-4 py-3 text-left text-sm text-gray-900 hover:bg-gray-50 transition-colors"
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 text-sm"
                     >
                       {text}
                     </button>
@@ -111,17 +141,19 @@ export function FoodDetailForm() {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Buttons */}
         <div className="grid grid-cols-2 gap-3 pt-2">
-          <button className="py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-semibold text-gray-700 transition-colors">
+          <button className="py-3 bg-gray-100 rounded-xl text-sm font-semibold">
             Batalkan
           </button>
+
           <button
             onClick={handleSubmit}
-            className="py-3 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-xl text-sm font-semibold text-gray-900 transition-colors flex items-center justify-center gap-2"
+            disabled={isPending}
+            className="py-3 bg-yellow-400 hover:bg-yellow-500 disabled:opacity-60 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
           >
             <Save className="w-4 h-4" />
-            Simpan ke Riwayat Harian
+            {isPending ? "Menyimpan..." : "Simpan ke Riwayat Harian"}
           </button>
         </div>
       </div>
