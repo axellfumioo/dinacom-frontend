@@ -25,13 +25,18 @@ export const useGetUserMeals = (
 export const useUserMealsToday = () => {
   return useQuery<UserMeal[]>({
     queryKey: ["user-meals-today"],
-    queryFn: () =>
-      userMealServiceInstance.getTodayUserMeals(),
+    queryFn: () => userMealServiceInstance.getTodayUserMeals(),
   });
 };
 
 
-export const useAddUserMeals = () => {
+
+
+
+
+export const useAddUserMeals = (options?: {
+  onSuccess?: () => void;
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -39,19 +44,17 @@ export const useAddUserMeals = () => {
       userMealServiceInstance.addUserMeals(dto),
 
     onSuccess: () => {
-      toast.success("Meal added successfully");
+      toast.success("Makanan berhasil disimpan");
 
-      queryClient.invalidateQueries({
-        queryKey: ["user-meals"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["user-meals"] });
+      queryClient.invalidateQueries({ queryKey: ["user-meals-today"] });
 
-      queryClient.invalidateQueries({
-        queryKey: ["user-meals-today"],
-      });
+      options?.onSuccess?.();
     },
 
-    onError: (error) => {
-      toast.error( error?.message||"Failed to add meal");
-    }
+    onError: (err) => {
+      toast.error(err?.message || "Gagal menyimpan makanan");
+    },
   });
 };
+

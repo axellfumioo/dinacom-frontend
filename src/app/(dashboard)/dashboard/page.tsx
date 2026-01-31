@@ -12,16 +12,12 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
-import { LaporanCard } from "@/components/dashboard/LaporanMingguan";
 import { PantauKeluargaCard } from "@/components/dashboard/PantauKeluarga";
-import { CalendarCard } from "@/components/dashboard/Kalender";
-import { ActivityCard } from "@/components/dashboard/ActivityCard";
 import { AiCard } from "@/components/dashboard/AiCard";
-import { NutritionCard } from "@/components/dashboard/NutritionCard";
-import { CalorieRing } from "@/components/dashboard/CalorieRing";
 import ActionCard from "@/components/dashboard/ActionCard";
 import { userStore } from "@/common/lib/store";
 import { useStore } from "@tanstack/react-store";
+import { UserMealTodayCard } from "@/components/dashboard/UserMealToday";
 
 export default function DashboardPage() {
   const { sidebarCollapsed } = useSidebarLayout();
@@ -119,43 +115,20 @@ export default function DashboardPage() {
                 Ringkasan Nutrisi
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <CalorieRing current={1540} target={2100} />
-                <NutritionCard
-                  label="Protein"
-                  value={85}
-                  unit="g"
-                  target={140}
-                  progress={60}
-                />
-                <NutritionCard
-                  label="Karbohidrat"
-                  value={180}
-                  unit="g"
-                  target={250}
-                  progress={72}
-                />
-                <NutritionCard
-                  label="Lemak"
-                  value={45}
-                  unit="g"
-                  target={70}
-                  progress={64}
-                />
-              </div>
+<div className="grid grid-cols-1">
+  <UserMealTodayCard />
+</div>
+
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <ActivityCard />
               <AiCard />
             </div>
           </div>
 
           {/* RIGHT */}
           <div className="space-y-4">
-            <LaporanCard />
             <PantauKeluargaCard />
-            <CalendarCard />
           </div>
         </div>
       </div>

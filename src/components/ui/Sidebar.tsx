@@ -9,8 +9,7 @@ import {
   CalendarDays,
   MessageCircle,
   Infinity,
-  Activity,
-  BarChart3,
+
   X,
   Menu,
 } from "lucide-react";
@@ -73,12 +72,6 @@ export default function Sidebar({
       icon: Infinity,
       path: "/dashboard/parentalmode",
       active: "/dashboard/parentalmode",
-    },
-    {
-      label: "Weekly Report",
-      icon: BarChart3,
-      path: "/dashboard/weeklyreport/",
-      active: "/dashboard/weeklyreport",
     },
   ];
 
