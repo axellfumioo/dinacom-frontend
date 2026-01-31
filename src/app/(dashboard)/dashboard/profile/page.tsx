@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Flame, Droplet, Activity, Bell, Settings } from 'lucide-react';
 
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
-import { NutritionCard } from '@/components/profile/NutritionCard';
-import { StravaCard } from '@/components/profile/StravaCard';
-import { SidebarCard } from '@/components/profile/SidebarCard';
+
 
 import { useProfile } from '@/hooks/useProfile';
 import { ProfileModel } from '@/common/model/profile';
@@ -72,19 +69,6 @@ export default function ProfilePage() {
       </div>
     );
   }
-
-  const nutritionData = {
-    calories: { current: 420, target: 2000, value: '420', unit: 'kkal', label: 'Kalori' },
-    protein: { current: 24, target: 150, value: '24g', unit: 'kkal', label: 'Protein' },
-    carbs: { current: 18, target: 300, value: '18g', unit: 'kkal', label: 'Karbo' },
-    fat: { current: 14, target: 65, value: '14g', unit: 'kkal', label: 'Lemak' },
-  };
-
-  const stravaActivities = {
-    weekly: '4 Aktifitas',
-    elevation: '480m',
-    totalCalories: 2567,
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -178,16 +162,7 @@ export default function ProfilePage() {
           </button>
         )}
 
-<div className="space-y-6">
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-    <NutritionCard icon={Flame} {...nutritionData.calories} color="orange" />
-    <NutritionCard icon={Activity} {...nutritionData.protein} color="blue" />
-    <NutritionCard icon={Droplet} {...nutritionData.carbs} color="yellow" />
-    <NutritionCard icon={Droplet} {...nutritionData.fat} color="red" />
-  </div>
 
-  <StravaCard activities={stravaActivities} onSync={() => {}} />
-</div>
 
 
           </div>
