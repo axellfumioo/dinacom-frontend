@@ -4,24 +4,21 @@ export function NutritionSummary() {
   const nutritionData = [
     {
       label: "Kalori",
-      current: 1250,
-      target: 2000,
+      value: 1250,
       unit: "kkal",
-      color: "bg-yellow-400"
+      color: "bg-yellow-100"
     },
     {
       label: "Protein",
-      current: 45,
-      target: 120,
+      value: 45,
       unit: "g",
-      color: "bg-orange-400"
+      color: "bg-orange-100"
     },
     {
       label: "Langkah",
-      current: 4500,
-      target: 5000,
+      value: 4500,
       unit: "",
-      color: "bg-blue-400"
+      color: "bg-blue-100"
     }
   ];
 
@@ -29,7 +26,7 @@ export function NutritionSummary() {
     {
       icon: <Droplets className="w-5 h-5 text-blue-500" />,
       title: "Hidrasi Penting",
-      description: "Cuaca panas hari ini, Usahakan minum 2 gelas air lagi sebelum jam 2 siang.",
+      description: "Cuaca panas hari ini, usahakan minum 2 gelas air lagi sebelum jam 2 siang.",
       bgColor: "bg-blue-50"
     },
     {
@@ -42,31 +39,19 @@ export function NutritionSummary() {
 
   return (
     <div className="space-y-4">
-      {/* Ringkasan Hari Ini */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-        <h3 className="text-base font-bold text-gray-900 mb-5">Ringkasan hari ini</h3>
-        
-        <div className="space-y-4">
-          {nutritionData.map((item, index) => {
-            const percentage = (item.current / item.target) * 100;
-            return (
-              <div key={index}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-700 font-medium">{item.label}</span>
-                  <span className="text-xs text-gray-500">
-                    {item.current.toLocaleString()} / {item.target.toLocaleString()} {item.unit}
-                  </span>
-                </div>
-                <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${item.color} rounded-full transition-all duration-300`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+      {/* Ringkasan Nutrisi */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {nutritionData.map((item, index) => (
+          <div
+            key={index}
+            className={`p-5 rounded-2xl border border-gray-200 flex flex-col items-start gap-2 ${item.color}`}
+          >
+            <span className="text-sm font-medium text-gray-700">{item.label}</span>
+            <span className="text-lg font-bold text-gray-900">
+              {item.value.toLocaleString()} {item.unit}
+            </span>
+          </div>
+        ))}
       </div>
 
       {/* Health Tips */}

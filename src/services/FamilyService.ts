@@ -1,19 +1,21 @@
 import { apiClient } from "@/common/lib/apiClient";
 import { CreateFamilyRequestDto, UpdateFamilyAvatarDto, UpdateFamilyRequestDto } from "@/common/dto/familyDto";
 import { getCookies } from "@/lib/cookie";
+import { Family } from "@/common/model/family";
 
 class FamilyService {
 
-  async getFamilies() {
-    const token = await getCookies();
-    return apiClient({
-      method: "get",
-      url: "/families/user",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
+async getFamilies() {
+  const token = await getCookies();
+  return apiClient<{ data: Family}>({
+    method: "get",
+    url: "/families/user",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
 
 async createNewFamily(dto: CreateFamilyRequestDto) {
   const token = await getCookies();

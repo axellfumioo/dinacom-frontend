@@ -1,6 +1,11 @@
 export interface FamilyMemberDto {
-  userID: string;
-  role: string;
+  ID: string;
+  Role: string;
+  FamilyID: string;
+  UserID: string;
+  Family: string;
+  CreatedAt: string;
+  UpdatedAt: string;
 }
 
 export interface AddFamilyMembersRequestDto {

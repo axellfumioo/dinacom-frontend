@@ -5,26 +5,32 @@ import { CreateFamilyRequestDto, UpdateFamilyAvatarDto } from '@/common/dto/fami
 import toast from 'react-hot-toast';
 import { familyService } from '@/services/FamilyService';
 
+import { Family } from "@/common/model/family";
+
 export const useGetFamily = () => {
   return useQuery({
-    queryKey: ['families'],
-    queryFn: async () => { 
-    const res = await familyService.getFamilies();
-    return res.data
-}
-})
-}
+    queryKey: ["family"],
+    queryFn: async () => await familyService.getFamilies(), // ambil family user
+  });
+};
+
+
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useCreateFamily = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['createFamily'],
-    mutationFn: (dto: CreateFamilyRequestDto) => familyService.createNewFamily(dto),
+    mutationFn: (dto: CreateFamilyRequestDto) =>
+      familyService.createNewFamily(dto),
     onSuccess: () => {
-
       toast.success('Family created successfully');
-    }  
-  })
-}
+      queryClient.invalidateQueries({ queryKey: ['family'] });
+    },
+  });
+};
+
 
 export const useUpdateAvatar = () => {
   return useMutation({

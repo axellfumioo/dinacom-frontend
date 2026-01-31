@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 export default function AddFamilyPage() {
   const router = useRouter();
-  const createFamily = useCreateFamily();
+  const { mutate, isPending } = useCreateFamily();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -15,9 +15,10 @@ export default function AddFamilyPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!name.trim()) return;
     if (!avatar) return;
 
-    createFamily.mutate(
+    mutate(
       {
         name,
         description,
@@ -39,25 +40,33 @@ export default function AddFamilyPage() {
         <input
           placeholder="Family Name"
           className="w-full border p-3 rounded"
+          value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
 
         <textarea
           placeholder="Description"
           className="w-full border p-3 rounded"
+          value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
 
         <input
           type="file"
+          accept="image/*"
           onChange={(e) => setAvatar(e.target.files?.[0] || null)}
+          required
         />
 
         <button
           type="submit"
-          className="bg-yellow-400 px-6 py-3 rounded-lg font-semibold"
+          disabled={isPending}
+          className={`px-6 py-3 rounded-lg font-semibold transition
+            ${isPending ? 'bg-gray-300 cursor-not-allowed' : 'bg-yellow-400'}
+          `}
         >
-          Create
+          {isPending ? 'Creating...' : 'Create'}
         </button>
       </form>
     </div>
