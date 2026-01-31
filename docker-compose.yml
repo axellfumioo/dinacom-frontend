@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    container_name: exportcampus_frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3030:3030"
+    environment:
+      - NODE_ENV=production
+      - PORT=3030
+      - NEXT_PUBLIC_API_URL=https://exportcampus.id/api/
