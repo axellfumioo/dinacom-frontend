@@ -178,33 +178,21 @@ export default function ProfilePage() {
           </button>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <NutritionCard icon={Flame} {...nutritionData.calories} color="orange" />
-              <NutritionCard icon={Activity} {...nutritionData.protein} color="blue" />
-              <NutritionCard icon={Droplet} {...nutritionData.carbs} color="yellow" />
-              <NutritionCard icon={Droplet} {...nutritionData.fat} color="red" />
-            </div>
+<div className="space-y-6">
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <NutritionCard icon={Flame} {...nutritionData.calories} color="orange" />
+    <NutritionCard icon={Activity} {...nutritionData.protein} color="blue" />
+    <NutritionCard icon={Droplet} {...nutritionData.carbs} color="yellow" />
+    <NutritionCard icon={Droplet} {...nutritionData.fat} color="red" />
+  </div>
 
-            <StravaCard activities={stravaActivities} onSync={() => {}} />
+  <StravaCard activities={stravaActivities} onSync={() => {}} />
+</div>
+
+
           </div>
 
-          <div className="space-y-6">
-            <SidebarCard icon={Bell} title="Notifikasi">
-              <p className="text-sm text-gray-400 text-center">
-                Tidak ada notifikasi
-              </p>
-            </SidebarCard>
 
-            <SidebarCard icon={Settings} title="Setelan">
-              <p className="text-sm text-gray-400 text-center">
-                Pengaturan profil
-              </p>
-            </SidebarCard>
-          </div>
         </div>
-      </div>
-    </div>
   );
 }

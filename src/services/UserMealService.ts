@@ -22,17 +22,20 @@ class userMealService {
     });
   }
 
-  async getTodayUserMeals(): Promise<UserMeal[]> {
-    const token = await getCookies();
+async getTodayUserMeals(): Promise<UserMeal[]> {
+  const token = await getCookies();
 
-    return apiClient<UserMeal[]>({
-      method: "get",
-      url: "/usermeals/today",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
+  const res = await apiClient<{ data: UserMeal[] }>({
+    method: "get",
+    url: "/usermeals/today",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data; 
+}
+
 
   async addUserMeals(dto: CreateUserMealRequest) {
     const token = await getCookies();

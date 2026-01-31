@@ -3,10 +3,10 @@
 import { useRef } from "react";
 import Navbar from "@/components/landingpage/Navbar";
 
-import Section4 from "@/components/landingpage/Section4";
-import Section1 from "@/components/landingpage/Section1";
-import Section2 from "@/components/landingpage/Section2";
-import Section3 from "@/components/landingpage/Section3";
+import Section4 from "@/components/landingpage/Halaman4";
+import Section1 from "@/components/landingpage/Halaman1";
+import Section2 from "@/components/landingpage/Halaman2";
+import Section3 from "@/components/landingpage/Halaman3";
 
 
 export default function LandingPage() {

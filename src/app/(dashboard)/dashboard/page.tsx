@@ -14,7 +14,6 @@ import {
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
 import { LaporanCard } from "@/components/dashboard/LaporanMingguan";
 import { PantauKeluargaCard } from "@/components/dashboard/PantauKeluarga";
-import { CalendarCard } from "@/components/dashboard/Kalender";
 import { ActivityCard } from "@/components/dashboard/ActivityCard";
 import { AiCard } from "@/components/dashboard/AiCard";
 import { NutritionCard } from "@/components/dashboard/NutritionCard";
@@ -155,7 +154,6 @@ export default function DashboardPage() {
           <div className="space-y-4">
             <LaporanCard />
             <PantauKeluargaCard />
-            <CalendarCard />
           </div>
         </div>
       </div>
