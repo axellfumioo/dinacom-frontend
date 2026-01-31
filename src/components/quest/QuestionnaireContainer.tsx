@@ -52,8 +52,11 @@ const  userId = userIdStore.state;
   const handleSubmit = async () => {
     const payload: UpdateQuestionnairesDto[] = answers 
 
-    await updateQuestion(payload);
+updateQuestion(payload, {
+  onSuccess: () => {
     setShowPopup(true);
+  },
+});
   };
 
   return (

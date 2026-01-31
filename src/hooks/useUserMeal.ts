@@ -17,7 +17,7 @@ export const useGetUserMeals = (
     queryKey: ["user-meals", page, pageSize],
     queryFn: () =>
       userMealServiceInstance.getUserMeals(page, pageSize),
-    keepPreviousData: true,
+
   });
 };
 

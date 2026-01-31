@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Flame, Droplet, Cookie, Apple, InfoIcon } from "lucide-react";
 import { FoodDetailForm } from "@/components/scan/FoodDetailForm";
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
@@ -11,8 +11,10 @@ import { Button } from "@headlessui/react";
 import { useSocket } from "@/common/lib/socketIo";
 import { FoodScanModel } from "@/common/model/foodscan";
 import { useQueryClient } from "@tanstack/react-query";
+import { FoodInsightDto } from "@/common/dto/foodInsightDto";
 
 export default function ScanFoodPage() {
+  const [insight, setInsigt] = useState<FoodInsightDto | null>(null);
   const params = useSearchParams();
   const router = useRouter();
   const socket = useSocket();
@@ -84,8 +86,19 @@ export default function ScanFoodPage() {
     };
   }, [socket, queryClient]);
 
+    useEffect(() => {
+    const handler = (data: FoodInsightDto) => {
+      setInsigt(data);
+    };
+
+    socket?.on("refresh:ai-insight", handler);
+    return () => {
+      socket?.off("refresh:ai-insight", handler);
+    };
+  }, [socket, queryClient]);
+
   return (
-    <div className={`${containerWidth} mx-auto px-4 py-6`}>
+    <div className={`${containerWidth} mx-auto px-4 py-6 -mt-7`}>
       <h1 className="text-2xl font-bold mb-1">NutriScan : Analisis Makanan</h1>
       <p className="text-sm text-gray-600 mb-6">
         Hasil analisis makanan dari AI
@@ -105,7 +118,7 @@ export default function ScanFoodPage() {
           >
             {foodscan?.status}
           </div>
-          <div className="aspect-video rounded-xl overflow-hidden bg-gray-100">
+<div className="flex-1 rounded-xl overflow-hidden bg-gray-100">
             {foodscanResponse?.data ? (
               <img
                 src={foodscanResponse?.data?.image_url}
@@ -119,6 +132,19 @@ export default function ScanFoodPage() {
             )}
           </div>
 
+          {/* FOOD AI INSIGHT
+{foodscan?.status === "SUCCESS" && insight && (
+  <div className="mt-4 rounded-xl border bg-yellow-50 px-4 py-3">
+    <h3 className="text-sm font-semibold text-gray-900 mb-1">
+      Insight AI
+    </h3>
+    <p className="text-sm text-gray-700 leading-relaxed">
+      {insight?.personal_ai_insight}
+    </p>
+  </div>
+)} */}
+
+
           {foodscan?.status === "FAILED" && (
             <Button
               onClick={() => router.push("/dashboard/scanmakanan")}
@@ -129,6 +155,8 @@ export default function ScanFoodPage() {
             </Button>
           )}
         </div>
+
+
 
         {/* NUTRITION */}
         <div className="space-y-6">
@@ -148,7 +176,15 @@ export default function ScanFoodPage() {
             })}
           </div>
 
-          <FoodDetailForm  />
+          <FoodDetailForm
+  nutrition={{
+    calories: Number(result?.calories_kcal ?? 0),
+    protein: Number(result?.protein_g ?? 0),
+    fat: Number(result?.fat_g ?? 0),
+    carbohydrate: Number(result?.carbs_g ?? 0),
+  }}
+/>
+
 
           {isLoading && (
             <p className="text-sm text-gray-500">Memuat data scan...</p>

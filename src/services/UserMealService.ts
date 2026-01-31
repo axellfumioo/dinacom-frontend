@@ -46,7 +46,7 @@ class userMealService {
     //   },
     // });
 
-    return apiClient({
+    return await apiClient<{message: string}>({
       method: "post",
       url: "/usermeals",
       data: dto,
