@@ -22,8 +22,13 @@ export const AddFamilyMemberForm = ({ familyID }: Props) => {
       familyID,
       members: [
         {
-          userID,
-          role,
+          UserID: "",
+          Family: "",
+          FamilyID: "",
+          ID: "",
+          UpdatedAt: "",
+          Role: "",
+          CreatedAt: "",
         },
       ],
     });
