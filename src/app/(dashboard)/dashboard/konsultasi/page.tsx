@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { DoctorCard } from "@/components/konsultant/DoctorCard";
 import { ChatSidebar } from "@/components/konsultant/ChatSidebar";
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
@@ -17,6 +18,7 @@ interface Doctor {
 }
 
 export default function KonsultanPage() {
+  const router = useRouter();
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [mobileChatOpen, setMobileChatOpen] = useState(false);
 
@@ -49,8 +51,18 @@ export default function KonsultanPage() {
   ];
 
   const handleChat = (doctor: Doctor) => {
-    setSelectedDoctor(doctor);
-    setMobileChatOpen(true);
+    
+    localStorage.setItem('selectedDoctor', JSON.stringify(doctor));
+    
+    router.push('/dashboard/konsultasi/chat');
+  };
+
+  const handleChatFromSidebar = (message: any) => {
+    
+    const doctor = doctors.find(d => d.id === message.doctorId);
+    if (doctor) {
+      handleChat(doctor);
+    }
   };
 
   return (
@@ -81,7 +93,11 @@ export default function KonsultanPage() {
 
         {/* DESKTOP CHAT SIDEBAR */}
         <div className="hidden md:block w-80 shrink-0">
-          <ChatSidebar messages={messages} activeDoctor={selectedDoctor} />
+          <ChatSidebar 
+            messages={messages} 
+            activeDoctor={selectedDoctor} 
+            onChatClick={handleChatFromSidebar}
+          />
         </div>
       </div>
 
@@ -99,7 +115,11 @@ export default function KonsultanPage() {
               </button>
             </div>
 
-            <ChatSidebar messages={messages} activeDoctor={selectedDoctor} />
+            <ChatSidebar 
+              messages={messages} 
+              activeDoctor={selectedDoctor} 
+              onChatClick={handleChatFromSidebar}
+            />
           </div>
         </div>
       )}

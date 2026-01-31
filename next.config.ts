@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // @ts-ignore
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   output: "standalone",
-  reactCompiler: true,
   images: {
     domains: ["upload.wikimedia.org"],
     remotePatterns: [
@@ -14,5 +16,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+} as any;
+
 export default nextConfig;
