@@ -1,37 +1,37 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateUserMealRequest } from "@/common/dto/usermealDto";
+'use client';
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userMealServiceInstance } from "@/services/UserMealService";
+import {
+  PaginatedUserMealResponse,
+  UserMeal,
+  CreateUserMealRequest,
+} from "@/common/dto/usermealDto";
+import toast from "react-hot-toast";
 
-
-const USER_MEAL_KEYS = {
-  all: ["user-meals"] as const,
-  list: (page: number, pageSize: number) =>
-    [...USER_MEAL_KEYS.all, "list", page, pageSize] as const,
-  today: () => [...USER_MEAL_KEYS.all, "today"] as const,
-};
-
-
-export const useUserMeals = (page = 1, pageSize = 10) => {
-  return useQuery({
-    queryKey: USER_MEAL_KEYS.list(page, pageSize),
+export const useGetUserMeals = (
+  page: number = 1,
+  pageSize: number = 10
+) => {
+  return useQuery<PaginatedUserMealResponse>({
+    queryKey: ["user-meals", page, pageSize],
     queryFn: () =>
       userMealServiceInstance.getUserMeals(page, pageSize),
-
-    // TanStack Query v5 replacement
-    placeholderData: (prev) => prev,
+    keepPreviousData: true,
   });
 };
 
-export const useTodayUserMeals = () => {
-  return useQuery({
-    queryKey: USER_MEAL_KEYS.today(),
+
+export const useUserMealsToday = () => {
+  return useQuery<UserMeal[]>({
+    queryKey: ["user-meals-today"],
     queryFn: () =>
       userMealServiceInstance.getTodayUserMeals(),
   });
 };
 
 
-export const useAddUserMeal = () => {
+export const useAddUserMeals = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -39,8 +39,14 @@ export const useAddUserMeal = () => {
       userMealServiceInstance.addUserMeals(dto),
 
     onSuccess: () => {
+      toast.success("Meal added successfully");
+
       queryClient.invalidateQueries({
-        queryKey: USER_MEAL_KEYS.all,
+        queryKey: ["user-meals"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["user-meals-today"],
       });
     },
   });

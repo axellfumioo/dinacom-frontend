@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
-import { KonsultasiCard } from "@/components/dashboard/KonsultasiCard";
 import { LaporanCard } from "@/components/dashboard/LaporanMingguan";
 import { PantauKeluargaCard } from "@/components/dashboard/PantauKeluarga";
 import { CalendarCard } from "@/components/dashboard/Kalender";
@@ -154,7 +153,6 @@ export default function DashboardPage() {
 
           {/* RIGHT */}
           <div className="space-y-4">
-            <KonsultasiCard />
             <LaporanCard />
             <PantauKeluargaCard />
             <CalendarCard />

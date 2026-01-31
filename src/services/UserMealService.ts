@@ -1,7 +1,7 @@
 import {
   CreateUserMealRequest,
-  UserMeal,
   PaginatedUserMealResponse,
+  UserMeal,
 } from "@/common/dto/usermealDto";
 import { apiClient } from "@/common/lib/apiClient";
 import { getCookies } from "@/lib/cookie";
@@ -9,8 +9,8 @@ import { getCookies } from "@/lib/cookie";
 class userMealService {
   async getUserMeals(
     page = 1,
-    pageSize = 10
-  ): Promise<PaginatedUserMealResponse> {
+    pageSize = 10,
+  ): (Promise<PaginatedUserMealResponse>) {
     const token = await getCookies();
 
     return apiClient<PaginatedUserMealResponse>({
