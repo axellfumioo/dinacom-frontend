@@ -49,5 +49,9 @@ export const useAddUserMeals = () => {
         queryKey: ["user-meals-today"],
       });
     },
+
+    onError: (error) => {
+      toast.error( error?.message||"Failed to add meal");
+    }
   });
 };

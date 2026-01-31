@@ -2,6 +2,7 @@ import { apiClient } from "@/common/lib/apiClient";
 import { FoodScanDto } from "@/common/dto/foodscanDto";
 import { getCookies } from "@/lib/cookie";
 import { FoodScanModel } from "@/common/model/foodscan";
+import { FoodScanResultModel } from "@/common/model/result";
 
 class FoodScanService {
 
@@ -9,7 +10,7 @@ class FoodScanService {
     const token = await getCookies();
     return apiClient({
       method: "get",
-      url: "api/v1/foodscans",
+      url: "/foodscans",
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -45,7 +46,7 @@ class FoodScanService {
     const token = await getCookies()
     return apiClient({
       method: "get",
-      url: "api/v1/foodscans/user",
+      url: "/foodscans/user",
       headers: { Authorization: `Bearer ${token}` }
     });
   }
@@ -54,7 +55,7 @@ class FoodScanService {
     const token = await getCookies();
     return apiClient({
       method: "get",
-      url: "api/v1/results",
+      url: "/results",
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -63,20 +64,21 @@ class FoodScanService {
 
   async GetUserFoodScanResult() {
     const token = await getCookies();
-    return apiClient({
-      method: "get",
-      url: "api/v1/results/user",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    return apiClient<FoodScanResultModel>({
+  method: "get",
+  url: "/results/user",
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
   }
 
   async GetFoodScanResultByID(id: string) {
     const token = await getCookies();
     return apiClient({
       method: "get",
-      url: `api/v1/results/${id}/get`,
+      url: `/results/${id}/get`,
       headers: {
         Authorization: `Bearer ${token}`
       }
