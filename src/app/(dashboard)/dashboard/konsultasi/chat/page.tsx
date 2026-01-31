@@ -18,6 +18,9 @@ import {
   Clock,
   ImagePlus
 } from "lucide-react";
+import { useGetAllUserDoctorChatRooms, useGetOrCreateDoctorChatRoom } from "@/hooks/useDoctorChat";
+import { useGetMessagesByRoomID, useCreateDoctorMessage } from "@/hooks/useDoctorChatMessage";
+import { DoctorChatRoomDto, DoctorChatMessageDto } from "@/common/dto/doctorChatDto";
 
 interface Doctor {
   id: number;
@@ -26,8 +29,7 @@ interface Doctor {
 }
 
 interface Message {
-  id: number;
-  doctorId: number;
+  id: string;
   text: string;
   time: string;
   sender: "user" | "doctor";
@@ -35,6 +37,7 @@ interface Message {
 
 interface Conversation {
   id: number;
+  roomId: string;
   doctor: Doctor;
   lastMessage: string;
   lastMessageTime: string;
@@ -47,6 +50,7 @@ export default function KonsultanPage() {
   const [messageText, setMessageText] = useState("");
   const [searchText, setSearchText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [currentRoomId, setCurrentRoomId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { sidebarCollapsed } = useSidebarLayout();
@@ -56,70 +60,75 @@ export default function KonsultanPage() {
     [sidebarCollapsed]
   );
 
+  // Fetch all user's chat rooms
+  const { data: chatRoomsData, isLoading: loadingRooms } = useGetAllUserDoctorChatRooms();
   
-  const conversations: Conversation[] = [
-    {
-      id: 1,
-      doctor: { id: 1, name: "Dr. Elina Toba" },
-      lastMessage: "Baik, jangan lupa minum obatnya ya",
-      lastMessageTime: "10:30",
-      unread: 2,
-    },
-    {
-      id: 2,
-      doctor: { id: 2, name: "Dr. Budi Santoso" },
-      lastMessage: "Terima kasih sudah konsultasi",
-      lastMessageTime: "09:15",
-      unread: 0,
-    },
-    {
-      id: 3,
-      doctor: { id: 3, name: "Dr. Sarah Wijaya" },
-      lastMessage: "Kapan bisa kontrol lagi?",
-      lastMessageTime: "Kemarin",
-      unread: 0,
-    },
-    {
-      id: 4,
-      doctor: { id: 4, name: "Dr. Ahmad Fauzi" },
-      lastMessage: "Hasil lab sudah keluar",
-      lastMessageTime: "2 hari lalu",
-      unread: 1,
-    },
-  ];
+  // Fetch messages for selected room
+  const { data: messagesData, isLoading: loadingMessages } = useGetMessagesByRoomID(currentRoomId || "");
+  
+  // Mutation for creating new message
+  const createMessageMutation = useCreateDoctorMessage();
 
-  const messages: Message[] = selectedConversation
-    ? [
-        { id: 1, doctorId: selectedConversation.doctor.id, text: "Halo, selamat pagi. Ada yang bisa saya bantu?", time: "09:00", sender: "doctor" },
-        { id: 2, doctorId: selectedConversation.doctor.id, text: "Pagi dok, saya mau konsultasi tentang sakit kepala yang sering saya alami", time: "09:02", sender: "user" },
-        { id: 3, doctorId: selectedConversation.doctor.id, text: "Baik, sudah berapa lama Anda mengalami sakit kepala ini?", time: "09:03", sender: "doctor" },
-        { id: 4, doctorId: selectedConversation.doctor.id, text: "Sudah sekitar 3 hari dok, terutama di pagi hari", time: "09:05", sender: "user" },
-        { id: 5, doctorId: selectedConversation.doctor.id, text: "Saya akan meresepkan obat pereda nyeri. Jangan lupa istirahat yang cukup ya", time: "09:07", sender: "doctor" },
-        { id: 6, doctorId: selectedConversation.doctor.id, text: "Baik dok, terima kasih", time: "09:10", sender: "user" },
-        { id: 7, doctorId: selectedConversation.doctor.id, text: "Baik, jangan lupa minum obatnya ya", time: "10:30", sender: "doctor" },
-      ]
-    : [];
+  // Transform chat rooms data
+  const conversations: Conversation[] = chatRoomsData?.map((room: DoctorChatRoomDto, index: number) => ({
+    id: index + 1,
+    roomId: room.ID,
+    doctor: {
+      id: parseInt(room.doctor_id) || index + 1,
+      name: room.doctor?.name || "Doctor",
+    },
+    lastMessage: room.last_message || "Mulai konsultasi",
+    lastMessageTime: room.last_message_at 
+      ? new Date(room.last_message_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+      : "Baru",
+    unread: 0,
+  })) || [];
+
+  // Transform messages data
+  const messages: Message[] = messagesData?.map((msg: DoctorChatMessageDto) => ({
+    id: msg.ID,
+    text: msg.message,
+    time: new Date(msg.CreatedAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+    sender: msg.sender_type,
+  })) || [];
 
   
+  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [selectedConversation]);
+  }, [messages]);
 
   
+  // Load doctor from localStorage and get or create chat room
   useEffect(() => {
+    const savedDoctorId = localStorage.getItem('selectedDoctorId');
+    const savedRoomId = localStorage.getItem('selectedRoomId');
     const savedDoctor = localStorage.getItem('selectedDoctor');
-    if (savedDoctor) {
-      const doctor = JSON.parse(savedDoctor);
-      
-      const existingConv = conversations.find(c => c.doctor.name === doctor.name);
+
+    if (savedRoomId && chatRoomsData) {
+      // Find existing conversation by room ID
+      const existingConv = conversations.find(c => c.roomId === savedRoomId);
       if (existingConv) {
         setSelectedConversation(existingConv);
+        setCurrentRoomId(savedRoomId);
+      }
+      localStorage.removeItem('selectedRoomId');
+    } else if (savedDoctorId && savedDoctor && chatRoomsData) {
+      const doctor = JSON.parse(savedDoctor);
+      const doctorIdNum = parseInt(savedDoctorId);
+      
+      // Check if conversation already exists
+      const existingConv = conversations.find(c => c.doctor.id === doctorIdNum);
+      if (existingConv) {
+        setSelectedConversation(existingConv);
+        setCurrentRoomId(existingConv.roomId);
       } else {
-        
+        // Create new conversation object (room will be created when sending first message)
         const newConv: Conversation = {
-          id: doctor.id,
+          id: parseInt(savedDoctorId) || 0,
+          roomId: "", // Will be set when room is created
           doctor: {
-            id: doctor.id,
+            id: parseInt(savedDoctorId) || 0,
             name: doctor.name,
           },
           lastMessage: "Mulai konsultasi",
@@ -129,27 +138,63 @@ export default function KonsultanPage() {
         setSelectedConversation(newConv);
       }
       
+      localStorage.removeItem('selectedDoctorId');
       localStorage.removeItem('selectedDoctor');
     }
-  }, [conversations]);
+  }, [chatRoomsData]);
 
-  const handleSendMessage = () => {
-    if (messageText.trim()) {
-      
-      console.log("Sending message:", messageText);
-      setMessageText("");
-      
-      
-      setIsTyping(true);
-      setTimeout(() => {
-        setIsTyping(false);
-      }, 2000);
+  const handleSendMessage = async () => {
+    if (messageText.trim() && selectedConversation) {
+      try {
+        let roomId = currentRoomId;
+        
+        // If no room exists yet, we need the backend to create it via GetOrCreateDoctor endpoint
+        // But since we're sending a message, the room should already exist
+        // If not, you may need to call GetOrCreateDoctorChatRoom first
+        
+        if (!roomId) {
+          // This shouldn't happen if the flow is correct
+          console.error("No room ID available");
+          return;
+        }
+
+        await createMessageMutation.mutateAsync({
+          room_id: roomId,
+          message: messageText.trim(),
+        });
+
+        setMessageText("");
+        
+        // Simulate doctor typing
+        setIsTyping(true);
+        setTimeout(() => {
+          setIsTyping(false);
+        }, 2000);
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 
   const filteredConversations = conversations.filter((conv) =>
     conv.doctor.name.toLowerCase().includes(searchText.toLowerCase())
   );
+
+  const handleConversationSelect = (conversation: Conversation) => {
+    setSelectedConversation(conversation);
+    setCurrentRoomId(conversation.roomId);
+  };
+
+  if (loadingRooms) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat percakapan...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-screen flex flex-col">
@@ -191,7 +236,7 @@ export default function KonsultanPage() {
             {filteredConversations.map((conversation) => (
               <div
                 key={conversation.id}
-                onClick={() => setSelectedConversation(conversation)}
+                onClick={() => handleConversationSelect(conversation)}
                 className={`group flex items-center gap-3 p-4 cursor-pointer transition-all duration-200 relative ${
                   selectedConversation?.id === conversation.id 
                     ? "bg-gradient-to-r from-yellow-50 to-amber-50 border-l-4 border-yellow-500" 
@@ -269,15 +314,23 @@ export default function KonsultanPage() {
 
               {/* Chat Messages */}
               <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-gray-50 to-white">
-                <div className="space-y-6 max-w-4xl mx-auto">
-                  {/* Date Divider */}
-                  <div className="flex items-center justify-center">
-                    <div className="bg-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full shadow-sm">
-                      Hari ini
+                {loadingMessages ? (
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500 mx-auto mb-2"></div>
+                      <p className="text-sm text-gray-600">Memuat pesan...</p>
                     </div>
                   </div>
+                ) : (
+                  <div className="space-y-6 max-w-4xl mx-auto">
+                    {/* Date Divider */}
+                    <div className="flex items-center justify-center">
+                      <div className="bg-gray-200 text-gray-600 text-xs font-medium px-4 py-1.5 rounded-full shadow-sm">
+                        Hari ini
+                      </div>
+                    </div>
 
-                  {messages.map((message, index) => (
+                    {messages.map((message, index) => (
                     <div
                       key={message.id}
                       className={`flex items-end gap-2 ${
@@ -337,9 +390,9 @@ export default function KonsultanPage() {
                       </div>
                       <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md p-4 shadow-md">
                         <div className="flex gap-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full" />
-                          <div className="w-2 h-2 bg-gray-400 rounded-full"  />
-                          <div className="w-2 h-2 bg-gray-400 rounded-full"  />
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       </div>
                     </div>
@@ -347,6 +400,7 @@ export default function KonsultanPage() {
 
                   <div ref={messagesEndRef} />
                 </div>
+                )}
               </div>
 
               {/* Chat Input */}
@@ -374,10 +428,14 @@ export default function KonsultanPage() {
                     
                     <button
                       onClick={handleSendMessage}
-                      disabled={!messageText.trim()}
+                      disabled={!messageText.trim() || createMessageMutation.isPending}
                       className="p-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 disabled:from-gray-200 disabled:to-gray-300 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg disabled:cursor-not-allowed group"
                     >
-                      <Send className="w-5 h-5 text-gray-900 group-hover:translate-x-0.5 transition-transform" />
+                      {createMessageMutation.isPending ? (
+                        <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Send className="w-5 h-5 text-gray-900 group-hover:translate-x-0.5 transition-transform" />
+                      )}
                     </button>
                   </div>
                 </div>

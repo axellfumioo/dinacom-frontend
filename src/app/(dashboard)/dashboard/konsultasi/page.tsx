@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { DoctorCard } from "@/components/konsultant/DoctorCard";
 import { ChatSidebar } from "@/components/konsultant/ChatSidebar";
 import { useSidebarLayout } from "@/components/ui/LayoutClient";
+import { useGetAllDoctors, useGetAllUserDoctorChatRooms, useGetOrCreateDoctorChatRoom } from "@/hooks/useDoctorChat";
+import { DoctorDto, DoctorChatRoomDto } from "@/common/dto/doctorChatDto";
 
 interface Doctor {
   id: number;
@@ -28,42 +30,64 @@ export default function KonsultanPage() {
     [sidebarCollapsed]
   );
 
-  const doctors: Doctor[] = [
-    {
-      id: 1,
-      name: "Dr. Elina Toba",
-      rating: 4.8,
-      reviews: 120,
-      price: "Rp25.000",
-      alumnus: "Universitas Kedokteran Airlangga, Surabaya, Indonesia 2012",
-      practice: "Senin-Rabu, 08:00-17:00",
-      str: "1234567890",
-    },
-    { id: 2, name: "Dr. Elina Toba", rating: 4.8, reviews: 120, price: "Rp25.000", alumnus: "Universitas Kedokteran Airlangga, Surabaya, Indonesia 2012", practice: "Senin-Rabu, 08:00-17:00", str: "1234567890" },
-    { id: 3, name: "Dr. Elina Toba", rating: 4.8, reviews: 120, price: "Rp25.000", alumnus: "Universitas Kedokteran Airlangga, Surabaya, Indonesia 2012", practice: "Senin-Rabu, 08:00-17:00", str: "1234567890" },
-    { id: 4, name: "Dr. Elina Toba", rating: 4.8, reviews: 120, price: "Rp25.000", alumnus: "Universitas Kedokteran Airlangga, Surabaya, Indonesia 2012", practice: "Senin-Rabu, 08:00-17:00", str: "1234567890" },
-  ];
+  // Fetch doctors and chat rooms from API
+  const { data: doctorsData, isLoading: loadingDoctors } = useGetAllDoctors();
+  const { data: chatRoomsData, isLoading: loadingChatRooms } = useGetAllUserDoctorChatRooms();
 
-  const messages = [
-    { id: 1, doctorId: 1, doctorName: "Dr. Elina Toba", lastMessage: "Halo kak, ada yang bisa saya bantu?", time: "10:30" },
-    { id: 2, doctorId: 2, doctorName: "Dr. Elina Toba", lastMessage: "Halo kak, ada yang bisa saya bantu?", time: "09:15" },
-    { id: 3, doctorId: 3, doctorName: "Dr. Elina Toba", lastMessage: "Halo kak, ada yang bisa saya bantu?", time: "08:45" },
-  ];
+  // Transform backend data to frontend format
+  const doctors: Doctor[] = doctorsData?.map((doc: DoctorDto, index: number) => ({
+    id: parseInt(doc.ID) || index + 1,
+    name: doc.name,
+    rating: doc.rating,
+    reviews: doc.reviews,
+    price: doc.price,
+    alumnus: doc.alumnus,
+    practice: doc.practice,
+    str: doc.str,
+  })) || [];
+
+  // Transform chat rooms to messages format for sidebar
+  const messages = chatRoomsData?.map((room: DoctorChatRoomDto, index: number) => ({
+    id: index + 1,
+    doctorId: parseInt(room.doctor_id) || index + 1,
+    doctorName: room.doctor?.name || "Doctor",
+    lastMessage: room.last_message || "Mulai konsultasi",
+    time: room.last_message_at ? new Date(room.last_message_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : "",
+    roomId: room.ID,
+  })) || [];
 
   const handleChat = (doctor: Doctor) => {
-    
+    // Store doctor info and navigate to chat
+    localStorage.setItem('selectedDoctorId', doctor.id.toString());
     localStorage.setItem('selectedDoctor', JSON.stringify(doctor));
     
     router.push('/dashboard/konsultasi/chat');
   };
 
   const handleChatFromSidebar = (message: any) => {
-    
+    // Navigate to existing chat room
+    if (message.roomId) {
+      localStorage.setItem('selectedRoomId', message.roomId);
+    }
     const doctor = doctors.find(d => d.id === message.doctorId);
     if (doctor) {
-      handleChat(doctor);
+      localStorage.setItem('selectedDoctor', JSON.stringify(doctor));
     }
+    router.push('/dashboard/konsultasi/chat');
   };
+
+  if (loadingDoctors || loadingChatRooms) {
+    return (
+      <div className={`${containerWidth} mx-auto px-4 py-6 md:py-8`}>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">Memuat data dokter...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${containerWidth} mx-auto px-4 py-6 md:py-8`}>
@@ -80,15 +104,19 @@ export default function KonsultanPage() {
             ))}
           </div>
 
-          <h1 className="text-2xl font-thin text-gray-300 mb-4">
-            ----Dokter Spesialis
-          </h1>
+          {doctors.length > 3 && (
+            <>
+              <h1 className="text-2xl font-thin text-gray-300 mb-4">
+                ----Dokter Spesialis
+              </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {doctors.slice(3, 4).map((doctor) => (
-              <DoctorCard key={doctor.id} doctor={doctor} onChat={handleChat} />
-            ))}
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {doctors.slice(3).map((doctor) => (
+                  <DoctorCard key={doctor.id} doctor={doctor} onChat={handleChat} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* DESKTOP CHAT SIDEBAR */}
